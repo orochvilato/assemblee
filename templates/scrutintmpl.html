@@ -1,97 +1,61 @@
-<!DOCTYPE html>
-<html lang="fr">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
-    <title>Kikavotékoa</title>
+{% extends "basetmpl.html" %}
+{% block content %}
+<div class="col s12">
+  <h5>{{ scrutin['objet.libelle'] }} ({{ scrutin['dateScrutin'] }})</h5>
+  <h6>Groupes</h6>
+  <table class="striped highlight centered">
+    <thead>
+      <tr><th>Groupe</th><th>Vote</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
+    </thead>
+    <tbody>
+      {% for grp in groupes.keys() %}
+        {% if scrutin['uid'] in groupes[grp]['votes'].keys() %}<tr>
+        {% set gs = groupes[grp]['votes'][scrutin['uid']] %}
+        <td>{{ organes[grp]['libelle'] }} ({{ organes[grp]['libelleAbrev'] }} )</td>
+          <td>{{ gs['vote'] }}</td>
+          <td>{{ gs['pour'] + gs['contre'] + gs['abstention'] + gs['nonVotant'] }}</td>
+          <td><a class="filter" class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' data-vote='pour' href="#">{{ gs['pour'] }}</a></td>
+          <td>{{ gs['contre'] }}</td>
+          <td>{{ gs['abstention'] }}</td>
+          <td>{{ gs['nonVotant'] }}</td></tr>
+        {% endif %}
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr><th>Total</th><th>{{ scrutin['sort.code']}}</th>
+          <th>{{ scrutin['syntheseVote.nombreVotants'] }}</th>
+          <th>{{ scrutin['syntheseVote.decompte.pour'] }}</th>
+          <th>{{ scrutin['syntheseVote.decompte.contre'] }}</th>
+          <th>{{ scrutin['syntheseVote.decompte.abstention'] }}</th>
+          <th>{{ scrutin['syntheseVote.decompte.nonVotant'] }}</th>
+    </tfoot>
+  </table>
 
-
-
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
-  <style>
-    tfoot, th {
-      text-align: center;
-    }
-    .parti {
-      color: grey;
-      font-weight:300;
-    }
-  </style>
-<body>
-  <div class="container">
-    <div class="row">
-      <div class="col s12">
-        <span>Date de mise à jour : {{ today }}</span>
-      </div>
-      <div class="col s12">
-        <h5>{{ scrutin['objet.libelle'] }} ({{ scrutin['dateScrutin'] }})</h5>
-        <h6>Groupes</h6>
-        <table class="striped highlight centered">
-          <thead>
-            <tr><th>Groupe</th><th>Vote</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
-          </thead>
-          <tbody>
-            {% for grp in groupes.keys() %}
-              {% if scrutin['uid'] in groupes[grp]['votes'].keys() %}<tr>
-              {% set gs = groupes[grp]['votes'][scrutin['uid']] %}
-              <td>{{ organes[grp]['libelle'] }} ({{ organes[grp]['libelleAbrev'] }} )</td>
-                <td>{{ gs['vote'] }}</td>
-                <td>{{ gs['pour'] + gs['contre'] + gs['abstention'] + gs['nonVotant'] }}</td>
-                <td><a class="filter" class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' data-vote='pour' href="#">{{ gs['pour'] }}</a></td>
-                <td>{{ gs['contre'] }}</td>
-                <td>{{ gs['abstention'] }}</td>
-                <td>{{ gs['nonVotant'] }}</td></tr>
-              {% endif %}
-            {% endfor %}
-          </tbody>
-          <tfoot>
-            <tr><th>Total</th><th>{{ scrutin['sort.code']}}</th>
-                <th>{{ scrutin['syntheseVote.nombreVotants'] }}</th>
-                <th>{{ scrutin['syntheseVote.decompte.pour'] }}</th>
-                <th>{{ scrutin['syntheseVote.decompte.contre'] }}</th>
-                <th>{{ scrutin['syntheseVote.decompte.abstention'] }}</th>
-                <th>{{ scrutin['syntheseVote.decompte.nonVotant'] }}</th>
-          </tfoot>
-        </table>
-
-        <h6>Députés</h6>
-        <div id="deputes">
-          <input class="search" placeholder="Recherche">
-        <table class="striped highlight centered">
-          <thead>
-            <tr><th>Nom</th><th>Groupe</th><th>Vote</th><th>Cause</th></tr>
-          </thead>
-          <tbody class="list">
-            {% for as in scrutin['votants'] %}<tr>
-              {% if as['acteur_uid'] in acteurs.keys() %}
-              <td class="nom">{{ acteurs[as['acteur_uid']]['etatCivil.ident.civ'] }} {{ acteurs[as['acteur_uid']]['etatCivil.ident.prenom'] }} {{ acteurs[as['acteur_uid']]['etatCivil.ident.nom'] }}</td>
-              {% else %}
-              <td class="parti">plus député</td>
-              {% endif %}
-                <td class="groupe">{{ organes[as['groupe_uid']]['libelleAbrev'] }}</td>
-                <td class="vote">{{ as['vote'] }}</td>
-                <td>{{ as['cause'] or "" }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
-      </div>
-
-
-      </div>
-    </div>
-  </div>
-</body>
-<footer>
-  <!--  Scripts-->
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-
+  <h6>Députés</h6>
+  <div id="deputes">
+    <input class="search" placeholder="Recherche">
+  <table class="striped highlight centered">
+    <thead>
+      <tr><th>Nom</th><th>Groupe</th><th>Vote</th><th>Cause</th></tr>
+    </thead>
+    <tbody class="list">
+      {% for as in scrutin['votants'] %}<tr>
+        {% if as['acteur_uid'] in acteurs.keys() %}
+        <td class="nom">{{ acteurs[as['acteur_uid']]['etatCivil.ident.civ'] }} {{ acteurs[as['acteur_uid']]['etatCivil.ident.prenom'] }} {{ acteurs[as['acteur_uid']]['etatCivil.ident.nom'] }}</td>
+        {% else %}
+        <td class="parti">plus député</td>
+        {% endif %}
+          <td class="groupe">{{ organes[as['groupe_uid']]['libelleAbrev'] }}</td>
+          <td class="vote">{{ as['vote'] }}</td>
+          <td>{{ as['cause'] or "" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+{% block javascript %}
   <script>
-
     var deputeList = new List('deputes',{ valueNames: ['nom','groupe','vote']});
     function searchdep(groupe,vote) {
       //deputeList.filter();
@@ -104,6 +68,4 @@
       });
     }
   </script>
-</footer>
-
-</html>
+{% endblock %}

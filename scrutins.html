@@ -14,14 +14,16 @@
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 27/06/2017 14:48</span>
+        <span>Date de mise à jour : 27/06/2017 19:37</span>
       </div>
-
+    </div>
+    <div class="row">
+      
       <div id="scrutins" class="col s12">
         <input class="search" placeholder="Recherche">
         <table class="striped highlight centered">
           <thead>
-            <tr><th>Date</th><th>Libelle</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
+            <tr><th>Date</th><th>Libelle</th><th>Résultat</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
           </thead>
           <tbody class="list">
             <tr>
@@ -12220,17 +12222,20 @@ SCRUTIN ANNULÉ - remplacé par le scrutin 1086</a></td>
           </tbody>
         </table>
       </div>
+
     </div>
   </div>
 </body>
 <footer>
   <!--  Scripts-->
-  <script src="http://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+  
   <script>
     var scrutinsList = new List('scrutins',{ valueNames: ['libelle']});
   </script>
+
 </footer>
 
 </html>
