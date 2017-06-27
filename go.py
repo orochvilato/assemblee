@@ -85,9 +85,92 @@ else:
     acteurs = json.loads(open('acteurs.json','r').read())
     scrutins = json.loads(open('scrutins.json','r').read())
 
-for scrutin in scrutins:
-    if scrutin['sort.code']==u'adopté':
-        print scrutin['uid'],scrutin['objet.libelle'].encode('utf8')
 
+
+acteurs_json = []
+for act in acteurs.values():
+    acteurs_json.append({ 'uid':act['uid'],
+                          'nom':act['etatCivil.ident.nom'],
+                          'prenom':act['etatCivil.ident.prenom'],
+                          'civ':act['etatCivil.ident.civ'],
+                          'nomcomplet':'%s %s %s' % (act['etatCivil.ident.civ'],
+                                                     act['etatCivil.ident.prenom'],
+                                                     act['etatCivil.ident.nom']),
+                        })
+
+print '\n'.join(organes.values()[0].keys())
+print '\n'.join(acteurs.values()[0].keys())
+
+datavotes = []
+for scrutin in scrutins:
+    vote = {'uid':scrutin['uid'],
+            'numero':scrutin['numero'],
+            'date':scrutin['dateScrutin'],
+            'type':scrutin['typeVote.codeTypeVote'],
+            'sort':scrutin['sort.code'],
+            'objet': scrutin['objet.libelle']
+            }
+    for grp in scrutin['ventilationVotes.organe.groupes']:
+        votegrp = dict(vote)
+        groupe = organes[grp['organeRef']]
+        votegrp.update({'grp_libelle':groupe['libelle'],
+                        'grp_uid':groupe['uid'],
+                         })
+
+        for v in grp.get('vote.decompteNominatif.nonVotants.votant',[]):
+            voteact = dict(votegrp)
+            acteur = acteurs.get(v['acteurRef'],None)
+            if not acteur:
+                continue
+            voteact.update({'act_uid':acteur['uid'],
+                           'act_nom':"%s %s %s" % (acteur['etatCivil.ident.civ'],acteur['etatCivil.ident.prenom'],acteur['etatCivil.ident.nom']),
+                           'act_vote':'non votant',
+                           'act_cause':v['causePositionVote']
+                          }
+                           )
+            datavotes.append(voteact)
+
+        for v in grp.get('vote.decompteNominatif.pours.votant',[]):
+            voteact = dict(votegrp)
+            acteur = acteurs.get(v['acteurRef'],None)
+            if not acteur:
+                continue
+            voteact.update({'act_uid':acteur['uid'],
+                           'act_nom':"%s %s %s" % (acteur['etatCivil.ident.civ'],acteur['etatCivil.ident.prenom'],acteur['etatCivil.ident.nom']),
+                           'act_vote':'pour'
+                          }
+                       )
+            datavotes.append(voteact)
+
+        for v in grp.get('vote.decompteNominatif.contres.votant',[]):
+            voteact = dict(votegrp)
+            acteur = acteurs.get(v['acteurRef'],None)
+            if not acteur:
+                continue
+            voteact.update({'act_uid':acteur['uid'],
+                           'act_nom':"%s %s %s" % (acteur['etatCivil.ident.civ'],acteur['etatCivil.ident.prenom'],acteur['etatCivil.ident.nom']),
+                           'act_vote':'contre'
+                          }
+                           )
+            datavotes.append(voteact)
+
+        for v in grp.get('vote.decompteNominatif.abstentions.votant',[]):
+            voteact = dict(votegrp)
+            acteur = acteurs.get(v['acteurRef'],None)
+            if not acteur:
+                continue
+            voteact.update({'act_uid':acteur['uid'],
+                           'act_nom':"%s %s %s" % (acteur['etatCivil.ident.civ'],acteur['etatCivil.ident.prenom'],acteur['etatCivil.ident.nom']),
+                           'act_vote':'abstention'
+                          }
+                           )
+            datavotes.append(voteact)
+
+
+    #if scrutin['sort.code']==u'adopté':
+        #print scrutin['uid'],scrutin['objet.libelle'].encode('utf8')
+
+print len(datavotes)
+open('votes.json','w').write(json.dumps(datavotes))
 #for acteur in acteurs.values():
 #    print acteur['etatCivil.ident.civ'],acteur['etatCivil.ident.nom'].encode('utf8'),acteur['etatCivil.ident.prenom'].encode('utf8'),organes[acteur['mandats'][0]['organes.organeRef']]['libelle'].encode('utf8')
