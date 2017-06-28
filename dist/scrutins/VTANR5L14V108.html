@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>Kikavotékoa</title>
+
+
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <span>Date de mise à jour : 27/06/2017 20:04</span>
+      </div>
+    </div>
+    <div class="row">
+      
+<div class="col s12">
+  <h5>les amendements n° 1372 de M. Poisson et n° 3373 de M. Mariton après l&#39;article premier du projet de loi portant ouverture du mariage aux couples de même sexe (possibilité pour un officier d&#39;état civil de refuser de célébrer un mariage entre deux personnes de même sexe). (2013-02-02)</h5>
+  <h6>Groupes</h6>
+  <table class="striped highlight centered">
+    <thead>
+      <tr><th>Groupe</th><th>Vote</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
+    </thead>
+    <tbody>
+      
+        
+      
+        <tr>
+        
+        <td>Gauche démocrate et républicaine (GDR )</td>
+          <td>contre</td>
+          <td>2</td>
+          <td><a class="filter" class="filter" data-groupe='GDR' data-vote='pour' href="#">0</a></td>
+          <td>2</td>
+          <td>0</td>
+          <td>0</td></tr>
+        
+      
+        
+      
+        <tr>
+        
+        <td>Union des démocrates et indépendants (UDI )</td>
+          <td>pour</td>
+          <td>2</td>
+          <td><a class="filter" class="filter" data-groupe='UDI' data-vote='pour' href="#">2</a></td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td></tr>
+        
+      
+        <tr>
+        
+        <td>Écologiste (ECOLO )</td>
+          <td>contre</td>
+          <td>2</td>
+          <td><a class="filter" class="filter" data-groupe='ECOLO' data-vote='pour' href="#">0</a></td>
+          <td>2</td>
+          <td>0</td>
+          <td>0</td></tr>
+        
+      
+        <tr>
+        
+        <td>Union pour un Mouvement Populaire (UMP )</td>
+          <td>pour</td>
+          <td>69</td>
+          <td><a class="filter" class="filter" data-groupe='UMP' data-vote='pour' href="#">69</a></td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td></tr>
+        
+      
+        <tr>
+        
+        <td>Radical, républicain, démocrate et progressiste (RRDP )</td>
+          <td>pour</td>
+          <td>0</td>
+          <td><a class="filter" class="filter" data-groupe='RRDP' data-vote='pour' href="#">0</a></td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td></tr>
+        
+      
+        <tr>
+        
+        <td>Socialiste, républicain et citoyen (SRC )</td>
+          <td>contre</td>
+          <td>190</td>
+          <td><a class="filter" class="filter" data-groupe='SRC' data-vote='pour' href="#">2</a></td>
+          <td>187</td>
+          <td>0</td>
+          <td>1</td></tr>
+        
+      
+        
+      
+        <tr>
+        
+        <td>Non inscrit (NI )</td>
+          <td>pour</td>
+          <td>0</td>
+          <td><a class="filter" class="filter" data-groupe='NI' data-vote='pour' href="#">0</a></td>
+          <td>0</td>
+          <td>0</td>
+          <td>0</td></tr>
+        
+      
+    </tbody>
+    <tfoot>
+      <tr><th>Total</th><th>rejeté</th>
+          <th>264</th>
+          <th>73</th>
+          <th>191</th>
+          <th>0</th>
+          <th>1</th>
+    </tfoot>
+  </table>
+
+  <h6>Députés</h6>
+  <div id="deputes">
+    <input class="search" placeholder="Recherche">
+  <table class="striped highlight centered">
+    <thead>
+      <tr><th>Nom</th><th>Groupe</th><th>Vote</th><th>Cause</th></tr>
+    </thead>
+    <tbody class="list">
+      <tr>
+        
+        <td class="parti">plus député</td>
+        
+          <td class="groupe">SRC</td>
+          <td class="vote">pour</td>
+          <td></td>
+        </tr>
+      <tr>
+        
+        <td class="parti">plus député</td>
+        
+          <td class="groupe">SRC</td>
+          <td class="vote">pour</td>
+          <td></td>
+        </tr>
+      
+    </tbody>
+  </table>
+</div>
+
+    </div>
+  </div>
+</body>
+<footer>
+  <!--  Scripts-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+  
+  <script>
+    var deputeList = new List('deputes',{ valueNames: ['nom','groupe','vote']});
+    function searchdep(groupe,vote) {
+      //deputeList.filter();
+      deputeList.filter(function(item) {
+        if ((item.values().groupe === groupe ) && (item.values().vote === vote)) {
+          return true;
+        } else {
+          return false;
+        }
+      });
+    }
+  </script>
+
+</footer>
+
+</html>

@@ -71,7 +71,7 @@ def loadScrutins():
     return scrutins['scrutins']['scrutin']
 
 import json
-debug = True
+debug = False
 if not debug:
     organes,acteurs = loadDeputes()
 
@@ -132,9 +132,9 @@ env = Environment(
 )
 from datetime import datetime
 today = datetime.now().strftime('%d/%m/%Y %H:%M')
-open('scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = scrutins, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = scrutins, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 for scrutin in scrutins:
-    open('scrutins/%s.html' % scrutin['uid'],'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutin, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+    open('dist/scrutins/%s.html' % scrutin['uid'],'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutin, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 
 #for acteur in acteurs.values():
 #    print acteur['etatCivil.ident.civ'],acteur['etatCivil.ident.nom'].encode('utf8'),acteur['etatCivil.ident.prenom'].encode('utf8'),organes[acteur['mandats'][0]['organes.organeRef']]['libelle'].encode('utf8')
