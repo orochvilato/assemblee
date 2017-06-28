@@ -89,13 +89,13 @@ else:
 
 scrutins = scrutins[::-1]
 groupes = {}
-
+stats = {'fsp':{}, 'parite':{}}
 for organe in organes.keys():
     org = organes[organe]
     if org['codeType'] == 'GP':
         if not org['viMoDe.dateFin']:
             groupes[org['uid']] = org
-        organes[org['uid']].update({'membres':{},'votes':{}})
+        organes[org['uid']].update({'membres':{},'votes':{},'stats':{'fsp':{}, 'parite':{}}})
 for acteur in acteurs.keys():
     act = acteurs[acteur]
     act['contacts'] = []
@@ -106,9 +106,20 @@ for acteur in acteurs.keys():
 
     for man in act['mandats']:
         if man['typeOrgane']=='GP':
+            groupeRef = man['organes.organeRef']
             if man['infosQualite.codeQualite'] == u'Président':
                 organes[man['organes.organeRef']]['president'] = act['uid']
             organes[man['organes.organeRef']]['membres'][act['uid']] = man['infosQualite.codeQualite']
+
+    # stats
+    fsp = act['profession.socProcINSEE.famSocPro'] or "Inconnu"
+    ostats = organes[groupeRef]['stats']
+    ostats['fsp'][fsp] = ostats['fsp'].get(fsp,0) + 1
+    stats['fsp'][fsp] = stats['fsp'].get(fsp,0) + 1
+    parite = 'Homme' if act['etatCivil.ident.civ']=='M.' else 'Femme'
+    ostats['parite'][parite] = ostats['parite'].get(parite,0) + 1
+    stats['parite'][parite] = stats['parite'].get(parite,0) + 1
+
 
 
 for scrutin in scrutins:
@@ -165,7 +176,7 @@ for groupe in groupes:
     organes[groupe]['nbmembres'] = len(organes[groupe]['membres'].keys())
     open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(today=today, acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
 open('dist/scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = scrutins, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, stats=stats, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 for scrutin in scrutins:
     open('dist/scrutins/%s.html' % scrutin['uid'],'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutin, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 

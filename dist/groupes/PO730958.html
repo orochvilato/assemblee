@@ -22,6 +22,7 @@
 </style>
 
   
+  
 </head>
 <body>
   <nav>
@@ -37,7 +38,7 @@
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 28/06/2017 11:38</span>
+        <span>Date de mise à jour : 28/06/2017 14:36</span>
       </div>
     </div>
     <div class="row">
@@ -444,6 +445,76 @@
       </tbody>
   </table>
 </div>
+<h5>Stats</h5>
+    <div class="col l6 m12">
+    <b>Parité</b>
+    <canvas id="pariteChart"></canvas>
+    </div>
+    <div class="col l6 m12">
+    <b>Répartition par familles socia-professionnelles</b>
+    <canvas id="fspChart"></canvas>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
+    
+    <script>
+    var ctx = document.getElementById("fspChart");
+    var fsplabels = JSON.parse('["Employ\u00e9s", "Ouvriers", "Cadres et professions intellectuelles sup\u00e9rieures", "Professions Interm\u00e9diaires"]');
+    var fspdata = JSON.parse('[3, 1, 10, 3]');
+    var fspChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: fsplabels,
+            datasets: [{
+                data: fspdata,
+                backgroundColor: ['rgba(239, 83, 80, 0.2)', 'rgba(126, 87, 194, 0.2)', 'rgba(41, 182, 246, 0.2)', 'rgba(102, 187, 106, 0.2)', 'rgba(255, 238, 88, 0.2)', 'rgba(236, 64, 122, 0.2)', 'rgba(92, 107, 192, 0.2)', 'rgba(38, 198, 218, 0.2)', 'rgba(156, 204, 101, 0.2)', 'rgba(255, 202, 40, 0.2)', 'rgba(171, 71, 188, 0.2)', 'rgba(66, 165, 245, 0.2)', 'rgba(38, 166, 154, 0.2)', 'rgba(212, 225, 87, 0.2)', 'rgba(255, 202, 40, 0.2)'],
+                borderColor: ['rgba(239, 83, 80, 1)', 'rgba(126, 87, 194, 1)', 'rgba(41, 182, 246, 1)', 'rgba(102, 187, 106, 1)', 'rgba(255, 238, 88, 1)', 'rgba(236, 64, 122, 1)', 'rgba(92, 107, 192, 1)', 'rgba(38, 198, 218, 1)', 'rgba(156, 204, 101, 1)', 'rgba(255, 202, 40, 1)', 'rgba(171, 71, 188, 1)', 'rgba(66, 165, 245, 1)', 'rgba(38, 166, 154, 1)', 'rgba(212, 225, 87, 1)', 'rgba(255, 202, 40, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+              display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var ctx = document.getElementById("pariteChart");
+    var parlabels = JSON.parse('["Femme", "Homme"]');
+    var pardata = JSON.parse('[7, 10]');
+
+    var parChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: parlabels,
+            datasets: [{
+                data: pardata,
+                backgroundColor: ['rgba(239, 83, 80, 0.2)', 'rgba(126, 87, 194, 0.2)', 'rgba(41, 182, 246, 0.2)', 'rgba(102, 187, 106, 0.2)', 'rgba(255, 238, 88, 0.2)', 'rgba(236, 64, 122, 0.2)', 'rgba(92, 107, 192, 0.2)', 'rgba(38, 198, 218, 0.2)', 'rgba(156, 204, 101, 0.2)', 'rgba(255, 202, 40, 0.2)', 'rgba(171, 71, 188, 0.2)', 'rgba(66, 165, 245, 0.2)', 'rgba(38, 166, 154, 0.2)', 'rgba(212, 225, 87, 0.2)', 'rgba(255, 202, 40, 0.2)'],
+                borderColor: ['rgba(239, 83, 80, 1)', 'rgba(126, 87, 194, 1)', 'rgba(41, 182, 246, 1)', 'rgba(102, 187, 106, 1)', 'rgba(255, 238, 88, 1)', 'rgba(236, 64, 122, 1)', 'rgba(92, 107, 192, 1)', 'rgba(38, 198, 218, 1)', 'rgba(156, 204, 101, 1)', 'rgba(255, 202, 40, 1)', 'rgba(171, 71, 188, 1)', 'rgba(66, 165, 245, 1)', 'rgba(38, 166, 154, 1)', 'rgba(212, 225, 87, 1)', 'rgba(255, 202, 40, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+              display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+
+    </script>
+</div>
 
     </div>
   </div>
@@ -474,6 +545,8 @@
     });
 
   </script>
+
+
 
 </footer>
 
