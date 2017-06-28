@@ -12,8 +12,7 @@
   {% block head %}
   {% endblock %}
   {% macro nomcomplet(acteur) -%}{{ acteur['etatCivil.ident.civ'] }} {{ acteur['etatCivil.ident.prenom'] }} {{ acteur['etatCivil.ident.nom'] }}{%- endmacro %}
-  {% macro stat_bloc(stats) -%}
-    <h5>Stats</h5>
+  {% macro stat_bloc(stats) -%}<div class="row">
     <div class="col l6 m12">
     <b>Parité</b>
     <canvas id="pariteChart"></canvas>
@@ -21,7 +20,7 @@
     <div class="col l6 m12">
     <b>Répartition par familles socio-professionnelles</b>
     <canvas id="fspChart"></canvas>
-    </div>
+  </div></div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
 
     <script>
@@ -85,7 +84,7 @@
     {%- endmacro %}
 </head>
 <body>
-  <nav>
+  <nav class="blue darken-2">
     <div class="nav-wrapper">
       <a href="#" class="brand-logo center">ObsAs</a>
       <ul id="nav-mobile" class="right hide-on-med-and-down">

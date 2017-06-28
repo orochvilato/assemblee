@@ -13,43 +13,52 @@
 {% endblock %}
 {% block content %}
 <div class="col s12">
-  <h4>{{ groupe['libelle'] }} ({{ groupe['nbmembres'] }} membres)</h4>
-  {% if 'president' in groupe.keys() %}
-  <h5>Président : {{ nomcomplet(acteurs[groupe['president']]) }}
-  {% endif %}
-  <h5>Membres</h5>
-  <div id="membres">
-    <input class="search" placeholder="Recherche">
-    <table class="striped highlight centered">
-      <thead>
-        <tr><th>Nom</th><th>Contact</th><th>Circo.</th><th>Profession</th><th>Age</th></tr>
-      </thead>
-      <tbody class="list">
-        {% for m in groupe['membres'] %}<tr>
-          <td class="nom">{{ nomcomplet(acteurs[m]) }}</td>
-          <td>{% for (k,v) in acteurs[m]['contacts'] %}
-            {% if (k=="Mèl") %}
-              <a href="mailto:{{ v }}"><i class="fa fa-envelope-o"></i></a>
-            {% elif (k=='Twitter') %}
-              <a href="https://twitter.com/{{ v[1:] }}"><i class="fa fa-twitter"></i></a>
-            {% elif (k=='Facebook') %}
-              <a href="https://fr-fr.facebook.com/{{ v }}"><i class="fa fa-facebook-square"></i></a>
-            {% elif (k=='Site internet') %}
-              <a href="http://{{ v }}"><i class="fa fa-globe"></i></a>
+  <div class="card blue lighten-4">
+    <div class="card-content">
+      <h4>{{ groupe['libelle'] }} ({{ groupe['nbmembres'] }} membres)</h4>
+      {% if 'president' in groupe.keys() %}
+      <h5>Président : {{ nomcomplet(acteurs[groupe['president']]) }}
+      {% endif %}
+    </div>
+  </div>
+  <ul class="collapsible" data-collapsible="accordion">
+  <li><div class="collapsible-header active"><i class="fa fa-group"></i>Membres</div>
+      <div class="collapsible-body">
+        <div id="membres">
+          <input class="search" placeholder="Recherche">
+          <table class="striped highlight centered">
+            <thead>
+              <tr><th>Nom</th><th>Contact</th><th>Circo.</th><th>Profession</th><th>Age</th></tr>
+            </thead>
+            <tbody class="list">
+              {% for m in groupe['membres'] %}<tr>
+                <td class="nom">{{ nomcomplet(acteurs[m]) }}</td>
+                <td>{% for (k,v) in acteurs[m]['contacts'] %}
+                  {% if (k=="Mèl") %}
+                    <a href="mailto:{{ v }}"><i class="fa fa-envelope-o"></i></a>
+                  {% elif (k=='Twitter') %}
+                    <a href="https://twitter.com/{{ v[1:] }}"><i class="fa fa-twitter"></i></a>
+                  {% elif (k=='Facebook') %}
+                    <a href="https://fr-fr.facebook.com/{{ v }}"><i class="fa fa-facebook-square"></i></a>
+                  {% elif (k=='Site internet') %}
+                    <a href="http://{{ v }}"><i class="fa fa-globe"></i></a>
 
-            {% endif %}
-          {% endfor %}</td>
-          <td>{{ acteurs[m]['mandats'][0]['election.lieu.region'] }} / {{ acteurs[m]['mandats'][0]['election.lieu.departement'] }} / {{ acteurs[m]['mandats'][0]['election.lieu.numCirco'] }}</td>
-          <td>{{ acteurs[m]['profession.libelleCourant'] or "" }}</td>
-          <td>{{ acteurs[m]['age'] }} ans</td>
+                  {% endif %}
+                {% endfor %}</td>
+                <td>{{ acteurs[m]['mandats'][0]['election.lieu.region'] }} / {{ acteurs[m]['mandats'][0]['election.lieu.departement'] }} / {{ acteurs[m]['mandats'][0]['election.lieu.numCirco'] }}</td>
+                <td>{{ acteurs[m]['profession.libelleCourant'] or "" }}</td>
+                <td>{{ acteurs[m]['age'] }} ans</td>
 
 
-          </tr>
-        {% endfor %}
-      </tbody>
-  </table>
-</div>
-{{ stat_bloc(groupe['stats']) }}
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div></li>
+      <li><div class="collapsible-header"><i class="fa fa-bar-chart"></i>Statistiques</div>
+      <div class="collapsible-body">{{ stat_bloc(groupe['stats']) }}</div></li>
+    </ul>
 </div>
 {% endblock %}
 {% block javascript %}

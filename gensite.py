@@ -72,7 +72,7 @@ def loadScrutins():
     return scrutins['scrutins']['scrutin']
 
 import json
-debug = False
+debug = True
 if not debug:
     organes,acteurs = loadDeputes()
 
