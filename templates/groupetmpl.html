@@ -21,14 +21,11 @@
     <input class="search" placeholder="Recherche">
     <table class="striped highlight centered">
       <thead>
-        <tr><th>Nom</th><th>Qualité</th><th>Age</th><th>Profession</th><th>Contact<th></tr>
+        <tr><th>Nom</th><th>Contact</th><th>Circo.</th><th>Profession</th><th>Age</th></tr>
       </thead>
       <tbody class="list">
         {% for m in groupe['membres'] %}<tr>
           <td class="nom">{{ nomcomplet(acteurs[m]) }}</td>
-          <td>{{ groupe['membres'][m] }}</td>
-          <td></td>
-          <td>{{ acteurs[m]['profession.libelleCourant'] or "" }}</td>
           <td>{% for (k,v) in acteurs[m]['contacts'] %}
             {% if (k=="Mèl") %}
               <a href="mailto:{{ v }}"><i class="fa fa-envelope-o"></i></a>
@@ -41,6 +38,11 @@
 
             {% endif %}
           {% endfor %}</td>
+          <td>{{ acteurs[m]['mandats'][0]['election.lieu.region'] }} / {{ acteurs[m]['mandats'][0]['election.lieu.departement'] }} / {{ acteurs[m]['mandats'][0]['election.lieu.numCirco'] }}</td>
+          <td>{{ acteurs[m]['profession.libelleCourant'] or "" }}</td>
+          <td>{{ acteurs[m]['age'] }} ans</td>
+
+
           </tr>
         {% endfor %}
       </tbody>

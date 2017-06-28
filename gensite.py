@@ -99,6 +99,7 @@ for organe in organes.keys():
 for acteur in acteurs.keys():
     act = acteurs[acteur]
     act['contacts'] = []
+    act['age'] = int((datetime.now() - datetime.strptime(act['etatCivil.infoNaissance.dateNais'],'%Y-%m-%d')).days / 365.25)
     for adr in act['adresses']:
         if 'valElec' in adr.keys():
             act['contacts'].append((adr['typeLibelle'],adr['valElec']))
