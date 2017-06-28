@@ -9,11 +9,20 @@
       color: grey;
       font-weight:300;
     }
+    .sortvote {
+      font-weight: 500;
+    }
 </style>
 {% endblock %}
 {% block content %}
 <div class="col s12">
-  <h5><div class="chip {% if scrutin['sort.code']=='adopté' %}green{% elif scrutin['sort.code']=='rejeté' %}red{% else %}grey{% endif %}">{{ scrutin['sort.code'] }}</div> {{ scrutin['objet.libelle'] }} ({{ scrutin['dateScrutin'] }})</h5>
+  {% set rcolor = 'green' if scrutin['sort.code']=='adopté' else 'red' %}
+  <div class="card {{ rcolor }} lighten-4">
+    <div class="card-content">
+      <h5><div class="chip {{ rcolor }}">{{ scrutin['sort.code'] }}</div> {{ scrutin['objet.libelle'] }} ({{ scrutin['dateScrutin'] }})</h5>
+    </div>
+  </div>
+
   <h5>Groupes</h5>
   <table class="striped highlight centered">
     <thead>
@@ -23,8 +32,10 @@
       {% for grp in scrutin['groupes'] %}
         <tr>
         {% set gs = organes[grp]['votes'][scrutin['uid']] %}
+        {% set vcolor = 'green' if gs['vote']=='pour' else 'red' if gs['vote']=='contre' else 'grey' %}
+
         <td>{{ organes[grp]['libelle'] }} ({{ organes[grp]['libelleAbrev'] }} )</td>
-          <td>{{ gs['vote'] }}</td>
+          <td class="{{ vcolor }}-text text-darken-1 sortvote">{{ gs['vote'] }}</td>
           <td><a class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' href="#detail">{{ gs['pour'] + gs['contre'] + gs['abstention'] + gs['nonVotant'] }}</a></td>
           {% for pos in ['pour','contre','abstention','nonVotant'] %}
           <td><a class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' data-vote='{{ pos }}' href="#detail">{{ gs[pos] }}</a></td>
@@ -55,7 +66,8 @@
         <td class="parti">plus député</td>
         {% endif %}
           <td class="groupe">{{ organes[as['groupe_uid']]['libelleAbrev'] }}</td>
-          <td class="vote">{{ as['vote'] }}</td>
+          {% set vcolor = 'green' if as['vote']=='pour' else 'red' if as['vote']=='contre' else 'grey' %}
+          <td class="vote {{ vcolor }}-text text-darken-1 sortvote">{{ as['vote'] }}</td>
           <td>{{ as['cause'] or "" }}</td>
         </tr>
       {% endfor %}

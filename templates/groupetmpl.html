@@ -28,10 +28,11 @@
           <input class="search" placeholder="Recherche">
           <table class="striped highlight centered">
             <thead>
-              <tr><th>Nom</th><th>Contact</th><th>Circo.</th><th>Profession</th><th>Age</th></tr>
+              <tr><th>Photo</th><th>Nom</th><th>Contact</th><th>Circo.</th><th>Profession</th><th>Age</th></tr>
             </thead>
             <tbody class="list">
               {% for m in groupe['membres'] %}<tr>
+                <td><img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/{{ m[2:] }}.jpg" /></td>
                 <td class="nom">{{ nomcomplet(acteurs[m]) }}</td>
                 <td>{% for (k,v) in acteurs[m]['contacts'] %}
                   {% if (k=="Mèl") %}
