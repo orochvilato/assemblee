@@ -88,7 +88,9 @@ else:
 
 scrutins = scrutins[::-1]
 groupes = {}
+
 for scrutin in scrutins:
+
     for grp in scrutin['ventilationVotes.organe.groupes']:
         groupe = organes[grp['organeRef']]
         if not grp['organeRef'] in groupes.keys():
@@ -105,7 +107,12 @@ for scrutin in scrutins:
 
         positions = ['nonVotant','pour','contre','abstention']
         for pos in positions:
-            for v in grp.get('vote.decompteNominatif.%ss.votant' % pos,[]):
+            if grp.get('vote.decompteNominatif.%ss.votant.acteurRef' % pos,None):
+                votants = [ dict(acteurRef = grp['vote.decompteNominatif.%ss.votant.acteurRef' % pos],
+                                 mandatRef = grp['vote.decompteNominatif.%ss.votant.mandatRef' % pos])]
+            else:
+                votants = grp.get('vote.decompteNominatif.%ss.votant' % pos,[])
+            for v in votants:
                 vote = { 'scrutin_uid':scrutin['uid'],
                          'acteur_uid':v['acteurRef'],
                          'groupe_uid':grp['organeRef'],
@@ -131,6 +138,7 @@ env = Environment(
     autoescape=select_autoescape(['html', 'xml'])
 )
 from datetime import datetime
+
 today = datetime.now().strftime('%d/%m/%Y %H:%M')
 open('dist/scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = scrutins, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 for scrutin in scrutins:

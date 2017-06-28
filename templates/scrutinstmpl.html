@@ -1,4 +1,5 @@
 {% extends "basetmpl.html" %}
+
 {% block content %}
       <div id="scrutins" class="col s12">
         <input class="search" placeholder="Recherche">
@@ -10,7 +11,7 @@
             {% for scrutin in scrutins %}<tr>
               <td>{{ scrutin['dateScrutin'] }}</td>
               <td width='50%' class="libelle"><a href="scrutins/{{ scrutin['uid']}}.html">{{ scrutin['objet.libelle'] }}</a></td>
-              <td>{{ scrutin['sort.code']}}</td>
+              <td><div class="chip {% if scrutin['sort.code']=='adopté' %}green{% elif scrutin['sort.code']=='rejeté' %}red{% else %}grey{% endif %}">{{ scrutin['sort.code'] }}</div></td>
               <td>{{ scrutin['syntheseVote.nombreVotants'] }}</td>
               <td>{{ scrutin['syntheseVote.decompte.pour'] }}</td>
               <td>{{ scrutin['syntheseVote.decompte.contre'] }}</td>

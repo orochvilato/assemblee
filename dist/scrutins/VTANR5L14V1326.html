@@ -9,19 +9,30 @@
 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+  
+<style>
+    tfoot, th {
+      text-align: center;
+    }
+    .parti {
+      color: grey;
+      font-weight:300;
+    }
+</style>
 
+</head>
 <body>
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 27/06/2017 20:06</span>
+        <span>Date de mise à jour : 27/06/2017 21:13</span>
       </div>
     </div>
     <div class="row">
       
 <div class="col s12">
-  <h5>l&#39;ensemble du projet de loi prorogeant l&#39;application de la loi n° 55-385 du 3 avril 1955 relative à l&#39;état d&#39;urgence (première lecture) (2016-07-19)</h5>
-  <h6>Groupes</h6>
+  <h5><div class="chip green">adopté</div> l&#39;ensemble du projet de loi prorogeant l&#39;application de la loi n° 55-385 du 3 avril 1955 relative à l&#39;état d&#39;urgence (première lecture) (2016-07-19)</h5>
+  <h5>Groupes</h5>
   <table class="striped highlight centered">
     <thead>
       <tr><th>Groupe</th><th>Vote</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
@@ -32,44 +43,64 @@
         
         <td>Les Républicains (LES-REP )</td>
           <td>pour</td>
-          <td>186</td>
-          <td><a class="filter" class="filter" data-groupe='LES-REP' data-vote='pour' href="#">185</a></td>
-          <td>1</td>
-          <td>0</td>
-          <td>0</td></tr>
+          <td><a class="filter" data-groupe='LES-REP' href="#detail">186</a></td>
+          
+          <td><a class="filter" data-groupe='LES-REP' data-vote='pour' href="#detail">185</a></td>
+          
+          <td><a class="filter" data-groupe='LES-REP' data-vote='contre' href="#detail">1</a></td>
+          
+          <td><a class="filter" data-groupe='LES-REP' data-vote='abstention' href="#detail">0</a></td>
+          
+          <td><a class="filter" data-groupe='LES-REP' data-vote='nonVotant' href="#detail">0</a></td>
+          
         
       
         <tr>
         
         <td>Gauche démocrate et républicaine (GDR )</td>
           <td>contre</td>
-          <td>13</td>
-          <td><a class="filter" class="filter" data-groupe='GDR' data-vote='pour' href="#">4</a></td>
-          <td>7</td>
-          <td>2</td>
-          <td>0</td></tr>
+          <td><a class="filter" data-groupe='GDR' href="#detail">13</a></td>
+          
+          <td><a class="filter" data-groupe='GDR' data-vote='pour' href="#detail">4</a></td>
+          
+          <td><a class="filter" data-groupe='GDR' data-vote='contre' href="#detail">7</a></td>
+          
+          <td><a class="filter" data-groupe='GDR' data-vote='abstention' href="#detail">2</a></td>
+          
+          <td><a class="filter" data-groupe='GDR' data-vote='nonVotant' href="#detail">0</a></td>
+          
         
       
         <tr>
         
         <td>Socialiste, écologiste et républicain (SER )</td>
           <td>pour</td>
-          <td>265</td>
-          <td><a class="filter" class="filter" data-groupe='SER' data-vote='pour' href="#">256</a></td>
-          <td>7</td>
-          <td>1</td>
-          <td>1</td></tr>
+          <td><a class="filter" data-groupe='SER' href="#detail">265</a></td>
+          
+          <td><a class="filter" data-groupe='SER' data-vote='pour' href="#detail">256</a></td>
+          
+          <td><a class="filter" data-groupe='SER' data-vote='contre' href="#detail">7</a></td>
+          
+          <td><a class="filter" data-groupe='SER' data-vote='abstention' href="#detail">1</a></td>
+          
+          <td><a class="filter" data-groupe='SER' data-vote='nonVotant' href="#detail">1</a></td>
+          
         
       
         <tr>
         
         <td>Union des démocrates et indépendants (UDI )</td>
           <td>pour</td>
-          <td>26</td>
-          <td><a class="filter" class="filter" data-groupe='UDI' data-vote='pour' href="#">26</a></td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td></tr>
+          <td><a class="filter" data-groupe='UDI' href="#detail">26</a></td>
+          
+          <td><a class="filter" data-groupe='UDI' data-vote='pour' href="#detail">26</a></td>
+          
+          <td><a class="filter" data-groupe='UDI' data-vote='contre' href="#detail">0</a></td>
+          
+          <td><a class="filter" data-groupe='UDI' data-vote='abstention' href="#detail">0</a></td>
+          
+          <td><a class="filter" data-groupe='UDI' data-vote='nonVotant' href="#detail">0</a></td>
+          
         
       
         
@@ -80,11 +111,16 @@
         
         <td>Radical, républicain, démocrate et progressiste (RRDP )</td>
           <td>pour</td>
-          <td>14</td>
-          <td><a class="filter" class="filter" data-groupe='RRDP' data-vote='pour' href="#">14</a></td>
-          <td>0</td>
-          <td>0</td>
-          <td>0</td></tr>
+          <td><a class="filter" data-groupe='RRDP' href="#detail">14</a></td>
+          
+          <td><a class="filter" data-groupe='RRDP' data-vote='pour' href="#detail">14</a></td>
+          
+          <td><a class="filter" data-groupe='RRDP' data-vote='contre' href="#detail">0</a></td>
+          
+          <td><a class="filter" data-groupe='RRDP' data-vote='abstention' href="#detail">0</a></td>
+          
+          <td><a class="filter" data-groupe='RRDP' data-vote='nonVotant' href="#detail">0</a></td>
+          
         
       
         
@@ -95,25 +131,35 @@
         
         <td>Non inscrit (NI )</td>
           <td>contre</td>
-          <td>16</td>
-          <td><a class="filter" class="filter" data-groupe='NI' data-vote='pour' href="#">4</a></td>
-          <td>11</td>
-          <td>1</td>
-          <td>0</td></tr>
+          <td><a class="filter" data-groupe='NI' href="#detail">16</a></td>
+          
+          <td><a class="filter" data-groupe='NI' data-vote='pour' href="#detail">4</a></td>
+          
+          <td><a class="filter" data-groupe='NI' data-vote='contre' href="#detail">11</a></td>
+          
+          <td><a class="filter" data-groupe='NI' data-vote='abstention' href="#detail">1</a></td>
+          
+          <td><a class="filter" data-groupe='NI' data-vote='nonVotant' href="#detail">0</a></td>
+          
         
       
     </tbody>
     <tfoot>
       <tr><th>Total</th><th>adopté</th>
-          <th>519</th>
-          <th>489</th>
-          <th>26</th>
-          <th>4</th>
-          <th>1</th>
+          <th><a class="filter" data-all=1 href="#detail">519</a></th>
+          
+          <th><a class="filter" data-vote="pour" href="#detail">489</a></th>
+          
+          <th><a class="filter" data-vote="contre" href="#detail">26</a></th>
+          
+          <th><a class="filter" data-vote="abstention" href="#detail">4</a></th>
+          
+          <th><a class="filter" data-vote="nonVotant" href="#detail">1</a></th>
+          
     </tfoot>
   </table>
 
-  <h6>Députés</h6>
+  <h5>Députés</h5>
   <div id="deputes">
     <input class="search" placeholder="Recherche">
   <table class="striped highlight centered">
@@ -121,6 +167,14 @@
       <tr><th>Nom</th><th>Groupe</th><th>Vote</th><th>Cause</th></tr>
     </thead>
     <tbody class="list">
+      <tr>
+        
+        <td class="parti">plus député</td>
+        
+          <td class="groupe">SER</td>
+          <td class="vote">nonVotant</td>
+          <td></td>
+        </tr>
       <tr>
         
         <td class="parti">plus député</td>
@@ -2229,6 +2283,14 @@
         
         <td class="parti">plus député</td>
         
+          <td class="groupe">SER</td>
+          <td class="vote">abstention</td>
+          <td></td>
+        </tr>
+      <tr>
+        
+        <td class="parti">plus député</td>
+        
           <td class="groupe">LES-REP</td>
           <td class="vote">pour</td>
           <td></td>
@@ -3709,6 +3771,14 @@
         
         <td class="parti">plus député</td>
         
+          <td class="groupe">LES-REP</td>
+          <td class="vote">contre</td>
+          <td></td>
+        </tr>
+      <tr>
+        
+        <td class="parti">plus député</td>
+        
           <td class="groupe">UDI</td>
           <td class="vote">pour</td>
           <td></td>
@@ -4035,6 +4105,14 @@
         </tr>
       <tr>
         
+        <td class="nom">M. Jean Lassalle</td>
+        
+          <td class="groupe">NI</td>
+          <td class="vote">abstention</td>
+          <td></td>
+        </tr>
+      <tr>
+        
         <td class="nom">M. Jérôme Lambert</td>
         
           <td class="groupe">RRDP</td>
@@ -4265,16 +4343,22 @@
   
   <script>
     var deputeList = new List('deputes',{ valueNames: ['nom','groupe','vote']});
-    function searchdep(groupe,vote) {
-      //deputeList.filter();
-      deputeList.filter(function(item) {
-        if ((item.values().groupe === groupe ) && (item.values().vote === vote)) {
-          return true;
-        } else {
-          return false;
+    $('.filter').click(function() {
+        var data = $(this).data();
+        if ('all' in data) {
+          deputeList.filter()
+          return
         }
+      deputeList.filter(function(item) {
+        result = true;
+
+        for(var key in data) {
+          result = result && (item.values()[key] == data[key]);
+        }
+        return result;
       });
-    }
+    });
+
   </script>
 
 </footer>

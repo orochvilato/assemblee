@@ -1,8 +1,19 @@
 {% extends "basetmpl.html" %}
+{% block head %}
+<style>
+    tfoot, th {
+      text-align: center;
+    }
+    .parti {
+      color: grey;
+      font-weight:300;
+    }
+</style>
+{% endblock %}
 {% block content %}
 <div class="col s12">
-  <h5>{{ scrutin['objet.libelle'] }} ({{ scrutin['dateScrutin'] }})</h5>
-  <h6>Groupes</h6>
+  <h5><div class="chip {% if scrutin['sort.code']=='adopté' %}green{% elif scrutin['sort.code']=='rejeté' %}red{% else %}grey{% endif %}">{{ scrutin['sort.code'] }}</div> {{ scrutin['objet.libelle'] }} ({{ scrutin['dateScrutin'] }})</h5>
+  <h5>Groupes</h5>
   <table class="striped highlight centered">
     <thead>
       <tr><th>Groupe</th><th>Vote</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
@@ -13,25 +24,23 @@
         {% set gs = groupes[grp]['votes'][scrutin['uid']] %}
         <td>{{ organes[grp]['libelle'] }} ({{ organes[grp]['libelleAbrev'] }} )</td>
           <td>{{ gs['vote'] }}</td>
-          <td>{{ gs['pour'] + gs['contre'] + gs['abstention'] + gs['nonVotant'] }}</td>
-          <td><a class="filter" class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' data-vote='pour' href="#">{{ gs['pour'] }}</a></td>
-          <td>{{ gs['contre'] }}</td>
-          <td>{{ gs['abstention'] }}</td>
-          <td>{{ gs['nonVotant'] }}</td></tr>
+          <td><a class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' href="#detail">{{ gs['pour'] + gs['contre'] + gs['abstention'] + gs['nonVotant'] }}</a></td>
+          {% for pos in ['pour','contre','abstention','nonVotant'] %}
+          <td><a class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' data-vote='{{ pos }}' href="#detail">{{ gs[pos] }}</a></td>
+          {% endfor %}
         {% endif %}
       {% endfor %}
     </tbody>
     <tfoot>
       <tr><th>Total</th><th>{{ scrutin['sort.code']}}</th>
-          <th>{{ scrutin['syntheseVote.nombreVotants'] }}</th>
-          <th>{{ scrutin['syntheseVote.decompte.pour'] }}</th>
-          <th>{{ scrutin['syntheseVote.decompte.contre'] }}</th>
-          <th>{{ scrutin['syntheseVote.decompte.abstention'] }}</th>
-          <th>{{ scrutin['syntheseVote.decompte.nonVotant'] }}</th>
+          <th><a class="filter" data-all=1 href="#detail">{{ scrutin['syntheseVote.nombreVotants'] }}</a></th>
+          {% for pos in ['pour','contre','abstention','nonVotant'] %}
+          <th><a class="filter" data-vote="{{ pos }}" href="#detail">{{ scrutin['syntheseVote.decompte.'+pos] }}</a></th>
+          {% endfor %}
     </tfoot>
   </table>
 
-  <h6>Députés</h6>
+  <h5>Députés</h5>
   <div id="deputes">
     <input class="search" placeholder="Recherche">
   <table class="striped highlight centered">
@@ -57,15 +66,21 @@
 {% block javascript %}
   <script>
     var deputeList = new List('deputes',{ valueNames: ['nom','groupe','vote']});
-    function searchdep(groupe,vote) {
-      //deputeList.filter();
-      deputeList.filter(function(item) {
-        if ((item.values().groupe === groupe ) && (item.values().vote === vote)) {
-          return true;
-        } else {
-          return false;
+    $('.filter').click(function() {
+        var data = $(this).data();
+        if ('all' in data) {
+          deputeList.filter()
+          return
         }
+      deputeList.filter(function(item) {
+        result = true;
+
+        for(var key in data) {
+          result = result && (item.values()[key] == data[key]);
+        }
+        return result;
       });
-    }
+    });
+
   </script>
 {% endblock %}
