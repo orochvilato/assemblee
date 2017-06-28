@@ -19,11 +19,11 @@
     <canvas id="pariteChart"></canvas>
     </div>
     <div class="col l6 m12">
-    <b>Répartition par familles socia-professionnelles</b>
+    <b>Répartition par familles socio-professionnelles</b>
     <canvas id="fspChart"></canvas>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
-    
+
     <script>
     var ctx = document.getElementById("fspChart");
     var fsplabels = JSON.parse('{{ stats['fsp'].keys() | tojson | safe}}');
