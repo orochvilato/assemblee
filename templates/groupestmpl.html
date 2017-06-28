@@ -1,0 +1,16 @@
+{% extends "basetmpl.html" %}
+
+{% block content %}
+      <table class="striped highlight centered">
+        <thead>
+          <tr><th>Nom</th><th>Président</th><th>Nb membres</th></tr>
+        </thead>
+        <tbody>
+        {% for grp in groupes %}<tr>
+          <td><a href="groupes/{{ grp }}.html">{{ organes[grp]['libelle'] }}</a></td>
+            <td>{% if 'president' in organes[grp].keys() %}{{ nomcomplet(acteurs[organes[grp]['president']]) }}{% endif %}</td>
+            <td>{{ organes[grp]['nbmembres'] }}</td>
+          </tr>{% endfor %}
+        </tbody>
+      </table>
+{% endblock %}

@@ -3,6 +3,7 @@ import requests
 from zipfile import ZipFile
 from cStringIO import StringIO
 import xmltodict
+from datetime import datetime
 
 
 def loadXMLZip(url):
@@ -89,16 +90,33 @@ else:
 scrutins = scrutins[::-1]
 groupes = {}
 
+for organe in organes.keys():
+    org = organes[organe]
+    if org['codeType'] == 'GP':
+        if not org['viMoDe.dateFin']:
+            groupes[org['uid']] = org
+        organes[org['uid']].update({'membres':{},'votes':{}})
+for acteur in acteurs.keys():
+    act = acteurs[acteur]
+    act['contacts'] = []
+    for adr in act['adresses']:
+        if 'valElec' in adr.keys():
+            act['contacts'].append((adr['typeLibelle'],adr['valElec']))
+
+    for man in act['mandats']:
+        if man['typeOrgane']=='GP':
+            if man['infosQualite.codeQualite'] == u'Président':
+                organes[man['organes.organeRef']]['president'] = act['uid']
+            organes[man['organes.organeRef']]['membres'][act['uid']] = man['infosQualite.codeQualite']
+
+
 for scrutin in scrutins:
-
+    scrutin['groupes'] = []
     for grp in scrutin['ventilationVotes.organe.groupes']:
+        scrutin['groupes'].append(grp['organeRef'])
         groupe = organes[grp['organeRef']]
-        if not grp['organeRef'] in groupes.keys():
-            groupes[grp['organeRef']] = {'uid':grp['organeRef'],
-                                         'votes':{},
-                                         }
 
-        groupes[grp['organeRef']]['votes'][scrutin['uid']] = { 'scrutin_uid':scrutin['uid'],
+        organes[grp['organeRef']]['votes'][scrutin['uid']] = { 'scrutin_uid':scrutin['uid'],
                                                              'vote':grp['vote.positionMajoritaire'],
                                                              'pour':int(grp.get('vote.decompteVoix.pour',0)),
                                                              'contre':int(grp.get('vote.decompteVoix.contre',0)),
@@ -137,10 +155,16 @@ env = Environment(
     loader=FileSystemLoader('./templates'),
     autoescape=select_autoescape(['html', 'xml'])
 )
-from datetime import datetime
+
+
 
 today = datetime.now().strftime('%d/%m/%Y %H:%M')
+
+for groupe in groupes:
+    organes[groupe]['nbmembres'] = len(organes[groupe]['membres'].keys())
+    open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(today=today, acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
 open('dist/scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = scrutins, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 for scrutin in scrutins:
     open('dist/scrutins/%s.html' % scrutin['uid'],'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutin, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 

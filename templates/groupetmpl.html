@@ -1,0 +1,70 @@
+{% extends "basetmpl.html" %}
+{% block head %}
+<style>
+    tfoot, th {
+      text-align: center;
+    }
+    .parti {
+      color: grey;
+      font-weight:300;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="col s12">
+  <h4>{{ groupe['libelle'] }} ({{ groupe['nbmembres'] }} membres)</h4>
+  {% if 'president' in groupe.keys() %}
+  <h5>Président : {{ nomcomplet(acteurs[groupe['president']]) }}
+  {% endif %}
+  <h5>Membres</h5>
+  <div id="membres">
+    <input class="search" placeholder="Recherche">
+    <table class="striped highlight centered">
+      <thead>
+        <tr><th>Nom</th><th>Qualité</th><th>Age</th><th>Profession</th><th>Contact<th></tr>
+      </thead>
+      <tbody class="list">
+        {% for m in groupe['membres'] %}<tr>
+          <td class="nom">{{ nomcomplet(acteurs[m]) }}</td>
+          <td>{{ groupe['membres'][m] }}</td>
+          <td></td>
+          <td>{{ acteurs[m]['profession.libelleCourant'] or "" }}</td>
+          <td>{% for (k,v) in acteurs[m]['contacts'] %}
+            {% if (k=="Mèl") %}
+              <a href="mailto:{{ v }}"><i class="fa fa-envelope-o"></i></a>
+            {% elif (k=='Twitter') %}
+              <a href="https://twitter.com/{{ v[1:] }}"><i class="fa fa-twitter"></i></a>
+            {% elif (k=='Facebook') %}
+              <a href="https://fr-fr.facebook.com/{{ v }}"><i class="fa fa-facebook-square"></i></a>
+            {% elif (k=='Site internet') %}
+              <a href="http://{{ v }}"><i class="fa fa-globe"></i></a>
+
+            {% endif %}
+          {% endfor %}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+  </table>
+</div>
+{% endblock %}
+{% block javascript %}
+  <script>
+    var membreList = new List('membres',{ valueNames: ['nom']});
+    $('.filter').click(function() {
+        var data = $(this).data();
+        if ('all' in data) {
+          deputeList.filter()
+          return
+        }
+      deputeList.filter(function(item) {
+        result = true;
+
+        for(var key in data) {
+          result = result && (item.values()[key] == data[key]);
+        }
+        return result;
+      });
+    });
+
+  </script>
+{% endblock %}

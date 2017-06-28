@@ -19,16 +19,15 @@
       <tr><th>Groupe</th><th>Vote</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
     </thead>
     <tbody>
-      {% for grp in groupes.keys() %}
-        {% if scrutin['uid'] in groupes[grp]['votes'].keys() %}<tr>
-        {% set gs = groupes[grp]['votes'][scrutin['uid']] %}
+      {% for grp in scrutin['groupes'] %}
+        <tr>
+        {% set gs = organes[grp]['votes'][scrutin['uid']] %}
         <td>{{ organes[grp]['libelle'] }} ({{ organes[grp]['libelleAbrev'] }} )</td>
           <td>{{ gs['vote'] }}</td>
           <td><a class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' href="#detail">{{ gs['pour'] + gs['contre'] + gs['abstention'] + gs['nonVotant'] }}</a></td>
           {% for pos in ['pour','contre','abstention','nonVotant'] %}
           <td><a class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' data-vote='{{ pos }}' href="#detail">{{ gs[pos] }}</a></td>
           {% endfor %}
-        {% endif %}
       {% endfor %}
     </tbody>
     <tfoot>
@@ -50,7 +49,7 @@
     <tbody class="list">
       {% for as in scrutin['votants'] %}<tr>
         {% if as['acteur_uid'] in acteurs.keys() %}
-        <td class="nom">{{ acteurs[as['acteur_uid']]['etatCivil.ident.civ'] }} {{ acteurs[as['acteur_uid']]['etatCivil.ident.prenom'] }} {{ acteurs[as['acteur_uid']]['etatCivil.ident.nom'] }}</td>
+        <td class="nom">{{ nomcomplet(acteurs[as['acteur_uid']]) }}</td>
         {% else %}
         <td class="parti">plus député</td>
         {% endif %}
