@@ -59,8 +59,8 @@
                   {% set first = True %}
                   {% for l in scrutins %}
                   <li>
-                    {% set abs=acteur['absenteisme'][l['leg']] %}
-                    <div class="collapsible-header{% if first %} active{% endif %}">{{ l['leg'] }}e législature<div class="right">Absenteisme {{ abs['tx'] }} % ({{ abs['nb']}})</div></div>
+                    {% set abs=acteur['stats']['absenteisme'][l['leg']] %}
+                    <div class="collapsible-header{% if first %} active{% endif %}">{{ l['leg'] }}e législature<div class="right">Absenteisme {{ abs['tx'] }} % ({{ abs['votes']}} votes / {{ abs['total'] }})</div></div>
                     "
                     <div class="collapsible-body">
                       <div id="scrutins{{ l['leg'] }}">

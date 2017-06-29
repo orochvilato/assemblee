@@ -103,7 +103,7 @@ else:
 
 nbvotes = {}
 groupes = {}
-stats = {'fsp':{}, 'parite':{}}
+stats = {'fsp':{}, 'parite':{},'scrutins':{}}
 for organe in organes.keys():
     org = organes[organe]
     if org['codeType'] == 'GP':
@@ -132,7 +132,7 @@ for acteur in acteurs.keys():
             places[str(int(placeH)) if placeH else ''] = groupeRef
 
     # initialisations
-    act['stats'] = {}
+    act['stats'] = {'absenteisme':{}}
     act['votes'] = {}
     # stats
     fsp = act['profession.socProcINSEE.famSocPro'] or "Inconnu"
@@ -157,7 +157,6 @@ for i,a in enumerate(hemicycle['svg']['a']):
 open('dist/hemicycle.svg','w').write(xmltodict.unparse(hemicycle).encode('utf8'))
 
 ttvot = 0
-
 for s in scrutins.keys():
     scrutin = scrutins[s]
     #print scrutin['uid'],scrutin['dateScrutin']
@@ -185,7 +184,7 @@ for s in scrutins.keys():
             for v in votants:
                 if pos != 'nonVotant':
                     svot += 1
-                nbvotes[v['acteurRef']] = nbvotes.get(v['acteurRef'],0) + 1
+
                 vote = { 'acteur_uid':v['acteurRef'],
                          'groupe_uid':grp['organeRef'],
                          'vote':pos,
@@ -202,11 +201,14 @@ for s in scrutins.keys():
                 organes[grp['organeRef']]['stats']['votes'][pos]= organes[grp['organeRef']]['stats']['votes'].get(pos,0) +1
 
     # Le détail n'est pas toujours cohérent
-    scrutin['valide'] = (scrutin['syntheseVote.nombreVotants'] == svot)
+    scrutin['valide'] = (int(scrutin['syntheseVote.nombreVotants']) == svot)
+    leg = scrutin['legislature']
+    if scrutin['valide']:
+        if leg not in stats['scrutins'].keys():
+            stats['scrutins'][leg] = {'nb':0}
+        stats['scrutins'][leg]['nb'] += 1
 
 
-classm = [(k,v) for (k,v) in sorted([ (k,v) for k,v in nbvotes.iteritems()],key=lambda t:t[1]) if k in acteurs.keys()]
-print ttvot,sum([v[1] for v in classm])
 from jinja2 import Environment, PackageLoader, select_autoescape,FileSystemLoader
 env = Environment(
     loader=FileSystemLoader('./templates'),
@@ -236,18 +238,26 @@ def sort_scrutins(keys):
     return [ dict(leg=leg,
                   scrutins=sorted(scruts[leg],key=lambda k:k['dateScrutin'],reverse=True)) for leg in sorted(scruts.keys(),reverse=True)]
 
-def count_scrutins():
-    counts = {}
-    for k in scrutins.keys():
-        s  = scrutins[k]
-        leg = s['legislature']
-        if not leg in counts.keys():
-            counts[leg] = dict(nb=0)
-        counts[leg]['nb'] += 1
-    return counts
 
-stats_scrutins = count_scrutins()
-print stats_scrutins
+# Stats absenteisme (sur les scrutins cohérents)
+for s in scrutins:
+    scrutin = scrutins[s]
+    leg = scrutin['legislature']
+    if not scrutin['valide']:
+        continue
+    for vote in scrutin['votants']:
+        acteur = acteurs.get(vote['acteur_uid'],None)
+
+        if acteur:
+            if not leg in acteur['stats']['absenteisme'].keys():
+                acteur['stats']['absenteisme'][leg] = {'votes':0,'total':stats['scrutins'][leg]['nb']}
+            acteur['stats']['absenteisme'][leg]['votes'] += 1
+
+# classement absenteisme
+#for leg in acteur['stats']['absenteisme'].keys():
+#    acteur['stats']['absenteisme'][leg]['classement'] = [()]
+
+
 for groupe in groupes:
     organes[groupe]['nbmembres'] = len(organes[groupe]['membres'].keys())
     open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(
@@ -261,12 +271,13 @@ for s in scrutins.keys():
 
 
 for act in acteurs:
-    print act
+
     acteur = acteurs[act]
     scruts = sort_scrutins(acteur['votes'].keys())
-    acteur['absenteisme']= dict((leg['leg'],dict(
-                                 tx="%.2f" % (100*(1-float(len(leg['scrutins']))/stats_scrutins[leg['leg']]['nb'])),nb=(stats_scrutins[leg['leg']]['nb']-len(leg['scrutins'])))) for leg in scruts )
-
+    for leg in acteur['stats']['absenteisme'].keys():
+        stat = acteur['stats']['absenteisme'][leg]
+        stat['tx']= "%.2f" % (100*float(stat['total']-stat['votes'])/stat['total'])
+    print act,acteur['stats']
     open('dist/acteurs/%s.html' % act,'w').write(env.get_template('acteurtmpl.html').render(
         scrutins=scruts,
         organes=organes,
