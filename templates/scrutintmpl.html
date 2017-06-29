@@ -61,7 +61,7 @@
     <tbody class="list">
       {% for as in scrutin['votants'] %}<tr>
         {% if as['acteur_uid'] in acteurs.keys() %}
-        <td class="nom">{{ nomcomplet(acteurs[as['acteur_uid']]) }}</td>
+        <td class="nom"><a href="../acteurs/{{ as['acteur_uid'] }}.html">{{ nomcomplet(acteurs[as['acteur_uid']]) }}</a></td>
         {% else %}
         <td class="parti">plus député</td>
         {% endif %}

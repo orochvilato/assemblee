@@ -15,64 +15,64 @@
 </style>
 {% endblock %}
 {% block content %}
-<div class="col s12">
-  {% set rcolor = 'green' if scrutin['sort.code']=='adopté' else 'red' %}
-  <div class="card {{ rcolor }} lighten-4">
-    <div class="card-content">
-      <h5><div class="chip {{ rcolor }}">{{ scrutin['sort.code'] }}</div> {{ scrutin['objet.libelle'] }} ({{ scrutin['dateScrutin'] }})</h5>
+<div class="row">
+  <div class="col s12">
+    <div class="card horizontal {{ color }} lighten-4">
+      <div class="card-image">
+        <img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/{{ acteur['uid'][2:] }}.jpg" />
+      </div>
+      <div class="card-stacked">
+        <div class="card-content">
+          <h4>{{ nomcomplet(acteur) }}</h4>
+          <h5>{% for (k,v) in acteur['contacts'] %}
+            {% if (k=="Mèl") %}
+              <a href="mailto:{{ v }}"><i class="fa fa-envelope-o"></i></a>
+            {% elif (k=='Twitter') %}
+              <a href="https://twitter.com/{{ v[1:] }}"><i class="fa fa-twitter"></i></a>
+            {% elif (k=='Facebook') %}
+              <a href="https://fr-fr.facebook.com/{{ v }}"><i class="fa fa-facebook-square"></i></a>
+            {% elif (k=='Site internet') %}
+              <a href="http://{{ v }}"><i class="fa fa-globe"></i></a>
+
+            {% endif %}
+          {% endfor %}</h5>
+          <h5><i class="fa fa-group {{ color }}-text"></i> {{ groupe['libelle'] }} ( {{ groupe['libelleAbrev'] }})</h5>
+          <span> Né(e) le {{ acteur['etatCivil.infoNaissance.dateNais'] | fdate }} à {{ acteur['etatCivil.infoNaissance.villeNais'] }}</span>
+        </div>
+      </div>
     </div>
   </div>
-
-  <h5>Groupes</h5>
-  <table class="striped highlight centered">
-    <thead>
-      <tr><th>Groupe</th><th>Vote</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
-    </thead>
-    <tbody>
-      {% for grp in scrutin['groupes'] %}
-        <tr>
-        {% set gs = organes[grp]['votes'][scrutin['uid']] %}
-        {% set vcolor = 'green' if gs['vote']=='pour' else 'red' if gs['vote']=='contre' else 'grey' %}
-
-        <td>{{ organes[grp]['libelle'] }} ({{ organes[grp]['libelleAbrev'] }} )</td>
-          <td class="{{ vcolor }}-text text-darken-1 sortvote">{{ gs['vote'] }}</td>
-          <td><a class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' href="#detail">{{ gs['pour'] + gs['contre'] + gs['abstention'] + gs['nonVotant'] }}</a></td>
-          {% for pos in ['pour','contre','abstention','nonVotant'] %}
-          <td><a class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' data-vote='{{ pos }}' href="#detail">{{ gs[pos] }}</a></td>
-          {% endfor %}
-      {% endfor %}
-    </tbody>
-    <tfoot>
-      <tr><th>Total</th><th>{{ scrutin['sort.code']}}</th>
-          <th><a class="filter" data-all=1 href="#detail">{{ scrutin['syntheseVote.nombreVotants'] }}</a></th>
-          {% for pos in ['pour','contre','abstention','nonVotant'] %}
-          <th><a class="filter" data-vote="{{ pos }}" href="#detail">{{ scrutin['syntheseVote.decompte.'+pos] }}</a></th>
-          {% endfor %}
-    </tfoot>
-  </table>
-
-  <h5>Députés</h5>
-  <div id="deputes">
-    <input class="search" placeholder="Recherche">
-  <table class="striped highlight centered">
-    <thead>
-      <tr><th>Nom</th><th>Groupe</th><th>Vote</th><th>Cause</th></tr>
-    </thead>
-    <tbody class="list">
-      {% for as in scrutin['votants'] %}<tr>
-        {% if as['acteur_uid'] in acteurs.keys() %}
-        <td class="nom">{{ nomcomplet(acteurs[as['acteur_uid']]) }}</td>
-        {% else %}
-        <td class="parti">plus député</td>
-        {% endif %}
-          <td class="groupe">{{ organes[as['groupe_uid']]['libelleAbrev'] }}</td>
-          {% set vcolor = 'green' if as['vote']=='pour' else 'red' if as['vote']=='contre' else 'grey' %}
-          <td class="vote {{ vcolor }}-text text-darken-1 sortvote">{{ as['vote'] }}</td>
-          <td>{{ as['cause'] or "" }}</td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+</div>
+<div class="row">
+  <div class="col s12">
+    <ul class="collapsible" data-collapsible="expandable">
+      <li>
+        <div class="collapsible-header"><i class="fa fa-legal"></i> Mandats</div>
+        <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+      </li>
+      <li>
+        <div class="collapsible-header"><i class="fa fa-hand-paper-o"></i> Votes</div>
+        <div class="collapsible-body">
+          <table class="striped highlight">
+            <thead>
+              <tr><th>Date</th><th>Scrutin</th><th>Vote</th><th>Cause</th></tr>
+            </thead>
+            <tbody class="votes">
+              {% for s in acteur['votes'] %}<tr>
+                {% set as = acteur['votes'][s] %}
+                <td>{{ scrutins[s]['dateScrutin'] }}</td>
+                <td class="scrutin" style="width:60%;"><a href="{{ '../scrutins/%s.html' % s }}">{{ scrutins[s]['objet.libelle'] }}</a></td>
+                {% set vcolor = 'green' if as['vote']=='pour' else 'red' if as['vote']=='contre' else 'grey' %}
+                <td class="vote {{ vcolor }}-text text-darken-1 sortvote">{{ as['vote'] }}</td>
+                <td>{{ as['cause'] or "" }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </li>
+    </ul>
+  </div>
 </div>
 {% endblock %}
 {% block javascript %}

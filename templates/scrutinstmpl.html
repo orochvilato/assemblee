@@ -8,7 +8,8 @@
             <tr><th>Date</th><th>Libelle</th><th>Résultat</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
           </thead>
           <tbody class="list">
-            {% for scrutin in scrutins %}<tr>
+            {% for s in scrutins.keys() %}<tr>
+              {% set scrutin = scrutins[s] %}
               <td>{{ scrutin['dateScrutin'] }}</td>
               <td width='50%' class="libelle"><a href="scrutins/{{ scrutin['uid']}}.html">{{ scrutin['objet.libelle'] }}</a></td>
               <td><div class="chip {% if scrutin['sort.code']=='adopté' %}green{% elif scrutin['sort.code']=='rejeté' %}red{% else %}grey{% endif %}">{{ scrutin['sort.code'] }}</div></td>

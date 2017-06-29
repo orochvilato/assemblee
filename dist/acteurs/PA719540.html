@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>ObsAs</title>
+
+
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+  
+<style>
+    tfoot, th {
+      text-align: center;
+    }
+    .parti {
+      color: grey;
+      font-weight:300;
+    }
+    .sortvote {
+      font-weight: 500;
+    }
+</style>
+
+  
+  
+</head>
+<body>
+  <nav class="blue-grey darken-1">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">ObsAs</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="../scrutins.html">Votes</a></li>
+        <li><a href="../groupes.html">Groupes</a></li>
+        <!--<li><a href="/acteurs.html">Députés</a></li>-->
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <span>Date de mise à jour : 29/06/2017 07:08</span>
+      </div>
+    </div>
+    <div class="row">
+      
+<div class="row">
+  <div class="col s12">
+    <div class="card horizontal pink lighten-4">
+      <div class="card-image">
+        <img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/719540.jpg" />
+      </div>
+      <div class="card-stacked">
+        <div class="card-content">
+          <h4>Mme Élisabeth Toutut-Picard</h4>
+          <h5>
+            
+              <a href="mailto:etp@elisabeth-toutut-picard.fr"><i class="fa fa-envelope-o"></i></a>
+            
+          
+            
+              <a href="https://twitter.com/etoututpicard"><i class="fa fa-twitter"></i></a>
+            
+          
+            
+              <a href="http://www.elisabeth-toutut-picard.fr"><i class="fa fa-globe"></i></a>
+
+            
+          
+            
+              <a href="https://fr-fr.facebook.com/Toutut-Picard"><i class="fa fa-facebook-square"></i></a>
+            
+          
+            
+              <a href="mailto:elisabeth.toutut-picard@assemblee-nationale.fr"><i class="fa fa-envelope-o"></i></a>
+            
+          </h5>
+          <h5><i class="fa fa-group pink-text"></i> La République en Marche ( REM)</h5>
+          <span> Né(e) le 17 décembre 1954 à Blida</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col s12">
+    <ul class="collapsible" data-collapsible="expandable">
+      <li>
+        <div class="collapsible-header"><i class="fa fa-legal"></i> Mandats</div>
+        <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+      </li>
+      <li>
+        <div class="collapsible-header"><i class="fa fa-hand-paper-o"></i> Votes</div>
+        <div class="collapsible-body">
+          <table class="striped highlight">
+            <thead>
+              <tr><th>Date</th><th>Scrutin</th><th>Vote</th><th>Cause</th></tr>
+            </thead>
+            <tbody class="votes">
+              
+            </tbody>
+          </table>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>
+
+    </div>
+  </div>
+</body>
+<footer>
+  <!--  Scripts-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://use.fontawesome.com/57f4fc708a.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+  
+  <script>
+    var deputeList = new List('deputes',{ valueNames: ['nom','groupe','vote']});
+    $('.filter').click(function() {
+        var data = $(this).data();
+        if ('all' in data) {
+          deputeList.filter()
+          return
+        }
+      deputeList.filter(function(item) {
+        result = true;
+
+        for(var key in data) {
+          result = result && (item.values()[key] == data[key]);
+        }
+        return result;
+      });
+    });
+
+  </script>
+
+</footer>
+
+</html>

@@ -5,14 +5,17 @@ from cStringIO import StringIO
 import xmltodict
 from datetime import datetime
 
+import locale
+locale.setlocale(locale.LC_ALL, 'fr_FR.utf8')
+
 grpcolors = {
     'NI': 'grey',
-    'LES-REP': 'blue',
+    'LR': 'blue',
     'MODEM': 'amber',
     'FI': 'deep-orange',
     'GDR': 'red',
     'LC': 'light-blue',
-    'LREM': 'purple',
+    'REM': 'purple',
     'NG': 'pink'}
 
 def loadXMLZip(url):
@@ -77,8 +80,8 @@ def loadScrutins():
     #scrutins = xmltodict.parse(open('Scrutins_XIV.xml','r').read())
 
     flatten(scrutins['scrutins']['scrutin'])
-
-    return scrutins['scrutins']['scrutin']
+    scrutins = dict( (s['uid'],s) for s in scrutins['scrutins']['scrutin'][::-1])
+    return scrutins
 
 import json
 debug = True
@@ -95,8 +98,9 @@ else:
     acteurs = json.loads(open('acteurs.json','r').read())
     scrutins = json.loads(open('scrutins.json','r').read())
 
+def sort_scrutins(keys):
+    return [ i[1] for i in sorted([(scrutins[s]['dateScrutin'],s) for s in keys],reverse=True)]
 
-scrutins = scrutins[::-1]
 groupes = {}
 stats = {'fsp':{}, 'parite':{}}
 for organe in organes.keys():
@@ -134,8 +138,9 @@ for acteur in acteurs.keys():
     stats['parite'][parite] = stats['parite'].get(parite,0) + 1
 
 
-for scrutin in scrutins:
-    #print scrutin['uid'],scrutin['dateScrutin']
+for s in sort_scrutins(scrutins.keys()):
+    scrutin = scrutins[s]
+    print scrutin['uid'],scrutin['dateScrutin']
     scrutin['groupes'] = []
     for grp in scrutin['ventilationVotes.organe.groupes']:
         scrutin['groupes'].append(grp['organeRef'])
@@ -157,7 +162,8 @@ for scrutin in scrutins:
             else:
                 votants = grp.get('vote.decompteNominatif.%ss.votant' % pos,[])
             for v in votants:
-                vote = { 'groupe_uid':grp['organeRef'],
+                vote = { 'acteur_uid':v['acteurRef'],
+                         'groupe_uid':grp['organeRef'],
                          'vote':pos,
                          'cause':v.get('causePositionVote',None)}
                 scrutin['votants'] = scrutin.get('votants',[]) + [vote]
@@ -191,16 +197,33 @@ env = Environment(
 
 today = datetime.now().strftime('%d/%m/%Y %H:%M')
 
+def format_date(date):
+    d = datetime.strptime(date,'%Y-%m-%d')
+    return d.strftime('%-d %B %Y').decode('utf8')
+
+env.filters['fdate'] = format_date
+
+
 for groupe in groupes:
     organes[groupe]['nbmembres'] = len(organes[groupe]['membres'].keys())
-    open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(today=today, color=grpcolors[organes[groupe]['libelleAbrev']],acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
+    open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(
+            today=today,
+            color=grpcolors.get(organes[groupe]['libelleAbrev'],'NI'),acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
 open('dist/scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = scrutins, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, colors=grpcolors,stats=stats, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-for scrutin in scrutins:
-    open('dist/scrutins/%s.html' % scrutin['uid'],'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutin, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+for s in sort_scrutins(scrutins.keys()):
+    scrutin = scrutins[s]
+    open('dist/scrutins/%s.html' % s,'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutins[s], organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 
 for act in acteurs:
     acteur = acteurs[act]
+    open('dist/acteurs/%s.html' % act,'w').write(env.get_template('acteurtmpl.html').render(
+        scrutins=scrutins,
+        organes=organes,
+        today=today,
+        color=grpcolors.get(organes[groupe]['libelleAbrev'],'NI'),
+        acteur = acteur,
+        groupe = organes[acteur['groupe']]).encode('utf-8'))
 
 
 #for acteur in acteurs.values():
