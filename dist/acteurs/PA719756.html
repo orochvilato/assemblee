@@ -34,21 +34,21 @@
       <ul id="nav-mobile" class="right hide-on-med-and-down">
         <li><a href="../scrutins.html">Votes</a></li>
         <li><a href="../groupes.html">Groupes</a></li>
-        <!--<li><a href="/acteurs.html">Députés</a></li>-->
+        <li><a href="../acteurs.html">Députés</a></li>
       </ul>
     </div>
   </nav>
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 29/06/2017 07:08</span>
+        <span>Date de mise à jour : 29/06/2017 11:21</span>
       </div>
     </div>
     <div class="row">
       
 <div class="row">
   <div class="col s12">
-    <div class="card horizontal pink lighten-4">
+    <div class="card horizontal purple lighten-4">
       <div class="card-image">
         <img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/719756.jpg" />
       </div>
@@ -60,8 +60,8 @@
               <a href="mailto:christine.cloarec@assemblee-nationale.fr"><i class="fa fa-envelope-o"></i></a>
             
           </h5>
-          <h5><i class="fa fa-group pink-text"></i> La République en Marche ( REM)</h5>
-          <span> Né(e) le 28 octobre 1964 à Noisy-le-Sec</span>
+          <h5><i class="fa fa-group purple-text"></i> <a href="../groupes/PO730964.html" class="purple-text">La République en Marche ( REM)</a></h5>
+          <span>Employée (secteur privé), né(e) le 28 octobre 1964 à Noisy-le-Sec</span>
         </div>
       </div>
     </div>
@@ -75,16 +75,16 @@
         <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
       </li>
       <li>
-        <div class="collapsible-header"><i class="fa fa-hand-paper-o"></i> Votes</div>
+        <div class="collapsible-header active"><i class="fa fa-hand-paper-o"></i> Votes</div>
         <div class="collapsible-body">
-          <table class="striped highlight">
-            <thead>
-              <tr><th>Date</th><th>Scrutin</th><th>Vote</th><th>Cause</th></tr>
-            </thead>
-            <tbody class="votes">
-              
-            </tbody>
-          </table>
+          <div class="row">
+				      <div class="col s12 m12">
+                <ul class="collapsible" data-collapsible="expandable">
+                  
+                  
+                </ul>
+              </div>
+            </div>
         </div>
       </li>
     </ul>
@@ -102,23 +102,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
   
   <script>
-    var deputeList = new List('deputes',{ valueNames: ['nom','groupe','vote']});
-    $('.filter').click(function() {
-        var data = $(this).data();
-        if ('all' in data) {
-          deputeList.filter()
-          return
-        }
-      deputeList.filter(function(item) {
-        result = true;
-
-        for(var key in data) {
-          result = result && (item.values()[key] == data[key]);
-        }
-        return result;
-      });
-    });
-
+    
   </script>
 
 </footer>

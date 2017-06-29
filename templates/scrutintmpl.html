@@ -65,7 +65,8 @@
         {% else %}
         <td class="parti">plus député</td>
         {% endif %}
-          <td class="groupe">{{ organes[as['groupe_uid']]['libelleAbrev'] }}</td>
+          <td class="groupe">{% if as['groupe_uid'] in groupes %}<a href="'../groupes/{{ as['groupe_uid'] }}.html"{{ organes[as['groupe_uid']]['libelleAbrev'] }}</a>
+          {% else %}{{ organes[as['groupe_uid']]['libelleAbrev'] }}{% endif %}</td>
           {% set vcolor = 'green' if as['vote']=='pour' else 'red' if as['vote']=='contre' else 'grey' %}
           <td class="vote {{ vcolor }}-text text-darken-1 sortvote">{{ as['vote'] }}</td>
           <td>{{ as['cause'] or "" }}</td>

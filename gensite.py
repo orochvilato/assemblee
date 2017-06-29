@@ -98,9 +98,8 @@ else:
     acteurs = json.loads(open('acteurs.json','r').read())
     scrutins = json.loads(open('scrutins.json','r').read())
 
-def sort_scrutins(keys):
-    return [ i[1] for i in sorted([(scrutins[s]['dateScrutin'],s) for s in keys],reverse=True)]
 
+nbvotes = {}
 groupes = {}
 stats = {'fsp':{}, 'parite':{}}
 for organe in organes.keys():
@@ -138,7 +137,7 @@ for acteur in acteurs.keys():
     stats['parite'][parite] = stats['parite'].get(parite,0) + 1
 
 
-for s in sort_scrutins(scrutins.keys()):
+for s in scrutins.keys():
     scrutin = scrutins[s]
     print scrutin['uid'],scrutin['dateScrutin']
     scrutin['groupes'] = []
@@ -162,6 +161,7 @@ for s in sort_scrutins(scrutins.keys()):
             else:
                 votants = grp.get('vote.decompteNominatif.%ss.votant' % pos,[])
             for v in votants:
+                nbvotes[v['acteurRef']] = nbvotes.get(v['acteurRef'],0) + 1
                 vote = { 'acteur_uid':v['acteurRef'],
                          'groupe_uid':grp['organeRef'],
                          'vote':pos,
@@ -187,6 +187,9 @@ for s in sort_scrutins(scrutins.keys()):
         #print scrutin['uid'],scrutin['objet.libelle'].encode('utf8')
 
 
+
+#print [(k,v) for (k,v) in sorted([ (k,v) for k,v in nbvotes.iteritems()],key=lambda t:t[1]) if k in acteurs.keys()]
+
 from jinja2 import Environment, PackageLoader, select_autoescape,FileSystemLoader
 env = Environment(
     loader=FileSystemLoader('./templates'),
@@ -203,28 +206,63 @@ def format_date(date):
 
 env.filters['fdate'] = format_date
 
+def sort_scrutins(keys):
+    # tri par legislature et date decroissante
+    scruts = {}
+    for k in keys:
+        s  = scrutins[k]
+        leg = s['legislature']
+        if not leg in scruts.keys():
+            scruts[leg] = []
+        scruts[leg].append(s)
+
+    return [ dict(leg=leg,
+                  scrutins=sorted(scruts[leg],key=lambda k:k['dateScrutin'],reverse=True)) for leg in sorted(scruts.keys(),reverse=True)]
+
+def count_scrutins():
+    counts = {}
+    for k in scrutins.keys():
+        s  = scrutins[k]
+        leg = s['legislature']
+        if not leg in counts.keys():
+            counts[leg] = dict(nb=0)
+        counts[leg]['nb'] += 1
+    return counts
+
+stats_scrutins = count_scrutins()
+print stats_scrutins
+for groupe in groupes:
+    organes[groupe]['nbmembres'] = len(organes[groupe]['membres'].keys())
+    open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(
+            today=today,
+            scrutins = sort_scrutins(organes[groupe]['votes'].keys()),
+            color=grpcolors.get(organes[groupe]['libelleAbrev'],'NI'),acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
+open('dist/scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = sort_scrutins(scrutins.keys()), organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, colors=grpcolors,stats=stats, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+for s in scrutins.keys():
+    open('dist/scrutins/%s.html' % s,'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutins[s], organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+
+
+for act in acteurs:
+    print act
+    acteur = acteurs[act]
+    scruts = sort_scrutins(acteur['votes'].keys())
+    acteur['absenteisme']= dict((leg['leg'],dict(
+                                 tx="%.2f" % (100*(1-float(len(leg['scrutins']))/stats_scrutins[leg['leg']]['nb'])),nb=(stats_scrutins[leg['leg']]['nb']-len(leg['scrutins'])))) for leg in scruts )
+
+    open('dist/acteurs/%s.html' % act,'w').write(env.get_template('acteurtmpl.html').render(
+        scrutins=scruts,
+        organes=organes,
+        today=today,
+        color=grpcolors.get(organes[acteur['groupe']]['libelleAbrev'],'NI'),
+        acteur = acteur,
+        groupe = organes[acteur['groupe']]).encode('utf-8'))
+
+open('dist/acteurs.html','w').write(env.get_template('acteurstmpl.html').render(today=today, colors=grpcolors,stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 
 for groupe in groupes:
     organes[groupe]['nbmembres'] = len(organes[groupe]['membres'].keys())
     open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(
             today=today,
+            scrutins = sort_scrutins(organes[groupe]['votes'].keys()),
             color=grpcolors.get(organes[groupe]['libelleAbrev'],'NI'),acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
-open('dist/scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = scrutins, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, colors=grpcolors,stats=stats, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-for s in sort_scrutins(scrutins.keys()):
-    scrutin = scrutins[s]
-    open('dist/scrutins/%s.html' % s,'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutins[s], organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-
-for act in acteurs:
-    acteur = acteurs[act]
-    open('dist/acteurs/%s.html' % act,'w').write(env.get_template('acteurtmpl.html').render(
-        scrutins=scrutins,
-        organes=organes,
-        today=today,
-        color=grpcolors.get(organes[groupe]['libelleAbrev'],'NI'),
-        acteur = acteur,
-        groupe = organes[acteur['groupe']]).encode('utf-8'))
-
-
-#for acteur in acteurs.values():
-#    print acteur['etatCivil.ident.civ'],acteur['etatCivil.ident.nom'].encode('utf8'),acteur['etatCivil.ident.prenom'].encode('utf8'),organes[acteur['mandats'][0]['organes.organeRef']]['libelle'].encode('utf8')

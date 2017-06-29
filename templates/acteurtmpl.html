@@ -36,8 +36,8 @@
 
             {% endif %}
           {% endfor %}</h5>
-          <h5><i class="fa fa-group {{ color }}-text"></i> {{ groupe['libelle'] }} ( {{ groupe['libelleAbrev'] }})</h5>
-          <span> Né(e) le {{ acteur['etatCivil.infoNaissance.dateNais'] | fdate }} à {{ acteur['etatCivil.infoNaissance.villeNais'] }}</span>
+          <h5><i class="fa fa-group {{ color }}-text"></i> <a href="../groupes/{{ groupe['uid'] }}.html" class="{{ color }}-text">{{ groupe['libelle'] }} ( {{ groupe['libelleAbrev'] }})</a></h5>
+          <span>{{ acteur['profession.libelleCourant'] }}, né(e) le {{ acteur['etatCivil.infoNaissance.dateNais'] | fdate }} à {{ acteur['etatCivil.infoNaissance.villeNais'] }}</span>
         </div>
       </div>
     </div>
@@ -51,24 +51,44 @@
         <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
       </li>
       <li>
-        <div class="collapsible-header"><i class="fa fa-hand-paper-o"></i> Votes</div>
+        <div class="collapsible-header active"><i class="fa fa-hand-paper-o"></i> Votes</div>
         <div class="collapsible-body">
-          <table class="striped highlight">
-            <thead>
-              <tr><th>Date</th><th>Scrutin</th><th>Vote</th><th>Cause</th></tr>
-            </thead>
-            <tbody class="votes">
-              {% for s in acteur['votes'] %}<tr>
-                {% set as = acteur['votes'][s] %}
-                <td>{{ scrutins[s]['dateScrutin'] }}</td>
-                <td class="scrutin" style="width:60%;"><a href="{{ '../scrutins/%s.html' % s }}">{{ scrutins[s]['objet.libelle'] }}</a></td>
-                {% set vcolor = 'green' if as['vote']=='pour' else 'red' if as['vote']=='contre' else 'grey' %}
-                <td class="vote {{ vcolor }}-text text-darken-1 sortvote">{{ as['vote'] }}</td>
-                <td>{{ as['cause'] or "" }}</td>
-                </tr>
-              {% endfor %}
-            </tbody>
-          </table>
+          <div class="row">
+				      <div class="col s12 m12">
+                <ul class="collapsible" data-collapsible="expandable">
+                  {% set first = True %}
+                  {% for l in scrutins %}
+                  <li>
+                    {% set abs=acteur['absenteisme'][l['leg']] %}
+                    <div class="collapsible-header{% if first %} active{% endif %}">{{ l['leg'] }}e législature<div class="right">Absenteisme {{ abs['tx'] }} % ({{ abs['nb']}})</div></div>
+                    "
+                    <div class="collapsible-body">
+                      <div id="scrutins{{ l['leg'] }}">
+                        <input class="search" placeholder="Recherche">
+                        <table class="striped highlight">
+                          <thead>
+                            <tr><th>Date</th><th>Scrutin</th><th>Vote</th><th>Cause</th></tr>
+                          </thead>
+                          <tbody class="list">
+                            {% for scrutin in l['scrutins'] %}<tr>
+                              {% set as = acteur['votes'][scrutin['uid']] %}
+                              <td>{{ scrutin['dateScrutin'] }}</td>
+                              <td class="libelle" style="width:60%;"><a href="{{ '../scrutins/%s.html' % scrutin['uid'] }}">{{ scrutin['objet.libelle'] }}</a></td>
+                              {% set vcolor = 'green' if as['vote']=='pour' else 'red' if as['vote']=='contre' else 'grey' %}
+                              <td class="vote {{ vcolor }}-text text-darken-1 sortvote">{{ as['vote'] }}</td>
+                              <td>{{ as['cause'] or "" }}</td>
+                            </tr>
+                            {% endfor %}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </li>
+                  {% set first=False %}
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
         </div>
       </li>
     </ul>
@@ -77,22 +97,8 @@
 {% endblock %}
 {% block javascript %}
   <script>
-    var deputeList = new List('deputes',{ valueNames: ['nom','groupe','vote']});
-    $('.filter').click(function() {
-        var data = $(this).data();
-        if ('all' in data) {
-          deputeList.filter()
-          return
-        }
-      deputeList.filter(function(item) {
-        result = true;
-
-        for(var key in data) {
-          result = result && (item.values()[key] == data[key]);
-        }
-        return result;
-      });
-    });
-
+    {% for l in scrutins %}
+      var scrutinsList = new List('scrutins{{ l['leg'] }}',{ valueNames: ['libelle']});
+    {% endfor %}
   </script>
 {% endblock %}

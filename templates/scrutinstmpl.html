@@ -1,30 +1,43 @@
 {% extends "basetmpl.html" %}
 
 {% block content %}
-      <div id="scrutins" class="col s12">
-        <input class="search" placeholder="Recherche">
-        <table class="striped highlight centered">
-          <thead>
-            <tr><th>Date</th><th>Libelle</th><th>Résultat</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
-          </thead>
-          <tbody class="list">
-            {% for s in scrutins.keys() %}<tr>
-              {% set scrutin = scrutins[s] %}
-              <td>{{ scrutin['dateScrutin'] }}</td>
-              <td width='50%' class="libelle"><a href="scrutins/{{ scrutin['uid']}}.html">{{ scrutin['objet.libelle'] }}</a></td>
-              <td><div class="chip {% if scrutin['sort.code']=='adopté' %}green{% elif scrutin['sort.code']=='rejeté' %}red{% else %}grey{% endif %}">{{ scrutin['sort.code'] }}</div></td>
-              <td>{{ scrutin['syntheseVote.nombreVotants'] }}</td>
-              <td>{{ scrutin['syntheseVote.decompte.pour'] }}</td>
-              <td>{{ scrutin['syntheseVote.decompte.contre'] }}</td>
-              <td>{{ scrutin['syntheseVote.decompte.abstention'] }}</td>
-              <td>{{ scrutin['syntheseVote.decompte.nonVotant'] }}</td>
-            </tr>{% endfor %}
-          </tbody>
-        </table>
-      </div>
+      <h4>Votes</h4>
+      <ul class="collapsible" data-collapsible="expandable">
+        {% set first = True %}
+        {% for l in scrutins %}
+        <li>
+          <div class="collapsible-header{% if first %} active{% endif %}">{{ l['leg'] }}e Législature</div>
+          <div class="collapsible-body">
+            <div id="scrutins{{ l['leg'] }}">
+              <input class="search" placeholder="Recherche">
+              <table class="striped highlight">
+                <thead>
+                  <tr><th>Date</th><th>Libelle</th><th>Résultat</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
+                </thead>
+                <tbody class="list">
+                  {% for scrutin in l['scrutins'] %}<tr>
+                    <td>{{ scrutin['dateScrutin'] }}</td>
+                    <td width='50%' class="libelle"><a href="scrutins/{{ scrutin['uid']}}.html">{{ scrutin['objet.libelle'] }}</a></td>
+                    <td><div class="chip {% if scrutin['sort.code']=='adopté' %}green{% elif scrutin['sort.code']=='rejeté' %}red{% else %}grey{% endif %}">{{ scrutin['sort.code'] }}</div></td>
+                    <td>{{ scrutin['syntheseVote.nombreVotants'] }}</td>
+                    <td>{{ scrutin['syntheseVote.decompte.pour'] }}</td>
+                    <td>{{ scrutin['syntheseVote.decompte.contre'] }}</td>
+                    <td>{{ scrutin['syntheseVote.decompte.abstention'] }}</td>
+                    <td>{{ scrutin['syntheseVote.decompte.nonVotant'] }}</td>
+                  </tr>{% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </li>
+        {% set first = False %}
+        {% endfor %}
+      </ul>
 {% endblock %}
 {% block javascript %}
   <script>
-    var scrutinsList = new List('scrutins',{ valueNames: ['libelle']});
+    {% for l in scrutins %}
+      var scrutinsList = new List('scrutins{{ l['leg'] }}',{ valueNames: ['libelle']});
+    {% endfor %}
   </script>
 {% endblock %}

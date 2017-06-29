@@ -32,8 +32,8 @@
             </thead>
             <tbody class="list">
               {% for m in groupe['membres'] %}<tr>
-                <td><img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/{{ m[2:] }}.jpg" /></td>
-                <td class="nom">{{ nomcomplet(acteurs[m]) }}</td>
+                <td><a href="../acteurs/{{ acteurs[m]['uid'] }}.html"><img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/{{ m[2:] }}.jpg" /></a></td>
+                <td class="nom"><a href="../acteurs/{{ acteurs[m]['uid'] }}.html">{{ nomcomplet(acteurs[m]) }}</a></td>
                 <td>{% for (k,v) in acteurs[m]['contacts'] %}
                   {% if (k=="Mèl") %}
                     <a href="mailto:{{ v }}"><i class="fa fa-envelope-o"></i></a>
