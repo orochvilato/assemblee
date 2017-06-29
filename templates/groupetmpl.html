@@ -13,7 +13,7 @@
 {% endblock %}
 {% block content %}
 <div class="col s12">
-  <div class="card blue lighten-4">
+  <div class="card {{ color }} lighten-3">
     <div class="card-content">
       <h4>{{ groupe['libelle'] }} ({{ groupe['nbmembres'] }} membres)</h4>
       {% if 'president' in groupe.keys() %}
@@ -22,7 +22,7 @@
     </div>
   </div>
   <ul class="collapsible" data-collapsible="accordion">
-  <li><div class="collapsible-header active"><i class="fa fa-group"></i>Membres</div>
+  <li><div class="collapsible-header active"><i class="fa fa-group {{ color }}-text"></i>Membres</div>
       <div class="collapsible-body">
         <div id="membres">
           <input class="search" placeholder="Recherche">
@@ -57,7 +57,7 @@
           </table>
         </div>
       </div></li>
-      <li><div class="collapsible-header"><i class="fa fa-bar-chart"></i>Statistiques</div>
+      <li><div class="collapsible-header"><i class="fa fa-bar-chart {{ color }}-text"></i>Statistiques</div>
       <div class="collapsible-body">{{ stat_bloc(groupe['stats']) }}</div></li>
     </ul>
 </div>

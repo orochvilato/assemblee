@@ -2,13 +2,13 @@
 {% extends "basetmpl.html" %}
 
 {% block content %}
-      <table class="striped highlight centered">
+      <table class="striped highlight">
         <thead>
           <tr><th>Nom</th><th>Président</th><th>Nb membres</th></tr>
         </thead>
         <tbody>
         {% for grp in groupes %}<tr>
-          <td><a href="groupes/{{ grp }}.html">{{ organes[grp]['libelle'] }}</a></td>
+          <td><a href="groupes/{{ grp }}.html"><i class="fa fa-group {{ colors[organes[grp]['libelleAbrev']] }}-text"></i> {{ organes[grp]['libelle'] }} ({{ organes[grp]['libelleAbrev'] }})</a></td>
             <td>{% if 'president' in organes[grp].keys() %}{{ nomcomplet(acteurs[organes[grp]['president']]) }}{% endif %}</td>
             <td>{{ organes[grp]['nbmembres'] }}</td>
           </tr>{% endfor %}

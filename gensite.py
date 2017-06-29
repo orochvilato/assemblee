@@ -5,6 +5,15 @@ from cStringIO import StringIO
 import xmltodict
 from datetime import datetime
 
+grpcolors = {
+    'NI': 'grey',
+    'LES-REP': 'blue',
+    'MODEM': 'amber',
+    'FI': 'deep-orange',
+    'GDR': 'red',
+    'LC': 'light-blue',
+    'LREM': 'purple',
+    'NG': 'pink'}
 
 def loadXMLZip(url):
 
@@ -95,7 +104,7 @@ for organe in organes.keys():
     if org['codeType'] == 'GP':
         if not org['viMoDe.dateFin']:
             groupes[org['uid']] = org
-        organes[org['uid']].update({'membres':{},'votes':{},'stats':{'fsp':{}, 'parite':{}}})
+        organes[org['uid']].update({'membres':{},'votes':{},'stats':{'fsp':{}, 'parite':{},'votes':{}}})
 for acteur in acteurs.keys():
     act = acteurs[acteur]
     act['contacts'] = []
@@ -110,7 +119,11 @@ for acteur in acteurs.keys():
             if man['infosQualite.codeQualite'] == u'Président':
                 organes[man['organes.organeRef']]['president'] = act['uid']
             organes[man['organes.organeRef']]['membres'][act['uid']] = man['infosQualite.codeQualite']
+            act['groupe'] = groupeRef
 
+    # initialisations
+    act['stats'] = {}
+    act['votes'] = {}
     # stats
     fsp = act['profession.socProcINSEE.famSocPro'] or "Inconnu"
     ostats = organes[groupeRef]['stats']
@@ -121,14 +134,14 @@ for acteur in acteurs.keys():
     stats['parite'][parite] = stats['parite'].get(parite,0) + 1
 
 
-
 for scrutin in scrutins:
+    #print scrutin['uid'],scrutin['dateScrutin']
     scrutin['groupes'] = []
     for grp in scrutin['ventilationVotes.organe.groupes']:
         scrutin['groupes'].append(grp['organeRef'])
         groupe = organes[grp['organeRef']]
 
-        organes[grp['organeRef']]['votes'][scrutin['uid']] = { 'scrutin_uid':scrutin['uid'],
+        organes[grp['organeRef']]['votes'][scrutin['uid']] = {
                                                              'vote':grp['vote.positionMajoritaire'],
                                                              'pour':int(grp.get('vote.decompteVoix.pour',0)),
                                                              'contre':int(grp.get('vote.decompteVoix.contre',0)),
@@ -136,6 +149,7 @@ for scrutin in scrutins:
                                                              'nonVotant':int(grp.get('vote.decompteVoix.nonVotant',0))}
 
         positions = ['nonVotant','pour','contre','abstention']
+        absents_uid = [ act['uid'] for act in acteurs.values()]
         for pos in positions:
             if grp.get('vote.decompteNominatif.%ss.votant.acteurRef' % pos,None):
                 votants = [ dict(acteurRef = grp['vote.decompteNominatif.%ss.votant.acteurRef' % pos],
@@ -143,21 +157,26 @@ for scrutin in scrutins:
             else:
                 votants = grp.get('vote.decompteNominatif.%ss.votant' % pos,[])
             for v in votants:
-                vote = { 'scrutin_uid':scrutin['uid'],
-                         'acteur_uid':v['acteurRef'],
-                         'groupe_uid':grp['organeRef'],
+                vote = { 'groupe_uid':grp['organeRef'],
                          'vote':pos,
                          'cause':v.get('causePositionVote',None)}
                 scrutin['votants'] = scrutin.get('votants',[]) + [vote]
-
                 acteur = acteurs.get(v['acteurRef'],None)
                 if not acteur:
                     continue
-                if not 'votes' in acteur.keys():
-                    acteur['votes'] = {}
+
                 acteur['votes'][scrutin['uid']] = vote
-
-
+                # stats
+                acteur['stats'][pos] = acteur['stats'].get(pos,0) + 1
+                absents_uid.remove(v['acteurRef'])
+                organes[grp['organeRef']]['stats']['votes'][pos]= organes[grp['organeRef']]['stats']['votes'].get(pos,0) +1
+        continue
+        for absent in absents_uid:
+            acteurs[absent]['votes'][scrutin['uid']]={'vote':'absent'}
+            acteurs[absent]['absent'] = acteurs[absent].get('absent',0) + 1
+            group = organes[acteurs[absent]['groupe']]
+            if datetime.strptime(group['viMoDe.dateDebut'],'%Y-%m-%d')<datetime.strptime(scrutin['dateScrutin'],'%Y-%m-%d'):
+                group['stats']['absent'] = group['stats'].get('absent',0) +1
     #if scrutin['sort.code']==u'adopté':
         #print scrutin['uid'],scrutin['objet.libelle'].encode('utf8')
 
@@ -174,11 +193,15 @@ today = datetime.now().strftime('%d/%m/%Y %H:%M')
 
 for groupe in groupes:
     organes[groupe]['nbmembres'] = len(organes[groupe]['membres'].keys())
-    open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(today=today, acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
+    open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(today=today, color=grpcolors[organes[groupe]['libelleAbrev']],acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
 open('dist/scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = scrutins, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, stats=stats, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, colors=grpcolors,stats=stats, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 for scrutin in scrutins:
     open('dist/scrutins/%s.html' % scrutin['uid'],'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutin, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+
+for act in acteurs:
+    acteur = acteurs[act]
+
 
 #for acteur in acteurs.values():
 #    print acteur['etatCivil.ident.civ'],acteur['etatCivil.ident.nom'].encode('utf8'),acteur['etatCivil.ident.prenom'].encode('utf8'),organes[acteur['mandats'][0]['organes.organeRef']]['libelle'].encode('utf8')

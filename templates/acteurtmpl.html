@@ -1,0 +1,98 @@
+{% set path = '../' %}
+{% extends "basetmpl.html" %}
+{% block head %}
+<style>
+    tfoot, th {
+      text-align: center;
+    }
+    .parti {
+      color: grey;
+      font-weight:300;
+    }
+    .sortvote {
+      font-weight: 500;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="col s12">
+  {% set rcolor = 'green' if scrutin['sort.code']=='adopté' else 'red' %}
+  <div class="card {{ rcolor }} lighten-4">
+    <div class="card-content">
+      <h5><div class="chip {{ rcolor }}">{{ scrutin['sort.code'] }}</div> {{ scrutin['objet.libelle'] }} ({{ scrutin['dateScrutin'] }})</h5>
+    </div>
+  </div>
+
+  <h5>Groupes</h5>
+  <table class="striped highlight centered">
+    <thead>
+      <tr><th>Groupe</th><th>Vote</th><th>Votants</th><th>Pour</th><th>Contre</th><th>Abst.</th><th>NV</th></tr>
+    </thead>
+    <tbody>
+      {% for grp in scrutin['groupes'] %}
+        <tr>
+        {% set gs = organes[grp]['votes'][scrutin['uid']] %}
+        {% set vcolor = 'green' if gs['vote']=='pour' else 'red' if gs['vote']=='contre' else 'grey' %}
+
+        <td>{{ organes[grp]['libelle'] }} ({{ organes[grp]['libelleAbrev'] }} )</td>
+          <td class="{{ vcolor }}-text text-darken-1 sortvote">{{ gs['vote'] }}</td>
+          <td><a class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' href="#detail">{{ gs['pour'] + gs['contre'] + gs['abstention'] + gs['nonVotant'] }}</a></td>
+          {% for pos in ['pour','contre','abstention','nonVotant'] %}
+          <td><a class="filter" data-groupe='{{ organes[grp]['libelleAbrev'] }}' data-vote='{{ pos }}' href="#detail">{{ gs[pos] }}</a></td>
+          {% endfor %}
+      {% endfor %}
+    </tbody>
+    <tfoot>
+      <tr><th>Total</th><th>{{ scrutin['sort.code']}}</th>
+          <th><a class="filter" data-all=1 href="#detail">{{ scrutin['syntheseVote.nombreVotants'] }}</a></th>
+          {% for pos in ['pour','contre','abstention','nonVotant'] %}
+          <th><a class="filter" data-vote="{{ pos }}" href="#detail">{{ scrutin['syntheseVote.decompte.'+pos] }}</a></th>
+          {% endfor %}
+    </tfoot>
+  </table>
+
+  <h5>Députés</h5>
+  <div id="deputes">
+    <input class="search" placeholder="Recherche">
+  <table class="striped highlight centered">
+    <thead>
+      <tr><th>Nom</th><th>Groupe</th><th>Vote</th><th>Cause</th></tr>
+    </thead>
+    <tbody class="list">
+      {% for as in scrutin['votants'] %}<tr>
+        {% if as['acteur_uid'] in acteurs.keys() %}
+        <td class="nom">{{ nomcomplet(acteurs[as['acteur_uid']]) }}</td>
+        {% else %}
+        <td class="parti">plus député</td>
+        {% endif %}
+          <td class="groupe">{{ organes[as['groupe_uid']]['libelleAbrev'] }}</td>
+          {% set vcolor = 'green' if as['vote']=='pour' else 'red' if as['vote']=='contre' else 'grey' %}
+          <td class="vote {{ vcolor }}-text text-darken-1 sortvote">{{ as['vote'] }}</td>
+          <td>{{ as['cause'] or "" }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
+{% block javascript %}
+  <script>
+    var deputeList = new List('deputes',{ valueNames: ['nom','groupe','vote']});
+    $('.filter').click(function() {
+        var data = $(this).data();
+        if ('all' in data) {
+          deputeList.filter()
+          return
+        }
+      deputeList.filter(function(item) {
+        result = true;
+
+        for(var key in data) {
+          result = result && (item.values()[key] == data[key]);
+        }
+        return result;
+      });
+    });
+
+  </script>
+{% endblock %}
