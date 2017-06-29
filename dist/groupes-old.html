@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>ObsAs</title>
+
+
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+
+<object id="hemicycle" data="hemicycle.svg" type="image/svg+xml" onload="svgloaded()"></object>
+
+
+</head>
+<body>
+  <nav class="blue-grey darken-1">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">ObsAs</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="scrutins.html">Votes</a></li>
+        <li><a href="groupes.html">Groupes</a></li>
+        <li><a href="acteurs.html">Députés</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <span>Date de mise à jour : 29/06/2017 14:15</span>
+      </div>
+    </div>
+    <div class="row">
+
+  <h4>Groupes</h4>
+      <table class="striped highlight">
+        <thead>
+          <tr><th>Nom</th><th>Président</th><th>Nb membres</th></tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><a href="groupes/PO723569.html"><i class="fa fa-group grey-text"></i> Non inscrit (NI)</a></td>
+            <td></td>
+            <td>18</td>
+          </tr><tr>
+          <td><a href="groupes/PO730934.html"><i class="fa fa-group blue-text"></i> Les Républicains (LR)</a></td>
+            <td>M. Christian Jacob</td>
+            <td>100</td>
+          </tr><tr>
+          <td><a href="groupes/PO730970.html"><i class="fa fa-group amber-text"></i> Mouvement Démocrate et apparentés (MODEM)</a></td>
+            <td>M. Marc Fesneau</td>
+            <td>47</td>
+          </tr><tr>
+          <td><a href="groupes/PO730958.html"><i class="fa fa-group deep-orange-text"></i> La France insoumise (FI)</a></td>
+            <td>M. Jean-Luc Mélenchon</td>
+            <td>17</td>
+          </tr><tr>
+          <td><a href="groupes/PO730940.html"><i class="fa fa-group red-text"></i> Gauche démocrate et républicaine (GDR)</a></td>
+            <td>M. André Chassaigne</td>
+            <td>16</td>
+          </tr><tr>
+          <td><a href="groupes/PO730952.html"><i class="fa fa-group light-blue-text"></i> Les Constructifs : républicains, UDI, indépendants (LC)</a></td>
+            <td>M. Franck Riester</td>
+            <td>35</td>
+          </tr><tr>
+          <td><a href="groupes/PO730964.html"><i class="fa fa-group purple-text"></i> La République en Marche (REM)</a></td>
+            <td>M. Richard Ferrand</td>
+            <td>313</td>
+          </tr><tr>
+          <td><a href="groupes/PO730946.html"><i class="fa fa-group pink-text"></i> Nouvelle Gauche (NG)</a></td>
+            <td>M. Olivier Faure</td>
+            <td>31</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="row">
+    <div class="col l6 m12">
+    <b>Parité</b>
+    <canvas id="pariteChart"></canvas>
+    </div>
+    <div class="col l6 m12">
+    <b>Répartition par familles socio-professionnelles</b>
+    <canvas id="fspChart"></canvas>
+  </div></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
+
+    <script>
+    var ctx = document.getElementById("fspChart");
+    var fsplabels = JSON.parse('["Ouvriers", "Autres personnes sans activit\u00e9 professionnelle", "Inconnu", "Cadres et professions intellectuelles sup\u00e9rieures", "Retrait\u00e9s", "Agriculteurs exploitants", "Artisans, commer\u00e7ants et chefs d\u0027entreprise", "Employ\u00e9s", "Sans profession d\u00e9clar\u00e9e", "Professions Interm\u00e9diaires"]');
+    var fspdata = JSON.parse('[2, 1, 16, 404, 32, 14, 46, 24, 7, 31]');
+    var fspChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: fsplabels,
+            datasets: [{
+                data: fspdata,
+                backgroundColor: ['rgba(239, 83, 80, 0.2)', 'rgba(126, 87, 194, 0.2)', 'rgba(41, 182, 246, 0.2)', 'rgba(102, 187, 106, 0.2)', 'rgba(255, 238, 88, 0.2)', 'rgba(236, 64, 122, 0.2)', 'rgba(92, 107, 192, 0.2)', 'rgba(38, 198, 218, 0.2)', 'rgba(156, 204, 101, 0.2)', 'rgba(255, 202, 40, 0.2)', 'rgba(171, 71, 188, 0.2)', 'rgba(66, 165, 245, 0.2)', 'rgba(38, 166, 154, 0.2)', 'rgba(212, 225, 87, 0.2)', 'rgba(255, 202, 40, 0.2)'],
+                borderColor: ['rgba(239, 83, 80, 1)', 'rgba(126, 87, 194, 1)', 'rgba(41, 182, 246, 1)', 'rgba(102, 187, 106, 1)', 'rgba(255, 238, 88, 1)', 'rgba(236, 64, 122, 1)', 'rgba(92, 107, 192, 1)', 'rgba(38, 198, 218, 1)', 'rgba(156, 204, 101, 1)', 'rgba(255, 202, 40, 1)', 'rgba(171, 71, 188, 1)', 'rgba(66, 165, 245, 1)', 'rgba(38, 166, 154, 1)', 'rgba(212, 225, 87, 1)', 'rgba(255, 202, 40, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+              display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var ctx = document.getElementById("pariteChart");
+    var parlabels = JSON.parse('["Femme", "Homme"]');
+    var pardata = JSON.parse('[224, 353]');
+
+    var parChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: parlabels,
+            datasets: [{
+                data: pardata,
+                backgroundColor: ['rgba(239, 83, 80, 0.2)', 'rgba(126, 87, 194, 0.2)', 'rgba(41, 182, 246, 0.2)', 'rgba(102, 187, 106, 0.2)', 'rgba(255, 238, 88, 0.2)', 'rgba(236, 64, 122, 0.2)', 'rgba(92, 107, 192, 0.2)', 'rgba(38, 198, 218, 0.2)', 'rgba(156, 204, 101, 0.2)', 'rgba(255, 202, 40, 0.2)', 'rgba(171, 71, 188, 0.2)', 'rgba(66, 165, 245, 0.2)', 'rgba(38, 166, 154, 0.2)', 'rgba(212, 225, 87, 0.2)', 'rgba(255, 202, 40, 0.2)'],
+                borderColor: ['rgba(239, 83, 80, 1)', 'rgba(126, 87, 194, 1)', 'rgba(41, 182, 246, 1)', 'rgba(102, 187, 106, 1)', 'rgba(255, 238, 88, 1)', 'rgba(236, 64, 122, 1)', 'rgba(92, 107, 192, 1)', 'rgba(38, 198, 218, 1)', 'rgba(156, 204, 101, 1)', 'rgba(255, 202, 40, 1)', 'rgba(171, 71, 188, 1)', 'rgba(66, 165, 245, 1)', 'rgba(38, 166, 154, 1)', 'rgba(212, 225, 87, 1)', 'rgba(255, 202, 40, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+              display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+
+    </script>
+
+    </div>
+  </div>
+</body>
+<footer>
+  <!--  Scripts-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://use.fontawesome.com/57f4fc708a.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+  <script>
+    function svgloaded() {
+      var svg = document.getElementById('hemicycle');
+      var svgDoc = svg.contentDocument;
+      var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+      styleElement.textContent = "path.PO730934 { fill: #ff0000; } path.PO723569 { fill: #00FF00; }"; // add whatever you need here
+      svgDoc.getElementById('defs').appendChild(styleElement);
+
+    }
+  </script>
+
+</footer>
+
+</html>

@@ -1,4 +1,3 @@
-{% set path = '../' %}
 {% extends "basetmpl.html" %}
 {% block content %}
 <div class="col s12">
@@ -16,7 +15,7 @@
 
               <td><a href="acteurs/{{ a }}.html"><img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/{{ a[2:] }}.jpg" /></a></td>
               <td class="nom"><a href="acteurs/{{ a }}.html">{{ nomcomplet(acteur) }}</a></td>
-              <td><i class="fa fa-group {{ colors[groupe] }}-text"></i> <a href="groupes/{{ acteur['groupe'] }}.html" class="{{ colors[groupe] }}-text">{{ groupe }}</a></td>
+              <td><a href="groupes/{{ acteur['groupe'] }}.html" class="{{ colors[groupe] }}-text"><i class="fa fa-group {{ colors[groupe] }}-text"></i> {{ groupe }}</a></td>
               <td>{% for (k,v) in acteur['contacts'] %}
                 {% if (k=="Mèl") %}
                   <a href="mailto:{{ v }}"><i class="fa fa-envelope-o"></i></a>

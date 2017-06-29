@@ -99,6 +99,8 @@ else:
     scrutins = json.loads(open('scrutins.json','r').read())
 
 
+
+
 nbvotes = {}
 groupes = {}
 stats = {'fsp':{}, 'parite':{}}
@@ -108,6 +110,8 @@ for organe in organes.keys():
         if not org['viMoDe.dateFin']:
             groupes[org['uid']] = org
         organes[org['uid']].update({'membres':{},'votes':{},'stats':{'fsp':{}, 'parite':{},'votes':{}}})
+
+places = {}
 for acteur in acteurs.keys():
     act = acteurs[acteur]
     act['contacts'] = []
@@ -115,14 +119,17 @@ for acteur in acteurs.keys():
     for adr in act['adresses']:
         if 'valElec' in adr.keys():
             act['contacts'].append((adr['typeLibelle'],adr['valElec']))
-
+    placeH = None
     for man in act['mandats']:
+        if man['typeOrgane']=='ASSEMBLEE':
+            placeH = man['mandature.placeHemicycle']
         if man['typeOrgane']=='GP':
             groupeRef = man['organes.organeRef']
             if man['infosQualite.codeQualite'] == u'Président':
                 organes[man['organes.organeRef']]['president'] = act['uid']
             organes[man['organes.organeRef']]['membres'][act['uid']] = man['infosQualite.codeQualite']
             act['groupe'] = groupeRef
+            places[str(int(placeH)) if placeH else ''] = groupeRef
 
     # initialisations
     act['stats'] = {}
@@ -135,6 +142,20 @@ for acteur in acteurs.keys():
     parite = 'Homme' if act['etatCivil.ident.civ']=='M.' else 'Femme'
     ostats['parite'][parite] = ostats['parite'].get(parite,0) + 1
     stats['parite'][parite] = stats['parite'].get(parite,0) + 1
+
+
+# Hemicycle
+
+hemicycle = xmltodict.parse(open('hemicycle.svg','r').read())
+for i,a in enumerate(hemicycle['svg']['a']):
+    if '@class' in a['path'].keys() and '@id' in a['path'].keys():
+
+        a['path']['@class'] += ' '+places.get(a['path']['@id'][1:],'')
+        hemicycle['svg']['path'].append(a['path'])
+        del hemicycle['svg']['a'][i]
+
+open('dist/hemicycle.svg','w').write(xmltodict.unparse(hemicycle).encode('utf8'))
+
 
 
 for s in scrutins.keys():
