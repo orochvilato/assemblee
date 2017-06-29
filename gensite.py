@@ -84,7 +84,7 @@ def loadScrutins():
     return scrutins
 
 import json
-debug = True
+debug = False
 if not debug:
     organes,acteurs = loadDeputes()
 
