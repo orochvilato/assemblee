@@ -84,7 +84,7 @@ def loadScrutins():
     return scrutins
 
 import json
-debug = False
+debug = True
 if not debug:
     organes,acteurs = loadDeputes()
 
@@ -156,12 +156,14 @@ for i,a in enumerate(hemicycle['svg']['a']):
 
 open('dist/hemicycle.svg','w').write(xmltodict.unparse(hemicycle).encode('utf8'))
 
-
+ttvot = 0
 
 for s in scrutins.keys():
     scrutin = scrutins[s]
-    print scrutin['uid'],scrutin['dateScrutin']
+    #print scrutin['uid'],scrutin['dateScrutin']
+    ttvot += int(scrutin['syntheseVote.nombreVotants'])
     scrutin['groupes'] = []
+    svot = 0
     for grp in scrutin['ventilationVotes.organe.groupes']:
         scrutin['groupes'].append(grp['organeRef'])
         groupe = organes[grp['organeRef']]
@@ -174,7 +176,6 @@ for s in scrutins.keys():
                                                              'nonVotant':int(grp.get('vote.decompteVoix.nonVotant',0))}
 
         positions = ['nonVotant','pour','contre','abstention']
-        absents_uid = [ act['uid'] for act in acteurs.values()]
         for pos in positions:
             if grp.get('vote.decompteNominatif.%ss.votant.acteurRef' % pos,None):
                 votants = [ dict(acteurRef = grp['vote.decompteNominatif.%ss.votant.acteurRef' % pos],
@@ -182,6 +183,8 @@ for s in scrutins.keys():
             else:
                 votants = grp.get('vote.decompteNominatif.%ss.votant' % pos,[])
             for v in votants:
+                if pos != 'nonVotant':
+                    svot += 1
                 nbvotes[v['acteurRef']] = nbvotes.get(v['acteurRef'],0) + 1
                 vote = { 'acteur_uid':v['acteurRef'],
                          'groupe_uid':grp['organeRef'],
@@ -195,22 +198,15 @@ for s in scrutins.keys():
                 acteur['votes'][scrutin['uid']] = vote
                 # stats
                 acteur['stats'][pos] = acteur['stats'].get(pos,0) + 1
-                absents_uid.remove(v['acteurRef'])
+
                 organes[grp['organeRef']]['stats']['votes'][pos]= organes[grp['organeRef']]['stats']['votes'].get(pos,0) +1
-        continue
-        for absent in absents_uid:
-            acteurs[absent]['votes'][scrutin['uid']]={'vote':'absent'}
-            acteurs[absent]['absent'] = acteurs[absent].get('absent',0) + 1
-            group = organes[acteurs[absent]['groupe']]
-            if datetime.strptime(group['viMoDe.dateDebut'],'%Y-%m-%d')<datetime.strptime(scrutin['dateScrutin'],'%Y-%m-%d'):
-                group['stats']['absent'] = group['stats'].get('absent',0) +1
-    #if scrutin['sort.code']==u'adopté':
-        #print scrutin['uid'],scrutin['objet.libelle'].encode('utf8')
+
+    # Le détail n'est pas toujours cohérent
+    scrutin['valide'] = (scrutin['syntheseVote.nombreVotants'] == svot)
 
 
-
-#print [(k,v) for (k,v) in sorted([ (k,v) for k,v in nbvotes.iteritems()],key=lambda t:t[1]) if k in acteurs.keys()]
-
+classm = [(k,v) for (k,v) in sorted([ (k,v) for k,v in nbvotes.iteritems()],key=lambda t:t[1]) if k in acteurs.keys()]
+print ttvot,sum([v[1] for v in classm])
 from jinja2 import Environment, PackageLoader, select_autoescape,FileSystemLoader
 env = Environment(
     loader=FileSystemLoader('./templates'),

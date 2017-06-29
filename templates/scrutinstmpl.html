@@ -6,7 +6,7 @@
         {% set first = True %}
         {% for l in scrutins %}
         <li>
-          <div class="collapsible-header{% if first %} active{% endif %}">{{ l['leg'] }}e Législature</div>
+          <div class="collapsible-header{% if first %} active{% endif %}">{{ l['leg'] }}<sup>ème</sup> Législature</div>
           <div class="collapsible-body">
             <div id="scrutins{{ l['leg'] }}">
               <input class="search" placeholder="Recherche">
