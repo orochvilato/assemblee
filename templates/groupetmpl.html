@@ -13,7 +13,7 @@
 {% endblock %}
 {% block content %}
 <div class="col s12">
-  <div class="card {{ color }} lighten-3">
+  <div class="card {{ groupe['csscolor'] }} lighten-3">
     <div class="card-content">
       <h4>{{ groupe['libelle'] }} ({{ groupe['nbmembres'] }} membres)</h4>
       {% if 'president' in groupe.keys() %}
@@ -22,7 +22,7 @@
     </div>
   </div>
   <ul class="collapsible" data-collapsible="expandable">
-  <li><div class="collapsible-header active"><i class="fa fa-group {{ color }}-text"></i>Membres</div>
+  <li><div class="collapsible-header active"><i class="fa fa-group {{ groupe['csscolor'] }}-text"></i>Membres</div>
       <div class="collapsible-body">
         <div id="membres">
           <input class="search" placeholder="Recherche">
@@ -57,8 +57,15 @@
           </table>
         </div>
       </div></li>
-      <li><div class="collapsible-header"><i class="fa fa-bar-chart {{ color }}-text"></i>Statistiques</div>
+      <li>
+        <div class="collapsible-header"><i class="fa fa-university {{ groupe['csscolor'] }}-text"></i> Hémicycle</div>
+        <div class="collapsible-body">
+          <object id="hemicycle" data="../hemicycle.svg" width='100%' type="image/svg+xml"></object>
+        </div>
+      </li>
+      <li><div class="collapsible-header"><i class="fa fa-bar-chart {{ groupe['csscolor'] }}-text"></i>Statistiques</div>
       <div class="collapsible-body">{{ stat_bloc(groupe['stats']) }}</div></li>
+
     </ul>
 </div>
 {% endblock %}
@@ -82,6 +89,16 @@
     });
 
   </script>
+  <script>
+    var svg = document.getElementById('hemicycle');
+    svg.addEventListener('load', function () {
+      //var svg = document.getElementById('hemicycle');
+      var svgDoc = svg.contentDocument;
+      var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+      styleElement.textContent = "path.{{groupe['uid']}} { fill: {{ groupe['svgcolor']}}; }"; // add whatever you need here
+      svgDoc.getElementById('defs').appendChild(styleElement);
 
+    });
+  </script>
 
 {% endblock %}

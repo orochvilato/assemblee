@@ -38,7 +38,7 @@
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 29/06/2017 19:08</span>
+        <span>Date de mise à jour : 30/06/2017 10:47</span>
       </div>
     </div>
     <div class="row">
@@ -2436,6 +2436,12 @@
           </table>
         </div>
       </div></li>
+      <li>
+        <div class="collapsible-header"><i class="fa fa-university blue-text"></i> Hémicycle</div>
+        <div class="collapsible-body">
+          <object id="hemicycle" data="../hemicycle.svg" width='100%' type="image/svg+xml"></object>
+        </div>
+      </li>
       <li><div class="collapsible-header"><i class="fa fa-bar-chart blue-text"></i>Statistiques</div>
       <div class="collapsible-body"><div class="row">
     <div class="col l6 m12">
@@ -2506,6 +2512,7 @@
     });
 
     </script></div></li>
+
     </ul>
 </div>
 
@@ -2538,7 +2545,17 @@
     });
 
   </script>
+  <script>
+    var svg = document.getElementById('hemicycle');
+    svg.addEventListener('load', function () {
+      //var svg = document.getElementById('hemicycle');
+      var svgDoc = svg.contentDocument;
+      var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+      styleElement.textContent = "path.PO730934 { fill: #2196f3; }"; // add whatever you need here
+      svgDoc.getElementById('defs').appendChild(styleElement);
 
+    });
+  </script>
 
 
 </footer>

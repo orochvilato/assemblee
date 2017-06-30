@@ -41,7 +41,7 @@
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 29/06/2017 19:08</span>
+        <span>Date de mise à jour : 30/06/2017 10:47</span>
       </div>
     </div>
     <div class="row">
@@ -90,11 +90,17 @@
   <div class="col s12">
     <ul class="collapsible" data-collapsible="expandable">
       <li>
-        <div class="collapsible-header"><i class="fa fa-legal"></i> Mandats</div>
-        <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+        <div class="collapsible-header"><i class="fa fa-legal purple-text"></i> Mandats</div>
+        <div class="collapsible-body"><span>...</span></div>
       </li>
       <li>
-        <div class="collapsible-header active"><i class="fa fa-hand-paper-o"></i> Votes</div>
+        <div class="collapsible-header"><i class="fa fa-university purple-text"></i> Hémicycle</div>
+        <div class="collapsible-body">
+          <object id="hemicycle" data="../hemicycle.svg" width='100%' type="image/svg+xml"></object>
+        </div>
+      </li>
+      <li>
+        <div class="collapsible-header active"><i class="fa fa-hand-paper-o purple-text"></i> Votes</div>
         <div class="collapsible-body">
           <div class="row">
 				      <div class="col s12 m12">
@@ -122,6 +128,17 @@
   
   <script>
     
+  </script>
+  <script>
+    var svg = document.getElementById('hemicycle');
+    svg.addEventListener('load', function () {
+      //var svg = document.getElementById('hemicycle');
+      var svgDoc = svg.contentDocument;
+      var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+      styleElement.textContent = "#p568 { fill: #9c27b0; }"; // add whatever you need here
+      svgDoc.getElementById('defs').appendChild(styleElement);
+
+    });
   </script>
 
 </footer>

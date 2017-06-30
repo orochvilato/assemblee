@@ -29,7 +29,7 @@
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 29/06/2017 19:08</span>
+        <span>Date de mise à jour : 30/06/2017 10:47</span>
       </div>
     </div>
     <div class="row">
@@ -41,41 +41,52 @@
         </thead>
         <tbody>
         <tr>
-          <td><a href="groupes/PO723569.html"><i class="fa fa-group grey-text"></i> Non inscrit (NI)</a></td>
+          <td><a href="groupes/PO723569.html" class="grey-text" style="font-weight:500;"><i class="fa fa-group"></i> Non inscrit (NI)</a></td>
             <td></td>
-            <td>18</td>
+            <td>17</td>
           </tr><tr>
-          <td><a href="groupes/PO730934.html"><i class="fa fa-group blue-text"></i> Les Républicains (LR)</a></td>
+          <td><a href="groupes/PO730934.html" class="blue-text" style="font-weight:500;"><i class="fa fa-group"></i> Les Républicains (LR)</a></td>
             <td>M. Christian Jacob</td>
             <td>100</td>
           </tr><tr>
-          <td><a href="groupes/PO730970.html"><i class="fa fa-group amber-text"></i> Mouvement Démocrate et apparentés (MODEM)</a></td>
+          <td><a href="groupes/PO730970.html" class="amber-text" style="font-weight:500;"><i class="fa fa-group"></i> Mouvement Démocrate et apparentés (MODEM)</a></td>
             <td>M. Marc Fesneau</td>
             <td>47</td>
           </tr><tr>
-          <td><a href="groupes/PO730958.html"><i class="fa fa-group deep-orange-text"></i> La France insoumise (FI)</a></td>
+          <td><a href="groupes/PO730958.html" class="deep-orange-text" style="font-weight:500;"><i class="fa fa-group"></i> La France insoumise (FI)</a></td>
             <td>M. Jean-Luc Mélenchon</td>
             <td>17</td>
           </tr><tr>
-          <td><a href="groupes/PO730940.html"><i class="fa fa-group red-text"></i> Gauche démocrate et républicaine (GDR)</a></td>
+          <td><a href="groupes/PO730940.html" class="red-text" style="font-weight:500;"><i class="fa fa-group"></i> Gauche démocrate et républicaine (GDR)</a></td>
             <td>M. André Chassaigne</td>
             <td>16</td>
           </tr><tr>
-          <td><a href="groupes/PO730952.html"><i class="fa fa-group light-blue-text"></i> Les Constructifs : républicains, UDI, indépendants (LC)</a></td>
+          <td><a href="groupes/PO730952.html" class="light-blue-text" style="font-weight:500;"><i class="fa fa-group"></i> Les Constructifs : républicains, UDI, indépendants (LC)</a></td>
             <td>M. Franck Riester</td>
             <td>35</td>
           </tr><tr>
-          <td><a href="groupes/PO730964.html"><i class="fa fa-group purple-text"></i> La République en Marche (REM)</a></td>
+          <td><a href="groupes/PO730964.html" class="purple-text" style="font-weight:500;"><i class="fa fa-group"></i> La République en Marche (REM)</a></td>
             <td>M. Richard Ferrand</td>
-            <td>313</td>
+            <td>314</td>
           </tr><tr>
-          <td><a href="groupes/PO730946.html"><i class="fa fa-group pink-text"></i> Nouvelle Gauche (NG)</a></td>
+          <td><a href="groupes/PO730946.html" class="pink-text" style="font-weight:500;"><i class="fa fa-group"></i> Nouvelle Gauche (NG)</a></td>
             <td>M. Olivier Faure</td>
             <td>31</td>
           </tr>
         </tbody>
       </table>
-      <div class="row">
+
+      <ul class="collapsible" data-collapsible="expandable">
+        <li>
+          <div class="collapsible-header active"><i class="fa fa-university"></i> Hémicycle</div>
+          <div class="collapsible-body">
+            <object id="hemicycle" data="hemicycle.svg" width='100%' type="image/svg+xml"></object>
+          </div>
+        </li>
+        <li>
+          <div class="collapsible-header active">Stats</div>
+          <div class="collapsible-body">
+            <div class="row">
     <div class="col l6 m12">
     <b>Parité</b>
     <canvas id="pariteChart"></canvas>
@@ -144,8 +155,9 @@
     });
 
     </script>
-
-
+          </div>
+        </li>
+      </ul>
 
     </div>
   </div>
@@ -157,7 +169,18 @@
   <script src="https://use.fontawesome.com/57f4fc708a.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
   
-  
+<script>
+  var svg = document.getElementById('hemicycle');
+  svg.addEventListener('load', function () {
+    //var svg = document.getElementById('hemicycle');
+    var svgDoc = svg.contentDocument;
+    var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+    styleElement.textContent = "path.PO723569 { fill: #9e9e9e; }path.PO730934 { fill: #2196f3; }path.PO730970 { fill: #ffc107; }path.PO730958 { fill: #ff5722; }path.PO730940 { fill: #f44336; }path.PO730952 { fill: #03a9f4; }path.PO730964 { fill: #9c27b0; }path.PO730946 { fill: #e91e63; }"; // add whatever you need here
+    svgDoc.getElementById('defs').appendChild(styleElement);
+
+  });
+</script>
+
 </footer>
 
 </html>

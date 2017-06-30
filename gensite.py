@@ -8,7 +8,14 @@ from datetime import datetime
 import locale
 locale.setlocale(locale.LC_ALL, 'fr_FR.utf8')
 
-grpcolors = {
+
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--debug", help="debug mode", action="store_true")
+args = parser.parse_args()
+debug = args.debug
+
+csscolors = {
     'NI': 'grey',
     'LR': 'blue',
     'MODEM': 'amber',
@@ -17,6 +24,16 @@ grpcolors = {
     'LC': 'light-blue',
     'REM': 'purple',
     'NG': 'pink'}
+svgcolors = {
+    'NI': '#9e9e9e',
+    'LR': '#2196f3',
+    'MODEM': '#ffc107',
+    'FI': '#ff5722',
+    'GDR': '#f44336',
+    'LC': '#03a9f4',
+    'REM': '#9c27b0',
+    'NG': '#e91e63'}
+
 
 def loadXMLZip(url):
 
@@ -84,7 +101,7 @@ def loadScrutins():
     return scrutins
 
 import json
-debug = True
+
 if not debug:
     organes,acteurs = loadDeputes()
 
@@ -109,12 +126,14 @@ for organe in organes.keys():
     if org['codeType'] == 'GP':
         if not org['viMoDe.dateFin']:
             groupes[org['uid']] = org
+            org.update({'svgcolor':svgcolors.get(org['libelleAbrev'],'NI'),'csscolor':csscolors.get(org['libelleAbrev'],'NI')})
         organes[org['uid']].update({'membres':{},'votes':{},'stats':{'fsp':{}, 'parite':{},'votes':{}}})
 
 places = {}
 for acteur in acteurs.keys():
     act = acteurs[acteur]
     act['contacts'] = []
+    act['nomcomplet'] = act['etatCivil.ident.civ'] + ' ' + act['etatCivil.ident.prenom'] + ' ' + act['etatCivil.ident.nom']
     act['age'] = int((datetime.now() - datetime.strptime(act['etatCivil.infoNaissance.dateNais'],'%Y-%m-%d')).days / 365.25)
     for adr in act['adresses']:
         if 'valElec' in adr.keys():
@@ -129,8 +148,12 @@ for acteur in acteurs.keys():
                 organes[man['organes.organeRef']]['president'] = act['uid']
             organes[man['organes.organeRef']]['membres'][act['uid']] = man['infosQualite.codeQualite']
             act['groupe'] = groupeRef
-            places[str(int(placeH)) if placeH else ''] = groupeRef
 
+    if placeH:
+        places[str(int(placeH))] = {'place':placeH,'acteur':acteur,'groupe':act['groupe']}
+        act['place'] = placeH
+    else:
+        print act['uid']
     # initialisations
     act['stats'] = {'absenteisme':{}}
     act['votes'] = {}
@@ -149,12 +172,14 @@ for acteur in acteurs.keys():
 hemicycle = xmltodict.parse(open('hemicycle.svg','r').read())
 for i,a in enumerate(hemicycle['svg']['a']):
     if '@class' in a['path'].keys() and '@id' in a['path'].keys():
+        place = places.get(a['path']['@id'][1:],None)
+        if place:
+            a['path']['@class'] += ' ' + place['groupe']
+            a['title'] = {'#text':'%s (place %s)' % (acteurs[place['acteur']]['nomcomplet'], place['place']) }
+            a['@href'] = 'acteurs/%s.html' % place['acteur']
+            a['@target'] = "_parent"
 
-        a['path']['@class'] += ' '+places.get(a['path']['@id'][1:],'')
-        hemicycle['svg']['path'].append(a['path'])
-        del hemicycle['svg']['a'][i]
-
-open('dist/hemicycle.svg','w').write(xmltodict.unparse(hemicycle).encode('utf8'))
+open('dist/hemicycle.svg','w').write(xmltodict.unparse(hemicycle,pretty=True).encode('utf8'))
 
 ttvot = 0
 for s in scrutins.keys():
@@ -263,9 +288,10 @@ for groupe in groupes:
     open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(
             today=today,
             scrutins = sort_scrutins(organes[groupe]['votes'].keys()),
-            color=grpcolors.get(organes[groupe]['libelleAbrev'],'NI'),acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
+            acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
+
 open('dist/scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = sort_scrutins(scrutins.keys()), organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, colors=grpcolors,stats=stats, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, stats=stats, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 for s in scrutins.keys():
     open('dist/scrutins/%s.html' % s,'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutins[s], organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 
@@ -277,20 +303,12 @@ for act in acteurs:
     for leg in acteur['stats']['absenteisme'].keys():
         stat = acteur['stats']['absenteisme'][leg]
         stat['tx']= "%.2f" % (100*float(stat['total']-stat['votes'])/stat['total'])
-    print act,acteur['stats']
+
     open('dist/acteurs/%s.html' % act,'w').write(env.get_template('acteurtmpl.html').render(
         scrutins=scruts,
         organes=organes,
         today=today,
-        color=grpcolors.get(organes[acteur['groupe']]['libelleAbrev'],'NI'),
         acteur = acteur,
         groupe = organes[acteur['groupe']]).encode('utf-8'))
 
-open('dist/acteurs.html','w').write(env.get_template('acteurstmpl.html').render(today=today, colors=grpcolors,stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-
-for groupe in groupes:
-    organes[groupe]['nbmembres'] = len(organes[groupe]['membres'].keys())
-    open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(
-            today=today,
-            scrutins = sort_scrutins(organes[groupe]['votes'].keys()),
-            color=grpcolors.get(organes[groupe]['libelleAbrev'],'NI'),acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
+open('dist/acteurs.html','w').write(env.get_template('acteurstmpl.html').render(today=today, stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))

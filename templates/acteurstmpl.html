@@ -11,11 +11,11 @@
           <tbody class="list">
             {% for a in acteurs %}<tr>
               {% set acteur = acteurs[a] %}
-              {% set groupe = groupes[acteur['groupe']]['libelleAbrev'] %}
+              {% set groupe = groupes[acteur['groupe']] %}
 
               <td><a href="acteurs/{{ a }}.html"><img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/{{ a[2:] }}.jpg" /></a></td>
-              <td class="nom"><a href="acteurs/{{ a }}.html">{{ nomcomplet(acteur) }}</a></td>
-              <td><a href="groupes/{{ acteur['groupe'] }}.html" class="{{ colors[groupe] }}-text"><i class="fa fa-group {{ colors[groupe] }}-text"></i> {{ groupe }}</a></td>
+              <td class="nom"><a href="acteurs/{{ a }}.html" style="font-weight:500;">{{ nomcomplet(acteur) }}</a></td>
+              <td><a href="groupes/{{ acteur['groupe'] }}.html" class="{{ groupe['csscolor'] }}-text" style="font-weight:500;"><i class="fa fa-group"></i> {{ groupe['libelleAbrev'] }}</a></td>
               <td>{% for (k,v) in acteur['contacts'] %}
                 {% if (k=="Mèl") %}
                   <a href="mailto:{{ v }}"><i class="fa fa-envelope-o"></i></a>

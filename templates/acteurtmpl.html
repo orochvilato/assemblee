@@ -17,7 +17,7 @@
 {% block content %}
 <div class="row">
   <div class="col s12">
-    <div class="card horizontal {{ color }} lighten-4">
+    <div class="card horizontal {{ groupe['csscolor'] }} lighten-4">
       <div class="card-image">
         <img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/{{ acteur['uid'][2:] }}.jpg" />
       </div>
@@ -36,7 +36,7 @@
 
             {% endif %}
           {% endfor %}</h5>
-          <h5><i class="fa fa-group {{ color }}-text"></i> <a href="../groupes/{{ groupe['uid'] }}.html" class="{{ color }}-text">{{ groupe['libelle'] }} ( {{ groupe['libelleAbrev'] }})</a></h5>
+          <h5><i class="fa fa-group {{ groupe['csscolor'] }}-text"></i> <a href="../groupes/{{ groupe['uid'] }}.html" class="{{ groupe['csscolor'] }}-text">{{ groupe['libelle'] }} ( {{ groupe['libelleAbrev'] }})</a></h5>
           <span>{{ acteur['profession.libelleCourant'] }}, né(e) le {{ acteur['etatCivil.infoNaissance.dateNais'] | fdate }} à {{ acteur['etatCivil.infoNaissance.villeNais'] }}</span>
         </div>
       </div>
@@ -47,11 +47,17 @@
   <div class="col s12">
     <ul class="collapsible" data-collapsible="expandable">
       <li>
-        <div class="collapsible-header"><i class="fa fa-legal"></i> Mandats</div>
-        <div class="collapsible-body"><span>Lorem ipsum dolor sit amet.</span></div>
+        <div class="collapsible-header"><i class="fa fa-legal {{ groupe['csscolor'] }}-text"></i> Mandats</div>
+        <div class="collapsible-body"><span>...</span></div>
       </li>
       <li>
-        <div class="collapsible-header active"><i class="fa fa-hand-paper-o"></i> Votes</div>
+        <div class="collapsible-header"><i class="fa fa-university {{ groupe['csscolor'] }}-text"></i> Hémicycle</div>
+        <div class="collapsible-body">
+          <object id="hemicycle" data="../hemicycle.svg" width='100%' type="image/svg+xml"></object>
+        </div>
+      </li>
+      <li>
+        <div class="collapsible-header active"><i class="fa fa-hand-paper-o {{ groupe['csscolor'] }}-text"></i> Votes</div>
         <div class="collapsible-body">
           <div class="row">
 				      <div class="col s12 m12">
@@ -100,5 +106,16 @@
     {% for l in scrutins %}
       var scrutinsList = new List('scrutins{{ l['leg'] }}',{ valueNames: ['libelle']});
     {% endfor %}
+  </script>
+  <script>
+    var svg = document.getElementById('hemicycle');
+    svg.addEventListener('load', function () {
+      //var svg = document.getElementById('hemicycle');
+      var svgDoc = svg.contentDocument;
+      var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+      styleElement.textContent = "#p{{ acteur['place'] }} { fill: {{ groupe['svgcolor']}}; }"; // add whatever you need here
+      svgDoc.getElementById('defs').appendChild(styleElement);
+
+    });
   </script>
 {% endblock %}
