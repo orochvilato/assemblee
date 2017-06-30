@@ -10,6 +10,7 @@
 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+  <link rel="stylesheet" href="../css/colors.css">
   
 <style>
     tfoot, th {
@@ -41,14 +42,14 @@
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 30/06/2017 10:47</span>
+        <span>Date de mise à jour : 30/06/2017 13:55</span>
       </div>
     </div>
     <div class="row">
       
 <div class="row">
   <div class="col s12">
-    <div class="card horizontal grey lighten-4">
+    <div class="card horizontal coulNIbg">
       <div class="card-image">
         <img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/720798.jpg" />
       </div>
@@ -60,7 +61,7 @@
               <a href="mailto:louis.aliot@assemblee-nationale.fr"><i class="fa fa-envelope-o"></i></a>
             
           </h5>
-          <h5><i class="fa fa-group grey-text"></i> <a href="../groupes/PO723569.html" class="grey-text">Non inscrit ( NI)</a></h5>
+          <h5><i class="fa fa-group coulNI-text"></i> <a href="../groupes/PO723569.html" class="coulNI-text">Non inscrit ( NI)</a></h5>
           <span>Autre profession, né(e) le 4 septembre 1969 à Toulouse</span>
         </div>
       </div>
@@ -71,17 +72,17 @@
   <div class="col s12">
     <ul class="collapsible" data-collapsible="expandable">
       <li>
-        <div class="collapsible-header"><i class="fa fa-legal grey-text"></i> Mandats</div>
+        <div class="collapsible-header"><i class="fa fa-legal coulNI-text"></i> Mandats</div>
         <div class="collapsible-body"><span>...</span></div>
       </li>
       <li>
-        <div class="collapsible-header"><i class="fa fa-university grey-text"></i> Hémicycle</div>
+        <div class="collapsible-header"><i class="fa fa-university coulNI-text"></i> Hémicycle</div>
         <div class="collapsible-body">
           <object id="hemicycle" data="../hemicycle.svg" width='100%' type="image/svg+xml"></object>
         </div>
       </li>
       <li>
-        <div class="collapsible-header active"><i class="fa fa-hand-paper-o grey-text"></i> Votes</div>
+        <div class="collapsible-header active"><i class="fa fa-hand-paper-o coulNI-text"></i> Votes</div>
         <div class="collapsible-body">
           <div class="row">
 				      <div class="col s12 m12">
@@ -116,7 +117,7 @@
       //var svg = document.getElementById('hemicycle');
       var svgDoc = svg.contentDocument;
       var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
-      styleElement.textContent = "#p011 { fill: #9e9e9e; }"; // add whatever you need here
+      styleElement.textContent = "#p011 { fill: #bfbfbf; }"; // add whatever you need here
       svgDoc.getElementById('defs').appendChild(styleElement);
 
     });

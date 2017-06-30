@@ -10,6 +10,7 @@
 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+  <link rel="stylesheet" href="../css/colors.css">
   
 <style>
     tfoot, th {
@@ -41,14 +42,14 @@
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 30/06/2017 10:47</span>
+        <span>Date de mise à jour : 30/06/2017 13:55</span>
       </div>
     </div>
     <div class="row">
       
 <div class="row">
   <div class="col s12">
-    <div class="card horizontal blue lighten-4">
+    <div class="card horizontal coulLRbg">
       <div class="card-image">
         <img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/721506.jpg" />
       </div>
@@ -73,7 +74,7 @@
               <a href="mailto:brigitte.kuster@assemblee-nationale.fr"><i class="fa fa-envelope-o"></i></a>
             
           </h5>
-          <h5><i class="fa fa-group blue-text"></i> <a href="../groupes/PO730934.html" class="blue-text">Les Républicains ( LR)</a></h5>
+          <h5><i class="fa fa-group coulLR-text"></i> <a href="../groupes/PO730934.html" class="coulLR-text">Les Républicains ( LR)</a></h5>
           <span>Sans profession déclarée, né(e) le 12 avril 1959 à Saint-Cloud</span>
         </div>
       </div>
@@ -84,17 +85,17 @@
   <div class="col s12">
     <ul class="collapsible" data-collapsible="expandable">
       <li>
-        <div class="collapsible-header"><i class="fa fa-legal blue-text"></i> Mandats</div>
+        <div class="collapsible-header"><i class="fa fa-legal coulLR-text"></i> Mandats</div>
         <div class="collapsible-body"><span>...</span></div>
       </li>
       <li>
-        <div class="collapsible-header"><i class="fa fa-university blue-text"></i> Hémicycle</div>
+        <div class="collapsible-header"><i class="fa fa-university coulLR-text"></i> Hémicycle</div>
         <div class="collapsible-body">
           <object id="hemicycle" data="../hemicycle.svg" width='100%' type="image/svg+xml"></object>
         </div>
       </li>
       <li>
-        <div class="collapsible-header active"><i class="fa fa-hand-paper-o blue-text"></i> Votes</div>
+        <div class="collapsible-header active"><i class="fa fa-hand-paper-o coulLR-text"></i> Votes</div>
         <div class="collapsible-body">
           <div class="row">
 				      <div class="col s12 m12">
@@ -129,7 +130,7 @@
       //var svg = document.getElementById('hemicycle');
       var svgDoc = svg.contentDocument;
       var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
-      styleElement.textContent = "#p336 { fill: #2196f3; }"; // add whatever you need here
+      styleElement.textContent = "#p336 { fill: #2f5597; }"; // add whatever you need here
       svgDoc.getElementById('defs').appendChild(styleElement);
 
     });

@@ -13,7 +13,7 @@
 {% endblock %}
 {% block content %}
 <div class="col s12">
-  <div class="card {{ groupe['csscolor'] }} lighten-3">
+  <div class="card {{ groupe['csscolor'] }}bg">
     <div class="card-content">
       <h4>{{ groupe['libelle'] }} ({{ groupe['nbmembres'] }} membres)</h4>
       {% if 'president' in groupe.keys() %}

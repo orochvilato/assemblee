@@ -4,7 +4,7 @@ from zipfile import ZipFile
 from cStringIO import StringIO
 import xmltodict
 from datetime import datetime
-
+import re
 import locale
 locale.setlocale(locale.LC_ALL, 'fr_FR.utf8')
 
@@ -15,7 +15,7 @@ parser.add_argument("--debug", help="debug mode", action="store_true")
 args = parser.parse_args()
 debug = args.debug
 
-csscolors = {
+_csscolors = {
     'NI': 'grey',
     'LR': 'blue',
     'MODEM': 'amber',
@@ -24,16 +24,26 @@ csscolors = {
     'LC': 'light-blue',
     'REM': 'purple',
     'NG': 'pink'}
-svgcolors = {
-    'NI': '#9e9e9e',
-    'LR': '#2196f3',
-    'MODEM': '#ffc107',
-    'FI': '#ff5722',
-    'GDR': '#f44336',
-    'LC': '#03a9f4',
-    'REM': '#9c27b0',
-    'NG': '#e91e63'}
+svgcolors = {}
 
+
+
+def setPalette(svgfile):
+    css = ""
+    svg = xmltodict.parse(open(svgfile,'r').read())
+    for c in svg['svg']['rect']:
+        id = c['@id']
+        h = re.search(r';fill:([^;]+);',c['@style']).groups()[0][1:]
+        svgcolors[id] = '#'+h
+        hcolor = tuple(int(h[i:i+2], 16) for i in (0, 2 ,4))
+        css += '.coul'+id+' {\n  background-color: rgba(%d,%d,%d,1);\n}\n\n' % hcolor
+        css += '.coul'+id+'-text {\n  color: rgba(%d,%d,%d,1);\n}\n\n' % hcolor
+        css += '.coul'+id+'bg {\n  background-color: rgba(%d,%d,%d,0.33);\n}\n\n' % hcolor
+        css += '.coul'+id+'bg-text {\n  color: rgba(%d,%d,%d,0.33);\n}\n\n' % hcolor
+    open("dist/css/colors.css",'w').write(css)
+
+
+setPalette('palette.svg')
 
 def loadXMLZip(url):
 
@@ -126,7 +136,7 @@ for organe in organes.keys():
     if org['codeType'] == 'GP':
         if not org['viMoDe.dateFin']:
             groupes[org['uid']] = org
-            org.update({'svgcolor':svgcolors.get(org['libelleAbrev'],'NI'),'csscolor':csscolors.get(org['libelleAbrev'],'NI')})
+            org.update({'csscolor':'coul'+org['libelleAbrev'],'svgcolor':svgcolors.get(org['libelleAbrev'],'NI')})
         organes[org['uid']].update({'membres':{},'votes':{},'stats':{'fsp':{}, 'parite':{},'votes':{}}})
 
 places = {}
