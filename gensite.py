@@ -15,15 +15,20 @@ parser.add_argument("--debug", help="debug mode", action="store_true")
 args = parser.parse_args()
 debug = args.debug
 
-_csscolors = {
-    'NI': 'grey',
-    'LR': 'blue',
-    'MODEM': 'amber',
-    'FI': 'deep-orange',
-    'GDR': 'red',
-    'LC': 'light-blue',
-    'REM': 'purple',
-    'NG': 'pink'}
+from collections import OrderedDict
+
+statsCSP = OrderedDict((
+(u"Agriculteurs exploitants", 1.1),
+(u"Artisans, commerçants et chefs d'entreprise",3.6),
+(u"Cadres et professions intellectuelles supérieures",9.4),
+(u"Professions Intermédiaires",13.8),
+(u"Employés",15.9),
+(u"Ouvriers",12.3),
+(u"Retraités",24.9),
+(u"Autres (y compris inconnu et sans profession déclarée)",19)
+))
+
+
 svgcolors = {}
 
 
@@ -130,14 +135,14 @@ else:
 
 nbvotes = {}
 groupes = {}
-stats = {'fsp':{}, 'parite':{},'scrutins':{}}
+stats = {'fsp':OrderedDict(list((c,0) for c in statsCSP.keys())), 'parite':{},'scrutins':{}}
 for organe in organes.keys():
     org = organes[organe]
     if org['codeType'] == 'GP':
         if not org['viMoDe.dateFin']:
             groupes[org['uid']] = org
             org.update({'csscolor':'coul'+org['libelleAbrev'],'svgcolor':svgcolors.get(org['libelleAbrev'],'NI')})
-        organes[org['uid']].update({'membres':{},'votes':{},'stats':{'fsp':{}, 'parite':{},'votes':{}}})
+        organes[org['uid']].update({'membres':{},'votes':{},'stats':{'fsp':OrderedDict(list((c,0) for c in statsCSP.keys())), 'parite':{},'votes':{}}})
 
 places = {}
 for acteur in acteurs.keys():
@@ -162,19 +167,22 @@ for acteur in acteurs.keys():
     if placeH:
         places[str(int(placeH))] = {'place':placeH,'acteur':acteur,'groupe':act['groupe']}
         act['place'] = placeH
-    else:
-        print act['uid']
     # initialisations
     act['stats'] = {'absenteisme':{}}
     act['votes'] = {}
     # stats
-    fsp = act['profession.socProcINSEE.famSocPro'] or "Inconnu"
+    if not act['profession.socProcINSEE.famSocPro'] in statsCSP.keys():
+        act['profession.socProcINSEE.famSocPro'] = u"Autres (y compris inconnu et sans profession déclarée)"
+
+    fsp = act['profession.socProcINSEE.famSocPro']
     ostats = organes[groupeRef]['stats']
     ostats['fsp'][fsp] = ostats['fsp'].get(fsp,0) + 1
     stats['fsp'][fsp] = stats['fsp'].get(fsp,0) + 1
     parite = 'Homme' if act['etatCivil.ident.civ']=='M.' else 'Femme'
     ostats['parite'][parite] = ostats['parite'].get(parite,0) + 1
     stats['parite'][parite] = stats['parite'].get(parite,0) + 1
+
+
 
 
 # Hemicycle
@@ -293,15 +301,23 @@ for s in scrutins:
 #    acteur['stats']['absenteisme'][leg]['classement'] = [()]
 
 
+for k in statsCSP.keys():
+    stats['fsp'][k] = round(100*float(stats['fsp'][k])/len(acteurs.keys()),2)
+
+
 for groupe in groupes:
     organes[groupe]['nbmembres'] = len(organes[groupe]['membres'].keys())
+    for k in statsCSP.keys():
+        organes[groupe]['stats']['fsp'][k] = 100*float(organes[groupe]['stats']['fsp'][k])/organes[groupe]['nbmembres']
+
     open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(
             today=today,
+            csp=statsCSP,
             scrutins = sort_scrutins(organes[groupe]['votes'].keys()),
             acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
 
 open('dist/scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = sort_scrutins(scrutins.keys()), organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, stats=stats, organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, stats=stats, csp=statsCSP,organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 for s in scrutins.keys():
     open('dist/scrutins/%s.html' % s,'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutins[s], organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 
