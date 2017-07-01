@@ -13,7 +13,7 @@
 								  path.place {
 									stroke-linejoin: round;
 									cursor: pointer;
-									fill:#cbcbcb;
+									fill:#f0f0f0;
 									stroke:#ffffff;
 									stroke-width:1.0714285714285714
 								  }

@@ -325,6 +325,8 @@ for s in scrutins.keys():
 for act in acteurs:
 
     acteur = acteurs[act]
+    if groupes[acteur['groupe']]['libelleAbrev']=='NI':
+        print acteur['nomcomplet'],acteur.get('place','NA')
     scruts = sort_scrutins(acteur['votes'].keys())
     for leg in acteur['stats']['absenteisme'].keys():
         stat = acteur['stats']['absenteisme'][leg]
