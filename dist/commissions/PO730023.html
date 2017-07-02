@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>ObsAs</title>
+
+
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+  <link rel="stylesheet" href="../css/colors.css">
+  
+<style>
+    tfoot, th {
+      text-align: center;
+    }
+    .parti {
+      color: grey;
+      font-weight:300;
+    }
+</style>
+
+  
+  
+</head>
+<body>
+  <nav class="blue-grey darken-1">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">ObsAs</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="../acteurs.html">Députés</a></li>
+        <li><a href="../scrutins.html">Votes</a></li>
+        <li><a href="../groupes.html">Groupes</a></li>
+        <li><a href="../commissions.html">Commissions</a></li>
+
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <span>Date de mise à jour : 02/07/2017 18:26</span>
+      </div>
+    </div>
+    <div class="row">
+      
+<div class="col s12">
+  <div class="card">
+    <div class="card-content">
+      <h4>Secrétariat d&#39;État, auprès de la ministre des armées (1 membres)</h4>
+      
+    </div>
+  </div>
+  <ul class="collapsible" data-collapsible="expandable">
+  <li><div class="collapsible-header active"><i class="fa fa-group"></i>Membres</div>
+      <div class="collapsible-body">
+        <div id="membres">
+          <input class="search" placeholder="Recherche">
+          <table class="striped highlight centered">
+            <thead>
+              <tr><th>Photo</th><th>Nom</th><th>Groupe</th><th>Contact</th><th>Profession</th><th>Age</th></tr>
+            </thead>
+            <tbody class="list">
+              <tr>
+                <td><a href="../acteurs/PA719914.html"><img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/719914.jpg" /></a></td>
+                <td class="nom"><a href="../acteurs/PA719914.html">Mme Geneviève Darrieussecq</a></td>
+                <td><a href="../groupes/PO730970.html" class="coulMODEM-text" style="font-weight:500;"><i class="fa fa-group"></i> MODEM</a></td>
+                <td>
+                  
+                    <a href="mailto:genevieve.darrieussecq@assemblee-nationale.fr"><i class="fa fa-envelope-o"></i></a>
+                  
+                
+                  
+                    <a href="https://twitter.com/Darrieussecq"><i class="fa fa-twitter"></i></a>
+                  
+                
+                  
+                    <a href="mailto:genevieve.darrieussecq@orange.fr"><i class="fa fa-envelope-o"></i></a>
+                  
+                
+                  
+                    <a href="http://www.darrieussecq.net"><i class="fa fa-globe"></i></a>
+
+                  
+                
+                  
+                    <a href="https://fr-fr.facebook.com/genevieve.darrieussecq"><i class="fa fa-facebook-square"></i></a>
+                  
+                </td>
+                <td>Médecin</td>
+                <td>61 ans</td>
+
+
+                </tr>
+              
+            </tbody>
+          </table>
+        </div>
+      </div></li>
+
+      <li><div class="collapsible-header"><i class="fa fa-bar-chart"></i>Statistiques</div>
+      <div class="collapsible-body"><div class="row">
+    <div class="col l6 m12">
+    <b>Parité</b>
+    <canvas id="pariteChart"></canvas>
+    </div>
+    <div class="col l6 m12">
+    <b>Répartition par familles socio-professionnelles</b>
+    <canvas id="fspChart"></canvas>
+  </div></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
+
+    <script>
+    var ctx = document.getElementById("fspChart");
+    var fsplabels = JSON.parse('["Agriculteurs exploitants", "Artisans, commer\u00e7ants et chefs d\u0027entreprise", "Cadres et professions intellectuelles sup\u00e9rieures", "Professions Interm\u00e9diaires", "Employ\u00e9s", "Ouvriers", "Retrait\u00e9s", "Autres (y compris inconnu et sans profession d\u00e9clar\u00e9e)"]');
+    var fspdata = JSON.parse('[0.0, 0.0, 100.0, 0.0, 0.0, 0.0, 0.0, 0.0]');
+    var fspfrance = JSON.parse('[1.1, 3.6, 9.4, 13.8, 15.9, 12.3, 24.9, 19]');
+    var gris = 'rgba(127,127,127,1)'
+    var grisbg = 'rgba(127,127,127,0.2)'
+    var fspChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: fsplabels,
+            datasets: [{
+                label:'Députés ARM',
+                data: fspdata,
+                backgroundColor: 'blue'
+
+            },
+            {
+              label: 'Population française',
+              data:fspfrance,
+              backgroundColor:gris
+            }
+          ]
+        },
+        options: {
+            legend: {
+              display: true
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var ctx = document.getElementById("pariteChart");
+    var parlabels = JSON.parse('["Femme"]');
+    var pardata = JSON.parse('[1]');
+
+    var parChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: parlabels,
+            datasets: [{
+                data: pardata,
+                backgroundColor: ['rgba(239, 83, 80, 0.2)', 'rgba(126, 87, 194, 0.2)', 'rgba(41, 182, 246, 0.2)', 'rgba(102, 187, 106, 0.2)', 'rgba(255, 238, 88, 0.2)', 'rgba(236, 64, 122, 0.2)', 'rgba(92, 107, 192, 0.2)', 'rgba(38, 198, 218, 0.2)', 'rgba(156, 204, 101, 0.2)', 'rgba(255, 202, 40, 0.2)', 'rgba(171, 71, 188, 0.2)', 'rgba(66, 165, 245, 0.2)', 'rgba(38, 166, 154, 0.2)', 'rgba(212, 225, 87, 0.2)', 'rgba(255, 202, 40, 0.2)'],
+                borderColor: ['rgba(239, 83, 80, 1)', 'rgba(126, 87, 194, 1)', 'rgba(41, 182, 246, 1)', 'rgba(102, 187, 106, 1)', 'rgba(255, 238, 88, 1)', 'rgba(236, 64, 122, 1)', 'rgba(92, 107, 192, 1)', 'rgba(38, 198, 218, 1)', 'rgba(156, 204, 101, 1)', 'rgba(255, 202, 40, 1)', 'rgba(171, 71, 188, 1)', 'rgba(66, 165, 245, 1)', 'rgba(38, 166, 154, 1)', 'rgba(212, 225, 87, 1)', 'rgba(255, 202, 40, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+              display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+
+    </script></div></li>
+
+    </ul>
+</div>
+
+    </div>
+  </div>
+</body>
+<footer>
+  <!--  Scripts-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://use.fontawesome.com/57f4fc708a.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+  
+  <script>
+    var membreList = new List('membres',{ valueNames: ['nom']});
+    $('.filter').click(function() {
+        var data = $(this).data();
+        if ('all' in data) {
+          deputeList.filter()
+          return
+        }
+      deputeList.filter(function(item) {
+        result = true;
+
+        for(var key in data) {
+          result = result && (item.values()[key] == data[key]);
+        }
+        return result;
+      });
+    });
+
+  </script>
+
+
+
+</footer>
+
+</html>

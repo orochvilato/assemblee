@@ -136,14 +136,16 @@ else:
 
 nbvotes = {}
 groupes = {}
-stats = {'fsp':OrderedDict(list((c,0) for c in statsCSP.keys())), 'parite':{},'scrutins':{}}
+stats = {'fsp':OrderedDict(list((c,0) for c in statsCSP.keys())), 'parite':{},'scrutins':{}, 'mandats':{}}
+
 for organe in organes.keys():
     org = organes[organe]
-    if org['codeType'] == 'GP':
-        if not org['viMoDe.dateFin']:
+    if not org['viMoDe.dateFin']:
+        if org['codeType'] == 'GP':
             groupes[org['uid']] = org
             org.update({'csscolor':'coul'+org['libelleAbrev'],'svgcolor':svgcolors.get(org['libelleAbrev'],'NI')})
-        organes[org['uid']].update({'membres':{},'votes':{},'stats':{'fsp':OrderedDict(list((c,0) for c in statsCSP.keys())), 'parite':{},'votes':{}}})
+    organes[org['uid']].update({'membres':{},'votes':{},'stats':{'fsp':OrderedDict(list((c,0) for c in statsCSP.keys())), 'parite':{},'votes':{}}})
+
 
 places = {}
 for acteur in acteurs.keys():
@@ -151,19 +153,32 @@ for acteur in acteurs.keys():
     act['contacts'] = []
     act['nomcomplet'] = act['etatCivil.ident.civ'] + ' ' + act['etatCivil.ident.prenom'] + ' ' + act['etatCivil.ident.nom']
     act['age'] = int((datetime.now() - datetime.strptime(act['etatCivil.infoNaissance.dateNais'],'%Y-%m-%d')).days / 365.25)
+    if not act['profession.socProcINSEE.famSocPro'] in statsCSP.keys():
+        act['profession.socProcINSEE.famSocPro'] = u"Autres (y compris inconnu et sans profession déclarée)"
+
     for adr in act['adresses']:
         if 'valElec' in adr.keys():
             act['contacts'].append((adr['typeLibelle'],adr['valElec']))
     placeH = None
     for man in act['mandats']:
+        organeRef = man['organes.organeRef']
         if man['typeOrgane']=='ASSEMBLEE':
             placeH = man['mandature.placeHemicycle']
         if man['typeOrgane']=='GP':
-            groupeRef = man['organes.organeRef']
-            if man['infosQualite.codeQualite'] == u'Président':
-                organes[man['organes.organeRef']]['president'] = act['uid']
-            organes[man['organes.organeRef']]['membres'][act['uid']] = man['infosQualite.codeQualite']
-            act['groupe'] = groupeRef
+
+            act['groupe'] = organeRef
+        if man['infosQualite.codeQualite'] == u'Président':
+            organes[man['organes.organeRef']]['president'] = act['uid']
+        else:
+            fsp = act['profession.socProcINSEE.famSocPro']
+            ostats = organes[organeRef]['stats']
+            ostats['fsp'][fsp] = ostats['fsp'].get(fsp,0) + 1
+            stats['fsp'][fsp] = stats['fsp'].get(fsp,0) + 1
+            parite = 'Homme' if act['etatCivil.ident.civ']=='M.' else 'Femme'
+            ostats['parite'][parite] = ostats['parite'].get(parite,0) + 1
+            stats['parite'][parite] = stats['parite'].get(parite,0) + 1
+        organes[man['organes.organeRef']]['membres'][act['uid']] = man['infosQualite.codeQualite']
+
 
     if placeH:
         places[str(int(placeH))] = {'place':placeH,'acteur':acteur,'groupe':act['groupe']}
@@ -172,20 +187,11 @@ for acteur in acteurs.keys():
     act['stats'] = {'absenteisme':{}}
     act['votes'] = {}
     # stats
-    if not act['profession.socProcINSEE.famSocPro'] in statsCSP.keys():
-        act['profession.socProcINSEE.famSocPro'] = u"Autres (y compris inconnu et sans profession déclarée)"
 
-    fsp = act['profession.socProcINSEE.famSocPro']
-    ostats = organes[groupeRef]['stats']
-    ostats['fsp'][fsp] = ostats['fsp'].get(fsp,0) + 1
-    stats['fsp'][fsp] = stats['fsp'].get(fsp,0) + 1
-    parite = 'Homme' if act['etatCivil.ident.civ']=='M.' else 'Femme'
-    ostats['parite'][parite] = ostats['parite'].get(parite,0) + 1
-    stats['parite'][parite] = stats['parite'].get(parite,0) + 1
 
     # déclarations hatvp
     act['hatvp'] = declarations.get(normalize(act['nomcomplet']),[])
-    
+    #stats['']
 
 
 
@@ -309,28 +315,48 @@ for k in statsCSP.keys():
     stats['fsp'][k] = round(100*float(stats['fsp'][k])/len(acteurs.keys()),2)
 
 
-for groupe in groupes:
-    organes[groupe]['nbmembres'] = len(organes[groupe]['membres'].keys())
-    for k in statsCSP.keys():
-        organes[groupe]['stats']['fsp'][k] = 100*float(organes[groupe]['stats']['fsp'][k])/organes[groupe]['nbmembres']
 
-    open('dist/groupes/%s.html' % groupe,'w').write(env.get_template('groupetmpl.html').render(
-            today=today,
-            csp=statsCSP,
-            scrutins = sort_scrutins(organes[groupe]['votes'].keys()),
-            acteurs = acteurs, groupe = organes[groupe]).encode('utf-8'))
+for organe in organes:
+    organes[organe]['nbmembres'] = len(organes[organe]['membres'].keys())
+    if organes[organe]['nbmembres']>0:
+        print organes[organe]['libelle']
+        for k in statsCSP.keys():
+            organes[organe]['stats']['fsp'][k] = 100*float(organes[organe]['stats']['fsp'][k])/organes[organe]['nbmembres']
+        if organes[organe]['codeType'] != 'GP':
+            open('dist/commissions/%s.html' % organe,'w').write(env.get_template('organetmpl.html').render(
+                today=today,
+                csp=statsCSP,
+                acteurs = acteurs,
+                groupes= groupes,
+                organe = organes[organe]).encode('utf-8'))
+        else:
+            open('dist/groupes/%s.html' % organe,'w').write(env.get_template('groupetmpl.html').render(
+                today=today,
+                csp=statsCSP,
+                scrutins = sort_scrutins(organes[organe]['votes'].keys()),
+                acteurs = acteurs, groupe = organes[organe]).encode('utf-8'))
+
 
 open('dist/scrutins.html','w').write(env.get_template('scrutinstmpl.html').render(today=today,scrutins = sort_scrutins(scrutins.keys()), organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/commissions.html','w').write(env.get_template('organestmpl.html').render(
+    today=today,
+    stats=stats,
+    csp=statsCSP,
+    organes = organes,
+    acteurs = acteurs,
+    commissions = dict((k,v) for k,v in organes.iteritems() if v['nbmembres']>0 and v['codeType'] in ['CONFPT','COMPER'])).encode('utf-8'))
 open('dist/groupes.html','w').write(env.get_template('groupestmpl.html').render(today=today, stats=stats, csp=statsCSP,organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 for s in scrutins.keys():
     open('dist/scrutins/%s.html' % s,'w').write(env.get_template('scrutintmpl.html').render(today=today, scrutin = scrutins[s], organes = organes, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 
-
+count = 0
 for act in acteurs:
-
     acteur = acteurs[act]
-    if groupes[acteur['groupe']]['libelleAbrev']=='NI':
-        print acteur['nomcomplet'],acteur.get('place','NA')
+    if acteur['hatvp']:
+        count += 1
+
+    #if groupes[acteur['groupe']]['libelleAbrev']=='NI':
+    #    print acteur['nomcomplet'],acteur.get('place','NA')
     scruts = sort_scrutins(acteur['votes'].keys())
     for leg in acteur['stats']['absenteisme'].keys():
         stat = acteur['stats']['absenteisme'][leg]

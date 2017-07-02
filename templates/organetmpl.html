@@ -1,0 +1,89 @@
+{% set path = '../' %}
+{% extends "basetmpl.html" %}
+{% block head %}
+<style>
+    tfoot, th {
+      text-align: center;
+    }
+    .parti {
+      color: grey;
+      font-weight:300;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="col s12">
+  <div class="card">
+    <div class="card-content">
+      <h4>{{ organe['libelle'] }} ({{ organe['nbmembres'] }} membres)</h4>
+      {% if 'president' in organe.keys() %}
+      <h5>Président : {{ nomcomplet(acteurs[organe['president']]) }}
+      {% endif %}
+    </div>
+  </div>
+  <ul class="collapsible" data-collapsible="expandable">
+  <li><div class="collapsible-header active"><i class="fa fa-group"></i>Membres</div>
+      <div class="collapsible-body">
+        <div id="membres">
+          <input class="search" placeholder="Recherche">
+          <table class="striped highlight centered">
+            <thead>
+              <tr><th>Photo</th><th>Nom</th><th>Groupe</th><th>Contact</th><th>Profession</th><th>Age</th></tr>
+            </thead>
+            <tbody class="list">
+              {% for m in organe['membres'] %}<tr>
+                <td><a href="../acteurs/{{ acteurs[m]['uid'] }}.html"><img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/{{ m[2:] }}.jpg" /></a></td>
+                <td class="nom"><a href="../acteurs/{{ acteurs[m]['uid'] }}.html">{{ nomcomplet(acteurs[m]) }}</a></td>
+                <td><a href="../groupes/{{ acteurs[m]['groupe'] }}.html" class="{{ groupes[acteurs[m]['groupe']]['csscolor'] }}-text" style="font-weight:500;"><i class="fa fa-group"></i> {{ groupes[acteurs[m]['groupe']]['libelleAbrev'] }}</a></td>
+                <td>{% for (k,v) in acteurs[m]['contacts'] %}
+                  {% if (k=="Mèl") %}
+                    <a href="mailto:{{ v }}"><i class="fa fa-envelope-o"></i></a>
+                  {% elif (k=='Twitter') %}
+                    <a href="https://twitter.com/{{ v[1:] }}"><i class="fa fa-twitter"></i></a>
+                  {% elif (k=='Facebook') %}
+                    <a href="https://fr-fr.facebook.com/{{ v }}"><i class="fa fa-facebook-square"></i></a>
+                  {% elif (k=='Site internet') %}
+                    <a href="http://{{ v }}"><i class="fa fa-globe"></i></a>
+
+                  {% endif %}
+                {% endfor %}</td>
+                <td>{{ acteurs[m]['profession.libelleCourant'] or "" }}</td>
+                <td>{{ acteurs[m]['age'] }} ans</td>
+
+
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div></li>
+
+      <li><div class="collapsible-header"><i class="fa fa-bar-chart"></i>Statistiques</div>
+      <div class="collapsible-body">{{ stat_bloc(organe['stats'],'blue',organe['libelleAbrev']) }}</div></li>
+
+    </ul>
+</div>
+{% endblock %}
+{% block javascript %}
+  <script>
+    var membreList = new List('membres',{ valueNames: ['nom']});
+    $('.filter').click(function() {
+        var data = $(this).data();
+        if ('all' in data) {
+          deputeList.filter()
+          return
+        }
+      deputeList.filter(function(item) {
+        result = true;
+
+        for(var key in data) {
+          result = result && (item.values()[key] == data[key]);
+        }
+        return result;
+      });
+    });
+
+  </script>
+
+
+{% endblock %}

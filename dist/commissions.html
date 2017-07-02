@@ -1,0 +1,186 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>ObsAs</title>
+
+
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+  <link rel="stylesheet" href="css/colors.css">
+  
+  
+  
+  
+</head>
+<body>
+  <nav class="blue-grey darken-1">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">ObsAs</a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+        <li><a href="acteurs.html">Députés</a></li>
+        <li><a href="scrutins.html">Votes</a></li>
+        <li><a href="groupes.html">Groupes</a></li>
+        <li><a href="commissions.html">Commissions</a></li>
+
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <span>Date de mise à jour : 02/07/2017 18:26</span>
+      </div>
+    </div>
+    <div class="row">
+      
+  <h4>Commissions et Conférences</h4>
+      <table class="striped highlight">
+        <thead>
+          <tr><th>Nom</th><th>Président</th><th>Nb membres</th></tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><a href="commissions/PO725343.html" style="font-weight:500;"><i class="fa fa-group"></i> Conférence des Présidents (CNFPDT)</a></td>
+            <td>M. François de Rugy</td>
+            <td>24</td>
+          </tr><tr>
+          <td><a href="commissions/PO59047.html" style="font-weight:500;"><i class="fa fa-group"></i> Commission des affaires étrangères (CION_AFETR)</a></td>
+            <td>Mme Marielle de Sarnez</td>
+            <td>73</td>
+          </tr><tr>
+          <td><a href="commissions/PO419865.html" style="font-weight:500;"><i class="fa fa-group"></i> Commission du développement durable et de l&#39;aménagement du territoire (CION-DVP)</a></td>
+            <td>Mme Barbara Pompili</td>
+            <td>73</td>
+          </tr><tr>
+          <td><a href="commissions/PO419610.html" style="font-weight:500;"><i class="fa fa-group"></i> Commission des affaires économiques (CION-ECO)</a></td>
+            <td>M. Roland Lescure</td>
+            <td>73</td>
+          </tr><tr>
+          <td><a href="commissions/PO59051.html" style="font-weight:500;"><i class="fa fa-group"></i> Commission des lois constitutionnelles, de la législation et de l&#39;administration générale de la République (CION_LOIS)</a></td>
+            <td>Mme Yaël Braun-Pivet</td>
+            <td>73</td>
+          </tr><tr>
+          <td><a href="commissions/PO59046.html" style="font-weight:500;"><i class="fa fa-group"></i> Commission de la défense nationale et des forces armées (CION_DEF)</a></td>
+            <td>M. Jean-Jacques Bridey</td>
+            <td>68</td>
+          </tr><tr>
+          <td><a href="commissions/PO419604.html" style="font-weight:500;"><i class="fa fa-group"></i> Commission des affaires culturelles et de l&#39;éducation (CION-CEDU)</a></td>
+            <td>M. Bruno Studer</td>
+            <td>71</td>
+          </tr><tr>
+          <td><a href="commissions/PO59048.html" style="font-weight:500;"><i class="fa fa-group"></i> Commission des finances, de l&#39;économie générale et du contrôle budgétaire (CION_FIN)</a></td>
+            <td>M. Éric Woerth</td>
+            <td>73</td>
+          </tr><tr>
+          <td><a href="commissions/PO420120.html" style="font-weight:500;"><i class="fa fa-group"></i> Commission des affaires sociales (CION-SOC)</a></td>
+            <td>Mme Brigitte Bourguignon</td>
+            <td>73</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ul class="collapsible" data-collapsible="expandable">
+        <li>
+          <div class="collapsible-header active">Stats</div>
+          <div class="collapsible-body">
+            <div class="row">
+    <div class="col l6 m12">
+    <b>Parité</b>
+    <canvas id="pariteChart"></canvas>
+    </div>
+    <div class="col l6 m12">
+    <b>Répartition par familles socio-professionnelles</b>
+    <canvas id="fspChart"></canvas>
+  </div></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
+
+    <script>
+    var ctx = document.getElementById("fspChart");
+    var fsplabels = JSON.parse('["Agriculteurs exploitants", "Artisans, commer\u00e7ants et chefs d\u0027entreprise", "Cadres et professions intellectuelles sup\u00e9rieures", "Professions Interm\u00e9diaires", "Employ\u00e9s", "Ouvriers", "Retrait\u00e9s", "Autres (y compris inconnu et sans profession d\u00e9clar\u00e9e)"]');
+    var fspdata = JSON.parse('[7.63, 25.82, 226.86, 16.98, 13.0, 1.04, 17.68, 14.04]');
+    var fspfrance = JSON.parse('[1.1, 3.6, 9.4, 13.8, 15.9, 12.3, 24.9, 19]');
+    var gris = 'rgba(127,127,127,1)'
+    var grisbg = 'rgba(127,127,127,0.2)'
+    var fspChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: fsplabels,
+            datasets: [{
+                label:'Députés ',
+                data: fspdata,
+                backgroundColor: 'rgba(102, 187, 106,1)'
+
+            },
+            {
+              label: 'Population française',
+              data:fspfrance,
+              backgroundColor:gris
+            }
+          ]
+        },
+        options: {
+            legend: {
+              display: true
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    var ctx = document.getElementById("pariteChart");
+    var parlabels = JSON.parse('["Femme", "Homme"]');
+    var pardata = JSON.parse('[722, 1142]');
+
+    var parChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: parlabels,
+            datasets: [{
+                data: pardata,
+                backgroundColor: ['rgba(239, 83, 80, 0.2)', 'rgba(126, 87, 194, 0.2)', 'rgba(41, 182, 246, 0.2)', 'rgba(102, 187, 106, 0.2)', 'rgba(255, 238, 88, 0.2)', 'rgba(236, 64, 122, 0.2)', 'rgba(92, 107, 192, 0.2)', 'rgba(38, 198, 218, 0.2)', 'rgba(156, 204, 101, 0.2)', 'rgba(255, 202, 40, 0.2)', 'rgba(171, 71, 188, 0.2)', 'rgba(66, 165, 245, 0.2)', 'rgba(38, 166, 154, 0.2)', 'rgba(212, 225, 87, 0.2)', 'rgba(255, 202, 40, 0.2)'],
+                borderColor: ['rgba(239, 83, 80, 1)', 'rgba(126, 87, 194, 1)', 'rgba(41, 182, 246, 1)', 'rgba(102, 187, 106, 1)', 'rgba(255, 238, 88, 1)', 'rgba(236, 64, 122, 1)', 'rgba(92, 107, 192, 1)', 'rgba(38, 198, 218, 1)', 'rgba(156, 204, 101, 1)', 'rgba(255, 202, 40, 1)', 'rgba(171, 71, 188, 1)', 'rgba(66, 165, 245, 1)', 'rgba(38, 166, 154, 1)', 'rgba(212, 225, 87, 1)', 'rgba(255, 202, 40, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+              display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+
+    </script>
+          </div>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</body>
+<footer>
+  <!--  Scripts-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://use.fontawesome.com/57f4fc708a.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+  
+
+
+</footer>
+
+</html>

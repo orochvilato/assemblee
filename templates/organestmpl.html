@@ -1,0 +1,30 @@
+
+{% extends "basetmpl.html" %}
+
+{% block content %}
+  <h4>Commissions et Conférences</h4>
+      <table class="striped highlight">
+        <thead>
+          <tr><th>Nom</th><th>Président</th><th>Nb membres</th></tr>
+        </thead>
+        <tbody>
+        {% for org in commissions %}<tr>
+          <td><a href="commissions/{{ org }}.html" style="font-weight:500;"><i class="fa fa-group"></i> {{ organes[org]['libelle'] }} ({{ organes[org]['libelleAbrev'] }})</a></td>
+            <td>{% if 'president' in organes[org].keys() %}{{ nomcomplet(acteurs[organes[org]['president']]) }}{% endif %}</td>
+            <td>{{ organes[org]['nbmembres'] }}</td>
+          </tr>{% endfor %}
+        </tbody>
+      </table>
+
+      <ul class="collapsible" data-collapsible="expandable">
+        <li>
+          <div class="collapsible-header active">Stats</div>
+          <div class="collapsible-body">
+            {{ stat_bloc(stats,'rgba(102, 187, 106,1)','') }}
+          </div>
+        </li>
+      </ul>
+{% endblock %}
+{% block javascript %}
+
+{% endblock %}
