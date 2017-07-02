@@ -8,12 +8,13 @@ import re
 import locale
 locale.setlocale(locale.LC_ALL, 'fr_FR.utf8')
 
+from lib.tools import cmdline_args,normalize
 
-import argparse
-parser = argparse.ArgumentParser()
-parser.add_argument("--debug", help="debug mode", action="store_true")
-args = parser.parse_args()
-debug = args.debug
+
+debug = cmdline_args.debug
+
+# déclaration hatvp
+from lib.hatvp import declarations
 
 from collections import OrderedDict
 
@@ -120,15 +121,15 @@ import json
 if not debug:
     organes,acteurs = loadDeputes()
 
-    open('acteurs.json','w').write(json.dumps(acteurs))
-    open('organes.json','w').write(json.dumps(organes))
+    open('json/acteurs.json','w').write(json.dumps(acteurs))
+    open('json/organes.json','w').write(json.dumps(organes))
 
     scrutins = loadScrutins()
-    open('scrutins.json','w').write(json.dumps(scrutins))
+    open('json/scrutins.json','w').write(json.dumps(scrutins))
 else:
-    organes = json.loads(open('organes.json','r').read())
-    acteurs = json.loads(open('acteurs.json','r').read())
-    scrutins = json.loads(open('scrutins.json','r').read())
+    organes = json.loads(open('json/organes.json','r').read())
+    acteurs = json.loads(open('json/acteurs.json','r').read())
+    scrutins = json.loads(open('json/scrutins.json','r').read())
 
 
 
@@ -182,6 +183,9 @@ for acteur in acteurs.keys():
     ostats['parite'][parite] = ostats['parite'].get(parite,0) + 1
     stats['parite'][parite] = stats['parite'].get(parite,0) + 1
 
+    # déclarations hatvp
+    act['hatvp'] = declarations.get(normalize(act['nomcomplet']),[])
+    
 
 
 

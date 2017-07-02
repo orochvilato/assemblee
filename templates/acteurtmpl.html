@@ -57,6 +57,19 @@
         </div>
       </li>
       <li>
+        <div class="collapsible-header"><i class="fa fa-file-text-o {{ groupe['csscolor'] }}-text"></i> HATVP</div>
+        <div class="collapsible-body">
+          <ul class="collection">{% for dec in acteur['hatvp'] %}
+            <li class="collection-item avatar">
+              <a href="{{ dec['docurl'] }}" target="_blank" style="color:black;"><i class="fa fa-file-text-o circle" style="background: {{ groupe['svgcolor'] }}"></i>
+              <span class="title" style="font-weight:450">{{ dec['typedoc'] }}</span>
+              <p>{{ dec['qualite'] }}</p></a>
+           </li>
+          {% endfor %}</ul>
+
+        </div>
+      </li>
+      <li>
         <div class="collapsible-header active"><i class="fa fa-hand-paper-o {{ groupe['csscolor'] }}-text"></i> Votes</div>
         <div class="collapsible-body">
           <div class="row">
