@@ -32,19 +32,27 @@
   <nav class="blue-grey darken-1">
     <div class="nav-wrapper">
       <a href="#" class="brand-logo center">ObsAs</a>
-      <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="../commissions/PO717460.html">Assemblée</a></li>
         <li><a href="../acteurs.html">Députés</a></li>
         <li><a href="../scrutins.html">Votes</a></li>
         <li><a href="../groupes.html">Groupes</a></li>
         <li><a href="../commissions.html">Commissions</a></li>
-
+      </ul>
+      <ul class="side-nav" id="mobile-demo">
+        <li><a href="../commissions/PO717460.html">Assemblée</a></li>
+        <li><a href="../acteurs.html">Députés</a></li>
+        <li><a href="../scrutins.html">Votes</a></li>
+        <li><a href="../groupes.html">Groupes</a></li>
+        <li><a href="../commissions.html">Commissions</a></li>
       </ul>
     </div>
   </nav>
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 03/07/2017 10:06</span>
+        <span>Date de mise à jour : 03/07/2017 14:23</span>
       </div>
     </div>
     <div class="row">
@@ -91,8 +99,19 @@
   <div class="col s12">
     <ul class="collapsible" data-collapsible="expandable">
       <li>
-        <div class="collapsible-header"><i class="fa fa-legal coulREM-text"></i> Mandats</div>
-        <div class="collapsible-body"><span>...</span></div>
+        <div class="collapsible-header"><i class="fa fa-legal coulREM-text"></i> Fonctions / Mandats</div>
+        <div class="collapsible-body"><ul class="collection">
+          <li class="collection-item">
+            
+            <i class="fa fa-play coulREM-text"></i> membre <a href="../commissions/PO717460.html" style="color:black; font-weight:500;">de l&#39;Assemblée</a> (depuis le 18 juin 2017)
+          </li><li class="collection-item">
+            
+            <i class="fa fa-play coulREM-text"></i> Membre <a href="../groupes/PO730964.html" style="color:black; font-weight:500;">du groupe La République en Marche</a> (depuis le 27 juin 2017)
+          </li><li class="collection-item">
+            
+            <i class="fa fa-play coulREM-text"></i> Vice-Président <a href="../commissions/PO419604.html" style="color:black; font-weight:500;">de la commission des affaires culturelles et de l&#39;éducation</a> (depuis le 30 juin 2017)
+          </li>
+        </ul></div>
       </li>
       <li>
         <div class="collapsible-header"><i class="fa fa-university coulREM-text"></i> Hémicycle</div>
@@ -133,6 +152,11 @@
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://use.fontawesome.com/57f4fc708a.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+  <script>
+  $(document).ready(function() {
+    $(".button-collapse").sideNav();
+  })
+  </script>
   
   <script>
     

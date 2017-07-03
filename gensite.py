@@ -8,7 +8,7 @@ import re
 import locale
 locale.setlocale(locale.LC_ALL, 'fr_FR.utf8')
 
-from lib.tools import cmdline_args,normalize
+from lib.tools import cmdline_args,normalize,format_date
 
 
 debug = cmdline_args.debug
@@ -161,6 +161,10 @@ commstats = {'fsp':OrderedDict(list((c,0) for c in statsCSP.keys())), 'parite':{
 places = {}
 rangs = {u'Président':1,
          u'Vice-Président':2,
+         u'Questeur':3,
+         u"Président d'âge":4,
+         u"Secrétaire d'âge":5,
+         u"Secrétaire":6,
          u'Membre apparenté':10}
 
 for acteur in acteurs.keys():
@@ -176,7 +180,10 @@ for acteur in acteurs.keys():
             act['contacts'].append((adr['typeLibelle'],adr['valElec']))
     placeH = None
     comm = 0
+    fonctions =  {}
+
     for man in act['mandats']:
+
         organeRef = man['organes.organeRef']
         if man['typeOrgane']=='ASSEMBLEE':
             placeH = man['mandature.placeHemicycle']
@@ -201,12 +208,14 @@ for acteur in acteurs.keys():
                 commstats['fsp'][fsp] += 1
                 commstats['parite'][parite] = commstats['parite'].get(parite,0) + 1
 
+
         qua = man['infosQualite.codeQualite']
+        fonctions[organeRef] = dict(qualite=qua,debut=format_date(man['dateDebut']),organe=organeRef)
         qua_norm = normalize(qua)
         organes[man['organes.organeRef']]['qualites'][qua_norm] = organes[man['organes.organeRef']]['qualites'].get(qua_norm,[]) + [act['uid']]
-        organes[man['organes.organeRef']]['membres'][act['uid']] = (act['uid'],qua,rangs.get(qua,3 if qua.lower()!='membre' else 4))
+        organes[man['organes.organeRef']]['membres'][act['uid']] = (act['uid'],qua,rangs.get(qua,3 if qua.lower()!='membre' else 8))
 
-
+    act['fonctions'] = fonctions.values()
     if placeH:
         places[str(int(placeH))] = {'place':placeH,'acteur':acteur,'groupe':act['groupe']}
         act['place'] = placeH
@@ -302,9 +311,7 @@ env = Environment(
 
 today = datetime.now().strftime('%d/%m/%Y %H:%M')
 
-def format_date(date):
-    d = datetime.strptime(date,'%Y-%m-%d')
-    return d.strftime('%-d %B %Y').decode('utf8')
+
 
 env.filters['fdate'] = format_date
 

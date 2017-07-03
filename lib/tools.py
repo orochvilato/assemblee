@@ -12,3 +12,8 @@ def strip_accents(s):
                   if unicodedata.category(c) != 'Mn')
 def normalize(s):
     return strip_accents(s).replace(' ','').lower() if s else s
+
+from datetime import datetime
+def format_date(date):
+    d = datetime.strptime(date,'%Y-%m-%d')
+    return d.strftime('%-d %B %Y').decode('utf8')

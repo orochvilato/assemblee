@@ -47,8 +47,13 @@
   <div class="col s12">
     <ul class="collapsible" data-collapsible="expandable">
       <li>
-        <div class="collapsible-header"><i class="fa fa-legal {{ groupe['csscolor'] }}-text"></i> Mandats</div>
-        <div class="collapsible-body"><span>...</span></div>
+        <div class="collapsible-header"><i class="fa fa-legal {{ groupe['csscolor'] }}-text"></i> Fonctions / Mandats</div>
+        <div class="collapsible-body"><ul class="collection">
+          {% for fct in acteur['fonctions'] %}<li class="collection-item">
+            {% if fct['organe'] == groupe['uid'] %}{% set opath='groupes' %}{% else %}{% set opath='commissions' %}{% endif %}
+            <i class="fa fa-play {{ groupe['csscolor'] }}-text"></i> {{ fct['qualite'] }} <a href="../{{ opath }}/{{ fct['organe'] }}.html" style="color:black; font-weight:500;">{{ organes[fct['organe']]['libelleEdition'] }}</a> (depuis le {{ fct['debut'] }})
+          </li>{% endfor %}
+        </ul></div>
       </li>
       <li>
         <div class="collapsible-header"><i class="fa fa-university {{ groupe['csscolor'] }}-text"></i> Hémicycle</div>
