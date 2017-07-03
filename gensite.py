@@ -437,3 +437,4 @@ for act in acteurs:
         groupe = organes[acteur['groupe']]).encode('utf-8'))
 
 open('dist/acteurs.html','w').write(env.get_template('acteurstmpl.html').render(today=today, stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/hatvp.html','w').write(env.get_template('hatvptmpl.html').render(today=today, stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
