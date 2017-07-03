@@ -20,7 +20,7 @@
         <li>
           <div class="collapsible-header active">Stats</div>
           <div class="collapsible-body">
-            {{ stat_bloc(stats,'rgba(102, 187, 106,1)','') }}
+            {{ stat_bloc({'stats':commstats,'color':'rgba(102, 187, 106,1)','groupe':''},['parite','fsp','pctgp']) }}
           </div>
         </li>
       </ul>

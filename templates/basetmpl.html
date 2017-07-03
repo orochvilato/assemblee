@@ -13,21 +13,29 @@
   {% block head %}
   {% endblock %}
   {% macro nomcomplet(acteur) -%}{{ acteur['etatCivil.ident.civ'] }} {{ acteur['etatCivil.ident.prenom'] }} {{ acteur['etatCivil.ident.nom'] }}{%- endmacro %}
-  {% macro stat_bloc(stats,color,groupe) -%}<div class="row">
+  {% macro stat_bloc(data,show) -%}<div class="row">
+    {% if 'parite' in show %}
     <div class="col l6 m12">
     <b>Parité</b>
     <canvas id="pariteChart"></canvas>
     </div>
+    {% endif %}{% if 'fsp' in show %}
     <div class="col l6 m12">
     <b>Répartition par familles socio-professionnelles</b>
     <canvas id="fspChart"></canvas>
-  </div></div>
+  </div>{% endif %}{% if 'pctgp' in show %}
+    <div class="col l6 m12">
+    <b>Répartition par groupe parlementaire</b>
+    <canvas id="pctgpChart"></canvas>
+  </div>
+    {% endif %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
 
     <script>
+    {% if 'fsp' in show %}
     var ctx = document.getElementById("fspChart");
-    var fsplabels = JSON.parse('{{ stats['fsp'].keys() | tojson | safe}}');
-    var fspdata = JSON.parse('{{ stats['fsp'].values() | tojson | safe }}');
+    var fsplabels = JSON.parse('{{ data['stats']['fsp'].keys() | tojson | safe}}');
+    var fspdata = JSON.parse('{{ data['stats']['fsp'].values() | tojson | safe }}');
     var fspfrance = JSON.parse('{{ csp.values() | tojson | safe }}');
     var gris = 'rgba(127,127,127,1)'
     var grisbg = 'rgba(127,127,127,0.2)'
@@ -36,9 +44,9 @@
         data: {
             labels: fsplabels,
             datasets: [{
-                label:'Députés {{ groupe }}',
+                label:'Députés {{ data['groupe'] }}',
                 data: fspdata,
-                backgroundColor: '{{ color }}'
+                backgroundColor: '{{ data['color'] }}'
 
             },
             {
@@ -61,9 +69,11 @@
             }
         }
     });
+    {% endif %}
+    {% if 'parite' in show %}
     var ctx = document.getElementById("pariteChart");
-    var parlabels = JSON.parse('{{ stats['parite'].keys() | tojson | safe}}');
-    var pardata = JSON.parse('{{ stats['parite'].values() | tojson | safe }}');
+    var parlabels = JSON.parse('{{ data['stats']['parite'].keys() | tojson | safe}}');
+    var pardata = JSON.parse('{{ data['stats']['parite'].values() | tojson | safe }}');
 
     var parChart = new Chart(ctx, {
         type: 'horizontalBar',
@@ -89,7 +99,46 @@
             }
         }
     });
+    {% endif %}
+    {% if 'pctgp' in show %}
+    var ctx = document.getElementById("pctgpChart");
+    var pctgplabels = JSON.parse('{{ data['stats']['pctgp'].keys() | tojson | safe}}');
+    var pctgpdata = JSON.parse('{{ data['stats']['pctgp'].values() | tojson | safe }}');
+    var pctgpassemb = JSON.parse('{{ stats['pctgp'].values() | tojson | safe }}');
+    var coulgp = JSON.parse('{{ coulgp | tojson | safe }}');
+    var gris = 'rgba(127,127,127,1)'
+    var grisbg = 'rgba(127,127,127,0.2)'
+    var fspChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: pctgplabels,
+            datasets: [{
+                label:'{{ data['label'] }}',
+                data: pctgpdata,
+                backgroundColor: coulgp
 
+            },
+            {
+              label: 'Assemblée',
+              data: pctgpassemb,
+              backgroundColor:gris
+            }
+          ]
+        },
+        options: {
+            legend: {
+              display: true
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    {% endif %}
     </script>
     {%- endmacro %}
 </head>

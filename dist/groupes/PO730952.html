@@ -41,7 +41,7 @@
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 02/07/2017 18:26</span>
+        <span>Date de mise à jour : 02/07/2017 21:56</span>
       </div>
     </div>
     <div class="row">
@@ -933,17 +933,20 @@
       </li>
       <li><div class="collapsible-header"><i class="fa fa-bar-chart coulLC-text"></i>Statistiques</div>
       <div class="collapsible-body"><div class="row">
+    
     <div class="col l6 m12">
     <b>Parité</b>
     <canvas id="pariteChart"></canvas>
     </div>
+    
     <div class="col l6 m12">
     <b>Répartition par familles socio-professionnelles</b>
     <canvas id="fspChart"></canvas>
-  </div></div>
+  </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
 
     <script>
+    
     var ctx = document.getElementById("fspChart");
     var fsplabels = JSON.parse('["Agriculteurs exploitants", "Artisans, commer\u00e7ants et chefs d\u0027entreprise", "Cadres et professions intellectuelles sup\u00e9rieures", "Professions Interm\u00e9diaires", "Employ\u00e9s", "Ouvriers", "Retrait\u00e9s", "Autres (y compris inconnu et sans profession d\u00e9clar\u00e9e)"]');
     var fspdata = JSON.parse('[5.714285714285714, 11.428571428571429, 74.28571428571429, 2.857142857142857, 0.0, 0.0, 2.857142857142857, 2.857142857142857]');
@@ -957,7 +960,7 @@
             datasets: [{
                 label:'Députés LC',
                 data: fspdata,
-                backgroundColor: '#7030a0'
+                backgroundColor: 'blue'
 
             },
             {
@@ -980,6 +983,8 @@
             }
         }
     });
+    
+    
     var ctx = document.getElementById("pariteChart");
     var parlabels = JSON.parse('["Femme", "Homme"]');
     var pardata = JSON.parse('[8, 27]');
@@ -1008,7 +1013,8 @@
             }
         }
     });
-
+    
+    
     </script></div></li>
 
     </ul>
