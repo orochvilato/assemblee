@@ -5,12 +5,18 @@
   <h4>Commissions et Conférences</h4>
       <table class="striped highlight">
         <thead>
-          <tr><th>Nom</th><th>Président</th><th>Nb membres</th></tr>
+          <tr><th>Nom</th><th>Président</th><th>Vice-présidents<th>Nb membres</th></tr>
         </thead>
         <tbody>
         {% for org in commissions %}<tr>
-          <td><a href="commissions/{{ org }}.html" style="font-weight:500;"><i class="fa fa-group"></i> {{ organes[org]['libelle'] }} ({{ organes[org]['libelleAbrev'] }})</a></td>
-            <td>{% if 'president' in organes[org].keys() %}{{ nomcomplet(acteurs[organes[org]['president']]) }}{% endif %}</td>
+          <td style="width:40%;"><a href="commissions/{{ org }}.html" style="font-weight:500;"><i class="fa fa-group"></i> {{ organes[org]['libelle'] }} ({{ organes[org]['libelleAbrev'] }})</a></td>
+          {% set pres = organes[org]['qualites']['president'][0] %}
+          <td><a href="acteurs/{{ pres }}.html" style="color:black;">{{ acteurs[pres]['nomcomplet'] }}</a> (
+            {% set groupe = organes[acteurs[pres]['groupe']] %}
+            <a href="groupes/{{ acteurs[pres]['groupe'] }}.html" class="{{ groupe['csscolor'] }}-text" style="font-weight:500;">{{ groupe['libelleAbrev'] }}</a>
+            )</td>
+            <td>{% for vp in organes[org]['qualites']['vice-president'] %}{% set groupe = organes[acteurs[vp]['groupe']] %}
+            <a href="acteurs/{{ vp}}.html" style="color:black;">{{ acteurs[vp]['nomcomplet'] }}</a> (<a href="groupes/{{ acteurs[vp]['groupe'] }}.html" class="{{ groupe['csscolor'] }}-text" style="font-weight:500;">{{ groupe['libelleAbrev'] }}</a>)<br/>{% endfor %}</td>
             <td>{{ organes[org]['nbmembres'] }}</td>
           </tr>{% endfor %}
         </tbody>

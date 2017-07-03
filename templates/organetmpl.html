@@ -16,8 +16,8 @@
   <div class="card">
     <div class="card-content">
       <h4>{{ organe['libelle'] }} ({{ organe['nbmembres'] }} membres)</h4>
-      {% if 'president' in organe.keys() %}
-      <h5>Président : {{ nomcomplet(acteurs[organe['president']]) }}
+      {% if 'president' in organe['qualites'].keys() %}
+      <h5>Président : {{ nomcomplet(acteurs[organe['qualites']['president'][0]]) }}
       {% endif %}
     </div>
   </div>
@@ -31,10 +31,10 @@
               <tr><th>Photo</th><th>Nom</th><th>Qualité</th><th>Groupe</th><th>Contact</th><th>Profession</th><th>Age</th></tr>
             </thead>
             <tbody class="list">
-              {% for m in organe['membres'] %}<tr>
+              {% for m,qua,rg in organe['membres_sort'] %}<tr>
                 <td><a href="../acteurs/{{ acteurs[m]['uid'] }}.html"><img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/{{ m[2:] }}.jpg" /></a></td>
                 <td class="nom"><a href="../acteurs/{{ acteurs[m]['uid'] }}.html">{{ nomcomplet(acteurs[m]) }}</a></td>
-                <td>{{ organe['membres'][m] }}</td>
+                <td>{{ qua }}</td>
                 <td><a href="../groupes/{{ acteurs[m]['groupe'] }}.html" class="{{ groupes[acteurs[m]['groupe']]['csscolor'] }}-text" style="font-weight:500;"><i class="fa fa-group"></i> {{ groupes[acteurs[m]['groupe']]['libelleAbrev'] }}</a></td>
                 <td>{% for (k,v) in acteurs[m]['contacts'] %}
                   {% if (k=="Mèl") %}

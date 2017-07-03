@@ -10,7 +10,7 @@
         <tbody>
         {% for grp in groupes %}<tr>
           <td><a href="groupes/{{ grp }}.html" class="{{ organes[grp]['csscolor'] }}-text" style="font-weight:500;"><i class="fa fa-group"></i> {{ organes[grp]['libelle'] }} ({{ organes[grp]['libelleAbrev'] }})</a></td>
-            <td>{% if 'president' in organes[grp].keys() %}{{ nomcomplet(acteurs[organes[grp]['president']]) }}{% endif %}</td>
+            <td>{% if 'president' in organes[grp]['qualites'].keys() %}<a href="acteurs/{{ organes[grp]['qualites']['president'][0] }}.html" style="color:black;">{{ nomcomplet(acteurs[organes[grp]['qualites']['president'][0]]) }}</a>{% endif %}</td>
             <td>{{ organes[grp]['nbmembres'] }}</td>
           </tr>{% endfor %}
         </tbody>

@@ -16,8 +16,8 @@
   <div class="card {{ groupe['csscolor'] }}bg">
     <div class="card-content">
       <h4>{{ groupe['libelle'] }} ({{ groupe['nbmembres'] }} membres)</h4>
-      {% if 'president' in groupe.keys() %}
-      <h5>Président : {{ nomcomplet(acteurs[groupe['president']]) }}
+      {% if 'president' in groupe['qualites'].keys() %}
+      <h5>Président : {{ nomcomplet(acteurs[groupe['qualites']['president'][0]]) }}
       {% endif %}
     </div>
   </div>
@@ -28,12 +28,13 @@
           <input class="search" placeholder="Recherche">
           <table class="striped highlight centered">
             <thead>
-              <tr><th>Photo</th><th>Nom</th><th>Contact</th><th>Circo.</th><th>Profession</th><th>Age</th></tr>
+              <tr><th>Photo</th><th>Nom</th><th>Qualité</th><th>Contact</th><th>Circo.</th><th>Profession</th><th>Age</th></tr>
             </thead>
             <tbody class="list">
-              {% for m in groupe['membres'] %}<tr>
+              {% for m,qua,rg in groupe['membres_sort'] %}<tr>
                 <td><a href="../acteurs/{{ acteurs[m]['uid'] }}.html"><img src="http://www2.assemblee-nationale.fr/static/tribun/15/photos/{{ m[2:] }}.jpg" /></a></td>
                 <td class="nom"><a href="../acteurs/{{ acteurs[m]['uid'] }}.html">{{ nomcomplet(acteurs[m]) }}</a></td>
+                <td>{{ qua }}</td>
                 <td>{% for (k,v) in acteurs[m]['contacts'] %}
                   {% if (k=="Mèl") %}
                     <a href="mailto:{{ v }}"><i class="fa fa-envelope-o"></i></a>

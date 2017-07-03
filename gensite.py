@@ -148,7 +148,7 @@ for organe in organes.keys():
 gplabels.sort()
 for organe in organes.keys():
     org = organes[organe]
-    organes[org['uid']].update({'membres':{},'votes':{},'stats':
+    organes[org['uid']].update({'membres':{},'votes':{},'qualites':{},'stats':
         {'fsp':OrderedDict(list((c,0) for c in statsCSP.keys())),
          'pctgp':OrderedDict(list((c,0) for c in sorted(gplabels))), 'parite':{},'votes':{}}})
 
@@ -158,8 +158,11 @@ stats = {'fsp':OrderedDict(list((c,0) for c in statsCSP.keys())), 'parite':{},'s
 commstats = {'fsp':OrderedDict(list((c,0) for c in statsCSP.keys())), 'parite':{},'scrutins':{}, 'mandats':{},
          'pctgp':OrderedDict(list((c,0) for c in sorted(gplabels)))}
 
-
 places = {}
+rangs = {u'Président':1,
+         u'Vice-Président':2,
+         u'Membre apparenté':10}
+
 for acteur in acteurs.keys():
     act = acteurs[acteur]
     act['contacts'] = []
@@ -180,8 +183,8 @@ for acteur in acteurs.keys():
         if man['typeOrgane']=='GP':
 
             act['groupe'] = organeRef
-        if man['infosQualite.codeQualite'] == u'Président':
-            organes[man['organes.organeRef']]['president'] = act['uid']
+        #if man['infosQualite.codeQualite'] == u'Président':
+        #    organes[man['organes.organeRef']]['president'] = act['uid']
         if not act['uid'] in organes[man['organes.organeRef']]['membres'].keys():
             fsp = act['profession.socProcINSEE.famSocPro']
             ostats = organes[organeRef]['stats']
@@ -198,7 +201,10 @@ for acteur in acteurs.keys():
                 commstats['fsp'][fsp] += 1
                 commstats['parite'][parite] = commstats['parite'].get(parite,0) + 1
 
-        organes[man['organes.organeRef']]['membres'][act['uid']] = man['infosQualite.codeQualite']
+        qua = man['infosQualite.codeQualite']
+        qua_norm = normalize(qua)
+        organes[man['organes.organeRef']]['qualites'][qua_norm] = organes[man['organes.organeRef']]['qualites'].get(qua_norm,[]) + [act['uid']]
+        organes[man['organes.organeRef']]['membres'][act['uid']] = (act['uid'],qua,rangs.get(qua,3 if qua.lower()!='membre' else 4))
 
 
     if placeH:
@@ -217,8 +223,10 @@ for acteur in acteurs.keys():
 
 
 
+
+
 # Hemicycle
-print commstats
+
 hemicycle = xmltodict.parse(open('hemicycle.svg','r').read())
 for i,a in enumerate(hemicycle['svg']['a']):
     if '@class' in a['path'].keys() and '@id' in a['path'].keys():
@@ -364,6 +372,7 @@ def statsOrgane(organe):
 
 for organe in organes:
     organes[organe]['nbmembres'] = len(organes[organe]['membres'].keys())
+    organes[organe]['membres_sort'] = sorted(organes[organe]['membres'].values(),key=lambda x:(x[2],acteurs[x[0]]['etatCivil.ident.nom'],acteurs[x[0]]['etatCivil.ident.prenom']))
     if organes[organe]['nbmembres']>0:
         statsOrgane(organe)
         if organes[organe]['codeType'] != 'GP':
