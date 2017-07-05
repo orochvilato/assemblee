@@ -208,6 +208,10 @@ correctionPlaces = {
 'PA722070':'466'}
 
 
+from confiance import voteconf
+votec = {'pour':[],'contre':[],'abstention':[],'nonVotant':[]}
+
+
 for acteur in acteurs.keys():
     act = acteurs[acteur]
     act['contacts'] = []
@@ -271,19 +275,32 @@ for acteur in acteurs.keys():
     stats['pctgp'][organes[act['groupe']]['libelleAbrev']] += 1
     commstats['pctgp'][organes[act['groupe']]['libelleAbrev']] += comm
 
+    norm_nom = normalize(act['nomcomplet'])
     # déclarations hatvp
-    act['hatvp'] = declarations.get(normalize(act['nomcomplet']),[])
+    act['hatvp'] = declarations.get(norm_nom,[])
 
     # deputywatch
-    act['deputywatch'] = deputywatch.get(normalize(act['nomcomplet']),None)
+    act['deputywatch'] = deputywatch.get(norm_nom,None)
     if act['deputywatch']:
         print act['nomcomplet']
 
+    if norm_nom in voteconf:
+        votec[voteconf[norm_nom]].append("%d" % int(placeH))
+
+    else:
+        print "pb :" + norm_nom
 
 
 
 
+# Vote confiance
 
+css = ""
+vcoul = {'pour':'green','contre':'red','abstention':'grey','nonVotant':'white' }
+for v in votec:
+    css = css + ' ,'.join([ '#p%s' % d for d in votec[v]]) + ' { stroke:'+vcoul[v]+'; stroke-width:3 } '
+
+print css
 # Hemicycle
 
 hemicycle = xmltodict.parse(open('hemicycle.svg','r').read())
@@ -488,3 +505,4 @@ for act in acteurs:
 
 open('dist/acteurs.html','w').write(env.get_template('acteurstmpl.html').render(today=today, stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 open('dist/hatvp.html','w').write(env.get_template('hatvptmpl.html').render(today=today, stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/voteconfiance.html','w').write(env.get_template('voteconfiancetmpl.html').render(today=today, css = css,stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))

@@ -1,0 +1,97 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>ObsAs</title>
+
+
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+  <link rel="stylesheet" href="../css/colors.css">
+  
+<style>
+    tfoot, th {
+      text-align: center;
+    }
+    .parti {
+      color: grey;
+      font-weight:300;
+    }
+    .sortvote {
+      font-weight: 500;
+    }
+</style>
+
+  
+  
+</head>
+<body>
+  <nav class="blue-grey darken-1">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">ObsAs</a>
+      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="../commissions/PO717460.html">Assemblée</a></li>
+        <li><a href="../acteurs.html">Députés</a></li>
+        <li><a href="../scrutins.html">Votes</a></li>
+        <li><a href="../groupes.html">Groupes</a></li>
+        <li><a href="../commissions.html">Commissions</a></li>
+      </ul>
+      <ul class="side-nav" id="mobile-demo">
+        <li><a href="../commissions/PO717460.html">Assemblée</a></li>
+        <li><a href="../acteurs.html">Députés</a></li>
+        <li><a href="../scrutins.html">Votes</a></li>
+        <li><a href="../groupes.html">Groupes</a></li>
+        <li><a href="../commissions.html">Commissions</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <span>Date de mise à jour : 05/07/2017 17:37</span>
+      </div>
+    </div>
+    <div class="row">
+      
+<div class="col s12">
+  <h5>Scrutin n°1 : Confiance au gouvernement</h5>
+
+<object id="hemicycle" data="hemicycle.svg" width='100%' type="image/svg+xml"></object>
+
+
+    </div>
+  </div>
+</body>
+<footer>
+  <!--  Scripts-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://use.fontawesome.com/57f4fc708a.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+  <script>
+  $(document).ready(function() {
+    $(".button-collapse").sideNav();
+  })
+  </script>
+  
+  <script>
+  var svg = document.getElementById('hemicycle');
+  svg.addEventListener('load', function () {
+    //var svg = document.getElementById('hemicycle');
+    var svgDoc = svg.contentDocument;
+    var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+    styleElement.textContent = "path.PO723569 { fill: #bfbfbf; }path.PO730934 { fill: #2f5597; }path.PO730970 { fill: #ed7d31; }path.PO730958 { fill: #0cc3d6; }path.PO730940 { fill: #c00000; }path.PO730952 { fill: #7030a0; }path.PO730964 { fill: #ffc000; }path.PO730946 { fill: #ea34d0; }"; // add whatever you need here
+    styleElement.textContent = styleElement.textContent + " #p23 ,#p89 ,#p41 ,#p127 ,#p5 ,#p25 ,#p6 ,#p14 ,#p577 ,#p92 ,#p140 ,#p145 ,#p19 ,#p157 ,#p498 ,#p8 ,#p113 ,#p40 ,#p111 ,#p52 ,#p509 ,#p120 ,#p501 ,#p72 ,#p581 ,#p513 ,#p133 ,#p147 ,#p27 ,#p2 ,#p512 ,#p650 ,#p30 ,#p128 ,#p18 ,#p576 ,#p507 ,#p497 ,#p80 ,#p21 ,#p595 ,#p10 ,#p514 ,#p580 ,#p100 ,#p517 ,#p109 ,#p48 ,#p112 ,#p81 ,#p649 ,#p11 ,#p135 ,#p78 ,#p77 ,#p75 ,#p13 ,#p110 ,#p94 ,#p97 ,#p516 ,#p499 ,#p53 ,#p84 ,#p47 ,#p51 ,#p153 ,#p144 ,#p125 ,#p35 ,#p143 ,#p44 ,#p24 ,#p505 ,#p515 ,#p54 ,#p90 ,#p597 ,#p49 ,#p16 ,#p503 ,#p95 ,#p28 ,#p43 ,#p86 ,#p17 ,#p12 ,#p73 ,#p152 ,#p79 ,#p108 ,#p154 ,#p511 ,#p32 ,#p156 ,#p639 ,#p136 ,#p99 ,#p64 ,#p502 ,#p137 ,#p596 ,#p149 ,#p132 ,#p155 ,#p510 ,#p148 ,#p122 ,#p9 ,#p83 ,#p648 ,#p26 ,#p139 ,#p20 ,#p117 ,#p582 ,#p96 ,#p104 ,#p87 ,#p76 ,#p38 ,#p500 ,#p146 ,#p105 ,#p1 ,#p22 ,#p578 ,#p116 { stroke:grey; stroke-width:3 } #p448 ,#p389 ,#p599 ,#p447 ,#p249 ,#p365 ,#p36 ,#p494 ,#p461 ,#p334 ,#p442 { stroke:white; stroke-width:3 } #p587 ,#p67 ,#p627 ,#p602 ,#p590 ,#p594 ,#p70 ,#p93 ,#p66 ,#p151 ,#p586 ,#p519 ,#p588 ,#p71 ,#p629 ,#p60 ,#p628 ,#p604 ,#p119 ,#p601 ,#p603 ,#p58 ,#p589 ,#p138 ,#p31 ,#p585 ,#p591 ,#p583 ,#p592 ,#p612 ,#p584 ,#p63 ,#p518 ,#p7 ,#p620 ,#p33 ,#p82 ,#p610 ,#p91 ,#p15 ,#p593 ,#p126 ,#p517 ,#p85 ,#p59 ,#p150 ,#p57 ,#p62 ,#p611 ,#p39 ,#p56 ,#p68 ,#p626 ,#p619 ,#p50 ,#p630 ,#p102 ,#p504 ,#p618 ,#p609 ,#p88 ,#p101 ,#p640 ,#p508 ,#p45 ,#p118 ,#p621 { stroke:red; stroke-width:3 } #p573 ,#p347 ,#p282 ,#p239 ,#p285 ,#p277 ,#p353 ,#p378 ,#p332 ,#p183 ,#p295 ,#p423 ,#p643 ,#p176 ,#p404 ,#p358 ,#p457 ,#p251 ,#p238 ,#p290 ,#p312 ,#p403 ,#p301 ,#p352 ,#p193 ,#p168 ,#p411 ,#p380 ,#p214 ,#p385 ,#p418 ,#p624 ,#p330 ,#p335 ,#p420 ,#p198 ,#p392 ,#p170 ,#p270 ,#p616 ,#p196 ,#p181 ,#p542 ,#p496 ,#p539 ,#p308 ,#p407 ,#p458 ,#p327 ,#p103 ,#p453 ,#p333 ,#p464 ,#p399 ,#p257 ,#p210 ,#p462 ,#p524 ,#p525 ,#p264 ,#p544 ,#p393 ,#p255 ,#p569 ,#p483 ,#p572 ,#p337 ,#p172 ,#p254 ,#p637 ,#p480 ,#p372 ,#p284 ,#p523 ,#p538 ,#p245 ,#p531 ,#p479 ,#p279 ,#p296 ,#p463 ,#p439 ,#p362 ,#p370 ,#p421 ,#p541 ,#p340 ,#p555 ,#p467 ,#p241 ,#p200 ,#p204 ,#p315 ,#p305 ,#p615 ,#p425 ,#p607 ,#p533 ,#p451 ,#p265 ,#p424 ,#p559 ,#p530 ,#p432 ,#p180 ,#p540 ,#p551 ,#p141 ,#p233 ,#p522 ,#p304 ,#p536 ,#p191 ,#p205 ,#p174 ,#p416 ,#p634 ,#p220 ,#p561 ,#p165 ,#p294 ,#p638 ,#p465 ,#p322 ,#p199 ,#p179 ,#p228 ,#p373 ,#p485 ,#p212 ,#p397 ,#p469 ,#p259 ,#p481 ,#p222 ,#p344 ,#p387 ,#p434 ,#p329 ,#p326 ,#p219 ,#p342 ,#p244 ,#p291 ,#p546 ,#p548 ,#p534 ,#p645 ,#p357 ,#p415 ,#p292 ,#p527 ,#p123 ,#p474 ,#p98 ,#p167 ,#p444 ,#p226 ,#p237 ,#p286 ,#p398 ,#p409 ,#p468 ,#p162 ,#p349 ,#p307 ,#p293 ,#p269 ,#p570 ,#p382 ,#p446 ,#p437 ,#p455 ,#p302 ,#p376 ,#p473 ,#p341 ,#p129 ,#p325 ,#p321 ,#p190 ,#p232 ,#p495 ,#p427 ,#p313 ,#p348 ,#p192 ,#p374 ,#p280 ,#p528 ,#p606 ,#p549 ,#p419 ,#p350 ,#p430 ,#p564 ,#p426 ,#p188 ,#p303 ,#p185 ,#p234 ,#p359 ,#p414 ,#p642 ,#p482 ,#p278 ,#p375 ,#p526 ,#p537 ,#p429 ,#p475 ,#p206 ,#p314 ,#p338 ,#p566 ,#p224 ,#p565 ,#p550 ,#p388 ,#p250 ,#p288 ,#p281 ,#p266 ,#p478 ,#p472 ,#p406 ,#p211 ,#p553 ,#p223 ,#p600 ,#p213 ,#p345 ,#p323 ,#p487 ,#p471 ,#p318 ,#p256 ,#p356 ,#p258 ,#p361 ,#p488 ,#p175 ,#p450 ,#p216 ,#p436 ,#p351 ,#p201 ,#p336 ,#p571 ,#p554 ,#p124 ,#p343 ,#p287 ,#p331 ,#p400 ,#p636 ,#p440 ,#p433 ,#p268 ,#p558 ,#p209 ,#p367 ,#p166 ,#p169 ,#p410 ,#p386 ,#p452 ,#p320 ,#p547 ,#p506 ,#p377 ,#p248 ,#p236 ,#p633 ,#p574 ,#p253 ,#p395 ,#p405 ,#p383 ,#p557 ,#p484 ,#p215 ,#p261 ,#p260 ,#p371 ,#p311 ,#p130 ,#p431 ,#p189 ,#p272 ,#p354 ,#p300 ,#p184 ,#p177 ,#p346 ,#p460 ,#p560 ,#p235 ,#p178 ,#p438 ,#p486 ,#p532 ,#p428 ,#p394 ,#p221 ,#p106 ,#p276 ,#p273 ,#p552 ,#p317 ,#p391 ,#p614 ,#p271 ,#p319 ,#p114 ,#p364 ,#p309 ,#p182 ,#p262 ,#p445 ,#p422 ,#p417 ,#p240 ,#p368 ,#p441 ,#p625 ,#p267 ,#p164 ,#p231 ,#p324 ,#p243 ,#p207 ,#p401 ,#p197 ,#p173 ,#p456 ,#p134 ,#p163 ,#p195 ,#p644 ,#p366 ,#p242 ,#p384 ,#p339 ,#p306 ,#p543 ,#p298 ,#p412 ,#p227 ,#p186 ,#p158 ,#p568 ,#p632 ,#p413 ,#p230 ,#p454 ,#p360 ,#p623 ,#p402 ,#p381 ,#p274 ,#p217 ,#p263 ,#p187 ,#p171 ,#p297 ,#p466 ,#p203 ,#p567 ,#p225 { stroke:green; stroke-width:3 } ";
+    svgDoc.getElementById('defs').appendChild(styleElement);
+
+  });
+
+  </script>
+
+</footer>
+
+</html>

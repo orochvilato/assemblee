@@ -1,0 +1,38 @@
+{% set path = '../' %}
+{% extends "basetmpl.html" %}
+{% block head %}
+<style>
+    tfoot, th {
+      text-align: center;
+    }
+    .parti {
+      color: grey;
+      font-weight:300;
+    }
+    .sortvote {
+      font-weight: 500;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="col s12">
+  <h5>Scrutin n°1 : Confiance au gouvernement</h5>
+
+<object id="hemicycle" data="hemicycle.svg" width='100%' type="image/svg+xml"></object>
+
+{% endblock %}
+{% block javascript %}
+  <script>
+  var svg = document.getElementById('hemicycle');
+  svg.addEventListener('load', function () {
+    //var svg = document.getElementById('hemicycle');
+    var svgDoc = svg.contentDocument;
+    var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+    styleElement.textContent = "{% for g in groupes %}path.{{g}} { fill: {{ groupes[g]['svgcolor']}}; }{% endfor %}"; // add whatever you need here
+    styleElement.textContent = styleElement.textContent + " {{ css|safe }}";
+    svgDoc.getElementById('defs').appendChild(styleElement);
+
+  });
+
+  </script>
+{% endblock %}
