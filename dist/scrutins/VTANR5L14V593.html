@@ -52,7 +52,7 @@
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 03/07/2017 16:14</span>
+        <span>Date de mise à jour : 05/07/2017 15:03</span>
       </div>
     </div>
     <div class="row">
@@ -5231,22 +5231,50 @@
   </script>
   
   <script>
-    var deputeList = new List('deputes',{ valueNames: ['nom','groupe','vote']});
-    $('.filter').click(function() {
-        var data = $(this).data();
-        if ('all' in data) {
-          deputeList.filter()
-          return
-        }
-      deputeList.filter(function(item) {
-        result = true;
+  function getQueryVariable(variable)
+  {
+       var query = window.location.search.substring(1);
+       var vars = query.split("&");
+       for (var i=0;i<vars.length;i++) {
+               var pair = vars[i].split("=");
+               if(pair[0] == variable){return pair[1];}
+       }
+       return(undefined);
+  }
 
-        for(var key in data) {
-          result = result && (item.values()[key] == data[key]);
-        }
-        return result;
-      });
-    });
+  $(document).ready(function () {
+     var deputeList = new List('deputes',{ valueNames: ['nom','groupe','vote']});
+     function filter(data) {
+       console.log(data);
+       if ('all' in data) {
+         deputeList.filter()
+         return
+       }
+       deputeList.filter(function(item) {
+         result = true;
+         for(var key in data) {
+           result = result && (item.values()[key] == data[key]);
+         }
+         return result;
+       });
+     }
+
+     $('.filter').click(function() {
+         var data = $(this).data();
+         filter(data);
+     });
+
+     var groupe = getQueryVariable('groupe');
+     var vote = getQueryVariable('vote');
+     var data = {};
+     if (groupe != undefined) {
+       data.groupe = groupe;
+     }
+     if (vote != undefined) {
+       data.vote = vote;
+     }
+     filter(data);
+  });
 
   </script>
 

@@ -134,6 +134,8 @@ else:
 
 
 
+deputywatch = json.loads(open('json/deputywatch.json','r').read())
+
 nbvotes = {}
 groupes = {}
 
@@ -228,7 +230,12 @@ for acteur in acteurs.keys():
 
     # déclarations hatvp
     act['hatvp'] = declarations.get(normalize(act['nomcomplet']),[])
-    #stats['']
+
+    # deputywatch
+    act['deputywatch'] = deputywatch.get(normalize(act['nomcomplet']),None)
+    if act['deputywatch']:
+        print act['nomcomplet']
+
 
 
 

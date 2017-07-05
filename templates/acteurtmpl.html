@@ -61,6 +61,19 @@
           <object id="hemicycle" data="../hemicycle.svg" width='100%' type="image/svg+xml"></object>
         </div>
       </li>
+      {% if acteur['deputywatch'] %}
+      <li>
+        <div class="collapsible-header"><i class="fa fa-search {{ groupe['csscolor'] }}-text"></i> Deputy Watch</div>
+        <div class="collapsible-body">
+          <ul class="collection">
+            <li class="collection-item avatar">
+              <a href="{{ acteur['deputywatch']['url'] }}" target="_blank" style="color:black;"><img src='../img/deputywatch.png' alt="" class="circle">
+              <span class="title" style="font-weight:450">Faits notables ou infraction</span></a>
+           </li>
+          </ul>
+        </div>
+      </li>
+      {% endif %}
       <li>
         <div class="collapsible-header"><i class="fa fa-file-text-o {{ groupe['csscolor'] }}-text"></i> HATVP</div>
         <div class="collapsible-body">

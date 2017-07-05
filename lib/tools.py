@@ -11,7 +11,7 @@ def strip_accents(s):
    return ''.join(c for c in unicodedata.normalize('NFD', s)
                   if unicodedata.category(c) != 'Mn')
 def normalize(s):
-    return strip_accents(s).replace(' ','').lower() if s else s
+    return strip_accents(s).replace(' ','').replace('-','').lower() if s else s
 
 from datetime import datetime
 def format_date(date):
