@@ -24,11 +24,18 @@ class DeputyWatchSpider(scrapy.Spider):
 
     def parse_dep(self, response):
         nom = response.xpath('(//table)[3]/tr/td[1]/center/b/text()').extract()[0]
-    
-        url = self.base_url+'afficheDepute/'+response.xpath('//a[contains(@href,"consulter")]/@href')[0].extract()
-        print url
-        if not "Aucun fait notable" in response.text and not "Pas d'Infraction(s)" in response.text:
+        for tr in response.xpath('(//table)[3]/tr'):
+            nom = tr.xpath('td[1]/center/b/text()').extract()[0]
+            url = self.base_url + 'afficherDepute/'+ tr.xpath('td[5]/center/a/@href').extract()[0]
             deputywatch[normalize(nom)] = {'nom':nom,'url':url}
+            request = scrapy.Request(url=url, callback=self.parse_fiche)
+            request.meta['nom'] = normalize(nom)
+            yield request
+
+    def parse_fiche(self, response):
+        if response.status != 404:
+            deputywatch[response.meta['nom']]['flag'] = True if (not "Aucun fait notable" in response.text or not "Pas d'Infraction(s)" in response.text) else False
+
 
 
 

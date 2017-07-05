@@ -134,7 +134,7 @@ else:
 
 
 
-deputywatch = json.loads(open('json/deputywatch.json','r').read())
+deputywatch = dict((k,v) for k,v in json.loads(open('json/deputywatch.json','r').read()).iteritems() if v.get('flag',False) == True)
 
 nbvotes = {}
 groupes = {}

@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <title>ObsAs</title>
+
+
+
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/css/materialize.min.css">
+  <link rel="stylesheet" href="css/colors.css">
+  
+  
+  
+  
+</head>
+<body>
+  <nav class="blue-grey darken-1">
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo center">ObsAs</a>
+      <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+      <ul class="right hide-on-med-and-down">
+        <li><a href="commissions/PO717460.html">Assemblée</a></li>
+        <li><a href="acteurs.html">Députés</a></li>
+        <li><a href="scrutins.html">Votes</a></li>
+        <li><a href="groupes.html">Groupes</a></li>
+        <li><a href="commissions.html">Commissions</a></li>
+      </ul>
+      <ul class="side-nav" id="mobile-demo">
+        <li><a href="commissions/PO717460.html">Assemblée</a></li>
+        <li><a href="acteurs.html">Députés</a></li>
+        <li><a href="scrutins.html">Votes</a></li>
+        <li><a href="groupes.html">Groupes</a></li>
+        <li><a href="commissions.html">Commissions</a></li>
+      </ul>
+    </div>
+  </nav>
+  <div class="container">
+    <div class="row">
+      <div class="col s12">
+        <span>Date de mise à jour : 05/07/2017 16:33</span>
+      </div>
+    </div>
+    <div class="row">
+      
+  <h4>Groupes</h4>
+      <table class="striped highlight">
+        <thead>
+          <tr><th>Nom</th><th>Président</th><th>Nb membres</th></tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td><a href="groupes/PO723569.html" class="coulNI-text" style="font-weight:500;"><i class="fa fa-group"></i> Non inscrit (NI)</a></td>
+            <td></td>
+            <td>17</td>
+          </tr><tr>
+          <td><a href="groupes/PO730934.html" class="coulLR-text" style="font-weight:500;"><i class="fa fa-group"></i> Les Républicains (LR)</a></td>
+            <td><a href="acteurs/PA1695.html" style="color:black;">M. Christian Jacob</a></td>
+            <td>100</td>
+          </tr><tr>
+          <td><a href="groupes/PO730970.html" class="coulMODEM-text" style="font-weight:500;"><i class="fa fa-group"></i> Mouvement Démocrate et apparentés (MODEM)</a></td>
+            <td><a href="acteurs/PA719938.html" style="color:black;">M. Marc Fesneau</a></td>
+            <td>47</td>
+          </tr><tr>
+          <td><a href="groupes/PO730958.html" class="coulFI-text" style="font-weight:500;"><i class="fa fa-group"></i> La France insoumise (FI)</a></td>
+            <td><a href="acteurs/PA2150.html" style="color:black;">M. Jean-Luc Mélenchon</a></td>
+            <td>17</td>
+          </tr><tr>
+          <td><a href="groupes/PO730940.html" class="coulGDR-text" style="font-weight:500;"><i class="fa fa-group"></i> Gauche démocrate et républicaine (GDR)</a></td>
+            <td><a href="acteurs/PA267306.html" style="color:black;">M. André Chassaigne</a></td>
+            <td>16</td>
+          </tr><tr>
+          <td><a href="groupes/PO730952.html" class="coulLC-text" style="font-weight:500;"><i class="fa fa-group"></i> Les Constructifs : républicains, UDI, indépendants (LC)</a></td>
+            <td><a href="acteurs/PA335758.html" style="color:black;">M. Franck Riester</a></td>
+            <td>35</td>
+          </tr><tr>
+          <td><a href="groupes/PO730964.html" class="coulREM-text" style="font-weight:500;"><i class="fa fa-group"></i> La République en Marche (REM)</a></td>
+            <td><a href="acteurs/PA606171.html" style="color:black;">M. Richard Ferrand</a></td>
+            <td>314</td>
+          </tr><tr>
+          <td><a href="groupes/PO730946.html" class="coulNG-text" style="font-weight:500;"><i class="fa fa-group"></i> Nouvelle Gauche (NG)</a></td>
+            <td><a href="acteurs/PA609332.html" style="color:black;">M. Olivier Faure</a></td>
+            <td>31</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <ul class="collapsible" data-collapsible="expandable">
+        <li>
+          <div class="collapsible-header active"><i class="fa fa-university"></i> Hémicycle</div>
+          <div class="collapsible-body">
+            <object id="hemicycle" data="hemicycle.svg" width='100%' type="image/svg+xml"></object>
+          </div>
+        </li>
+        <li>
+          <div class="collapsible-header active">Stats</div>
+          <div class="collapsible-body">
+            <div class="row">
+    
+    <div class="col l6 m12">
+    <b>Parité</b>
+    <canvas id="pariteChart"></canvas>
+    </div>
+    
+    <div class="col l6 m12">
+    <b>Répartition par familles socio-professionnelles</b>
+    <canvas id="fspChart"></canvas>
+  </div>
+    <div class="col l6 m12">
+    <b>Répartition par groupe parlementaire</b>
+    <canvas id="pctgpChart"></canvas>
+  </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"></script>
+
+    <script>
+    
+    var ctx = document.getElementById("fspChart");
+    var fsplabels = JSON.parse('["Agriculteurs exploitants", "Artisans, commer\u00e7ants et chefs d\u0027entreprise", "Cadres et professions intellectuelles sup\u00e9rieures", "Professions Interm\u00e9diaires", "Employ\u00e9s", "Ouvriers", "Retrait\u00e9s", "Autres (y compris inconnu et sans profession d\u00e9clar\u00e9e)"]');
+    var fspdata = JSON.parse('[2.43, 7.97, 70.02, 5.37, 4.16, 0.35, 5.55, 4.16]');
+    var fspfrance = JSON.parse('[1.1, 3.6, 9.4, 13.8, 15.9, 12.3, 24.9, 19]');
+    var gris = 'rgba(127,127,127,1)'
+    var grisbg = 'rgba(127,127,127,0.2)'
+    var fspChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: fsplabels,
+            datasets: [{
+                label:'Députés ',
+                data: fspdata,
+                backgroundColor: 'rgba(102, 187, 106,1)'
+
+            },
+            {
+              label: 'Population française',
+              data:fspfrance,
+              backgroundColor:gris
+            }
+          ]
+        },
+        options: {
+            legend: {
+              display: true
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    
+    
+    var ctx = document.getElementById("pariteChart");
+    var parlabels = JSON.parse('["Femme", "Homme"]');
+    var pardata = JSON.parse('[224, 353]');
+
+    var parChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: parlabels,
+            datasets: [{
+                data: pardata,
+                backgroundColor: ['rgba(239, 83, 80, 0.2)', 'rgba(126, 87, 194, 0.2)', 'rgba(41, 182, 246, 0.2)', 'rgba(102, 187, 106, 0.2)', 'rgba(255, 238, 88, 0.2)', 'rgba(236, 64, 122, 0.2)', 'rgba(92, 107, 192, 0.2)', 'rgba(38, 198, 218, 0.2)', 'rgba(156, 204, 101, 0.2)', 'rgba(255, 202, 40, 0.2)', 'rgba(171, 71, 188, 0.2)', 'rgba(66, 165, 245, 0.2)', 'rgba(38, 166, 154, 0.2)', 'rgba(212, 225, 87, 0.2)', 'rgba(255, 202, 40, 0.2)'],
+                borderColor: ['rgba(239, 83, 80, 1)', 'rgba(126, 87, 194, 1)', 'rgba(41, 182, 246, 1)', 'rgba(102, 187, 106, 1)', 'rgba(255, 238, 88, 1)', 'rgba(236, 64, 122, 1)', 'rgba(92, 107, 192, 1)', 'rgba(38, 198, 218, 1)', 'rgba(156, 204, 101, 1)', 'rgba(255, 202, 40, 1)', 'rgba(171, 71, 188, 1)', 'rgba(66, 165, 245, 1)', 'rgba(38, 166, 154, 1)', 'rgba(212, 225, 87, 1)', 'rgba(255, 202, 40, 1)'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            legend: {
+              display: false
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    
+    
+    var ctx = document.getElementById("pctgpChart");
+    var pctgplabels = JSON.parse('["FI", "GDR", "LC", "LR", "MODEM", "NG", "NI", "REM"]');
+    var pctgpdata = JSON.parse('[2.95, 2.77, 6.07, 17.33, 8.15, 5.37, 2.95, 54.42]');
+    var pctgpassemb = JSON.parse('[2.95, 2.77, 6.07, 17.33, 8.15, 5.37, 2.95, 54.42]');
+    var coulgp = JSON.parse('["#0cc3d6", "#c00000", "#7030a0", "#2f5597", "#ed7d31", "#ea34d0", "#bfbfbf", "#ffc000"]');
+    var gris = 'rgba(127,127,127,1)'
+    var grisbg = 'rgba(127,127,127,0.2)'
+    var fspChart = new Chart(ctx, {
+        type: 'horizontalBar',
+        data: {
+            labels: pctgplabels,
+            datasets: [{
+                label:'',
+                data: pctgpdata,
+                backgroundColor: coulgp
+
+            },
+            {
+              label: 'Assemblée',
+              data: pctgpassemb,
+              backgroundColor:gris
+            }
+          ]
+        },
+        options: {
+            legend: {
+              display: true
+            },
+            scales: {
+                xAxes: [{
+                    ticks: {
+                        beginAtZero:true
+                    }
+                }]
+            }
+        }
+    });
+    
+    </script>
+          </div>
+        </li>
+      </ul>
+
+    </div>
+  </div>
+</body>
+<footer>
+  <!--  Scripts-->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="https://use.fontawesome.com/57f4fc708a.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.99.0/js/materialize.min.js"></script>
+  <script>
+  $(document).ready(function() {
+    $(".button-collapse").sideNav();
+  })
+  </script>
+  
+<script>
+  var svg = document.getElementById('hemicycle');
+  svg.addEventListener('load', function () {
+    //var svg = document.getElementById('hemicycle');
+    var svgDoc = svg.contentDocument;
+    var styleElement = svgDoc.createElementNS("http://www.w3.org/2000/svg", "style");
+    styleElement.textContent = "path.PO723569 { fill: #bfbfbf; }path.PO730934 { fill: #2f5597; }path.PO730970 { fill: #ed7d31; }path.PO730958 { fill: #0cc3d6; }path.PO730940 { fill: #c00000; }path.PO730952 { fill: #7030a0; }path.PO730964 { fill: #ffc000; }path.PO730946 { fill: #ea34d0; }"; // add whatever you need here
+    svgDoc.getElementById('defs').appendChild(styleElement);
+
+  });
+</script>
+
+</footer>
+
+</html>
