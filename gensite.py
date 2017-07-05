@@ -169,6 +169,45 @@ rangs = {u'Président':1,
          u"Secrétaire":6,
          u'Membre apparenté':10}
 
+
+correctionPlaces = {
+'PA720606':'67',
+'PA719850':'385',
+'PA721824':'196',
+'PA720822':'66',
+'PA1198':'509',
+'PA720798':'60',
+'PA719922':'362',
+'PA720614':'58',
+'PA721262':'373',
+'PA721036':'357',
+'PA346876':'123',
+'PA721880':'307',
+'PA721718':'341',
+'PA721678':'47',
+'PA719890':'549',
+'PA719770':'419',
+'PA721398':'350',
+'PA722150':'537',
+'PA610667':'597',
+'PA223837':'82',
+'PA720622':'288',
+'PA719388':'318',
+'PA719640':'256',
+'PA429893':'517',
+'PA332747':'494',
+'PA718736':'201',
+'PA606212':'59',
+'PA720468':'57',
+'PA720664':'56',
+'PA719608':'68',
+'PA588884':'618',
+'PA721600':'441',
+'PA720746':'267',
+'PA724827':'306',
+'PA722070':'466'}
+
+
 for acteur in acteurs.keys():
     act = acteurs[acteur]
     act['contacts'] = []
@@ -218,9 +257,13 @@ for acteur in acteurs.keys():
         organes[man['organes.organeRef']]['membres'][act['uid']] = (act['uid'],qua,rangs.get(qua,3 if qua.lower()!='membre' else 8))
 
     act['fonctions'] = fonctions.values()
+    if not placeH:
+        placeH = correctionPlaces[act['uid']]
     if placeH:
         places[str(int(placeH))] = {'place':placeH,'acteur':acteur,'groupe':act['groupe']}
         act['place'] = placeH
+    else:
+        print act['nomcomplet']+";"+act['uid']
     # initialisations
     act['stats'] = {'absenteisme':{}}
     act['votes'] = {}
