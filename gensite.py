@@ -298,7 +298,7 @@ for acteur in acteurs.keys():
 css = ""
 vcoul = {'pour':'green','contre':'red','abstention':'grey','nonVotant':'white' }
 for v in votec:
-    css = css + ' ,'.join([ '#p%s' % d for d in votec[v]]) + ' { stroke:'+vcoul[v]+'; stroke-width:3 } '
+    css = css + ' ,'.join([ '#p%s' % d for d in votec[v]]) + ' { stroke:'+vcoul[v]+'; stroke-width:2 } '
 
 print css
 # Hemicycle
@@ -312,6 +312,9 @@ for i,a in enumerate(hemicycle['svg']['a']):
             a['title'] = {'#text':'%s (place %s)' % (acteurs[place['acteur']]['nomcomplet'], place['place']) }
             a['@href'] = 'acteurs/%s.html' % place['acteur']
             a['@target'] = "_parent"
+
+
+
 
 open('dist/hemicycle.svg','w').write(xmltodict.unparse(hemicycle,pretty=True).encode('utf8'))
 
