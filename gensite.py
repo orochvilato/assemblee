@@ -296,14 +296,15 @@ for acteur in acteurs.keys():
 # Vote confiance
 
 css = ""
-vcoul = {'pour':'green','contre':'red','abstention':'grey','nonVotant':'white' }
+vcoul = {'pour':'green','contre':'red','abstention':'white' }
 for v in votec:
-    css = css + ' ,'.join([ '#p%s' % d for d in votec[v]]) + ' { stroke:'+vcoul[v]+'; stroke-width:2 } '
+    if v in vcoul.keys():
+        css = css + ' ,'.join([ '#p%s' % d for d in votec[v]]) + ' { fill:'+vcoul[v]+'; stroke-width:0 } '
 
-print css
+
 # Hemicycle
 
-hemicycle = xmltodict.parse(open('hemicycle.svg','r').read())
+hemicycle = xmltodict.parse(open('hemicycle-test.svg','r').read())
 for i,a in enumerate(hemicycle['svg']['a']):
     if '@class' in a['path'].keys() and '@id' in a['path'].keys():
         place = places.get(a['path']['@id'][1:],None)
