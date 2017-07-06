@@ -40,7 +40,7 @@
     <div class="card-content">
       <span class="card-title coul{{ groupes[gp]['libelleAbrev'] }}-text" style="font-weight:500;">{{ groupes[gp]['libelle'] }}</span>
       <div>{% for pos in ['pour','contre','abstention','nonVotant'] %}{% for v in votegp[gp][pos] %}
-        <a  class="vcircle {{ pos }}" href="acteurs/{{ v }}.html" {% if pos=='nonVotant' %} style="border-color:{{ groupes[gp]['svgcolor'] }}"{% endif %}></a>{% endfor %}{% endfor %}
+        <a  class="vcircle {{ pos }}" title="{{ acteurs[v]['nomcomplet'] }}" href="acteurs/{{ v }}.html" {% if pos=='nonVotant' %} style="border-color:{{ groupes[gp]['svgcolor'] }}"{% endif %}></a>{% endfor %}{% endfor %}
      </div>
     </div>
 
