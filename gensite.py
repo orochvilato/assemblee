@@ -301,6 +301,20 @@ for acteur in acteurs.keys():
 
 # Vote confiance
 
+for gp in votecgp.keys():
+    pour = len(votecgp[gp]['pour'])
+    contre = len(votecgp[gp]['contre'])
+    abstention = len(votecgp[gp]['abstention'])
+    nonVotant = len(votecgp[gp]['nonVotant'])
+    total = pour+contre+abstention
+    votecgp[gp]['stats'] = {'pour': int(float(100*pour)/total),
+                            'contre':int(float(100*contre)/total),
+                            'abstention': int(float(100*abstention)/total),
+                            'nonVotant':int(float(100*nonVotant)/(total+nonVotant))
+                            }
+    votecgp[gp]['stats'] = OrderedDict(sorted(votecgp[gp]['stats'].items(), key=lambda t:t[1], reverse=True))
+    print gp,votecgp[gp]['stats']
+
 css = ""
 vcoul = {'pour':'green','contre':'red','abstention':'white' }
 for v in votec:

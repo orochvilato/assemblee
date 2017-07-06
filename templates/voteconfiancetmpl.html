@@ -26,11 +26,31 @@
       background: red;
     }
     .abstention {
-      background: #888888;
+      background: #666666;
     }
     .nonVotant {
       border-style:solid;
       border-width:1px;
+    }
+    .pour-text {
+      color: green;
+    }
+    .contre-text {
+      color: red;
+    }
+    .abstention-text {
+      color: #666666;
+    }
+    .nonVotant-text {
+
+    }
+    .pctBig {
+      font-size: 30px;
+      font-weight: 500;
+    }
+    .pctSmall {
+      font-size: 18px;
+      font-weight: 500;
     }
 
 </style>
@@ -39,6 +59,12 @@
   <div class="card coul{{ groupes[gp]['libelleAbrev'] }}bg">
     <div class="card-content">
       <span class="card-title coul{{ groupes[gp]['libelleAbrev'] }}-text" style="font-weight:500;">{{ groupes[gp]['libelle'] }}</span>
+      {% set vars = {'cl':'pctBig'} %}
+      {% set icon = {'pour':'thumbs-up', 'contre':'thumbs-down', 'abstention':'ban','nonVotant':''} %}
+      {% for pos in votegp[gp]['stats'] %}{% if pos!='nonVotant' and votegp[gp]['stats'][pos]>0 %}
+        <span class="{{ vars['cl'] }} {{ pos }}-text"><i class="fa fa-{{ icon[pos] }}"></i> {{ votegp[gp]['stats'][pos] }} %</span>{% if vars.update({'cl':'pctSmall'}) %}{% endif %}
+      {% endif %}{% endfor %}
+
       <div>{% for pos in ['pour','contre','abstention','nonVotant'] %}{% for v in votegp[gp][pos] %}
         <a  class="vcircle {{ pos }}" title="{{ acteurs[v]['nomcomplet'] }}" href="acteurs/{{ v }}.html" {% if pos=='nonVotant' %} style="border-color:{{ groupes[gp]['svgcolor'] }}"{% endif %}></a>{% endfor %}{% endfor %}
      </div>
