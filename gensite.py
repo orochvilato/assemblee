@@ -145,6 +145,7 @@ for organe in organes.keys():
         if org['codeType'] == 'GP':
             gplabels.append(org['libelleAbrev'])
             groupes[org['uid']] = org
+            #print org['uid'],org['libelle']
             org.update({'csscolor':'coul'+org['libelleAbrev'],'svgcolor':svgcolors.get(org['libelleAbrev'],'NI')})
 
 gplabels.sort()
@@ -210,7 +211,7 @@ correctionPlaces = {
 
 from confiance import voteconf
 votec = {'pour':[],'contre':[],'abstention':[],'nonVotant':[]}
-
+votecgp = {}
 
 for acteur in acteurs.keys():
     act = acteurs[acteur]
@@ -285,6 +286,11 @@ for acteur in acteurs.keys():
         print act['nomcomplet']
 
     if norm_nom in voteconf:
+        gp = act['groupe']
+        if not gp in votecgp.keys():
+            votecgp[gp] = {'pour':[],'contre':[],'abstention':[],'nonVotant':[]}
+
+        votecgp[gp][voteconf[norm_nom]].append(act['uid'])
         votec[voteconf[norm_nom]].append("%d" % int(placeH))
 
     else:
@@ -509,4 +515,4 @@ for act in acteurs:
 
 open('dist/acteurs.html','w').write(env.get_template('acteurstmpl.html').render(today=today, stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 open('dist/hatvp.html','w').write(env.get_template('hatvptmpl.html').render(today=today, stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-open('dist/voteconfiance.html','w').write(env.get_template('voteconfiancetmpl.html').render(today=today, css = css,stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/voteconfiance.html','w').write(env.get_template('voteconfiancetmpl.html').render(today=today, votegp = votecgp, css = css,stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))

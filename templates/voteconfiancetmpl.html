@@ -12,13 +12,53 @@
     .sortvote {
       font-weight: 500;
     }
+    .vcircle {
+      display:inline-block;
+      height: 0.7em;
+      width: 0.7em;
+      border-radius: 50%;
+      margin:2px;
+    }
+    .pour {
+      background: green;
+    }
+    .contre {
+      background: red;
+    }
+    .abstention {
+      background: #888888;
+    }
+    .nonVotant {
+      border-style:solid;
+      border-width:1px;
+    }
+
 </style>
 {% endblock %}
+{% macro votegroupe(gp) -%}
+  <div class="card coul{{ groupes[gp]['libelleAbrev'] }}bg">
+    <div class="card-content">
+      <span class="card-title coul{{ groupes[gp]['libelleAbrev'] }}-text" style="font-weight:500;">{{ groupes[gp]['libelle'] }}</span>
+      <div>{% for pos in ['pour','contre','abstention','nonVotant'] %}{% for v in votegp[gp][pos] %}
+        <a  class="vcircle {{ pos }}" href="acteurs/{{ v }}.html" {% if pos=='nonVotant' %} style="border-color:{{ groupes[gp]['svgcolor'] }}"{% endif %}></a>{% endfor %}{% endfor %}
+     </div>
+    </div>
+
+</div>{%- endmacro %}
+
 {% block content %}
 <div class="col s12">
   <h5>Scrutin n°1 : Confiance au gouvernement</h5>
+  <div class="row">
+    <div class="col s6 m6">
+    {% for gp in ['PO730964','PO730970','PO730952'] %} {{ votegroupe(gp)}} {% endfor %}
+    </div>
+    <div class="col s6 m6">
+    {% for gp in ['PO730958','PO730940','PO730946','PO723569','PO730934'] %} {{ votegroupe(gp)}} {% endfor %}
+    </div>
+</div>
 
-<object id="hemicycle" data="hemicycle.svg" width='100%' type="image/svg+xml"></object>
+<!-- <object id="hemicycle" data="hemicycle.svg" width='100%' type="image/svg+xml"></object> -->
 
 {% endblock %}
 {% block javascript %}
