@@ -56,13 +56,15 @@
 </style>
 {% endblock %}
 {% macro votegroupe(gp) -%}
-  <div class="card coul{{ groupes[gp]['libelleAbrev'] }}bg">
+  <div class="card acoul{{ groupes[gp]['libelleAbrev'] }}bg" style="background:#F0F0F0">
+
     <div class="card-content">
-      <div class="row" style="margin-bottom:0px">
-      <div class="col s9"><span class="card-title coul{{ groupes[gp]['libelleAbrev'] }}-text" style="font-weight:500;">{{ groupes[gp]['libelle'] }}</span></div>
-      <div class="col s3 coul{{ groupes[gp]['libelleAbrev'] }}-text"><span style="font-weight:500; font-size:24px; float:right;">{{ votegp[gp]['stats']['votant'] }} %</span>
+      <div class="row coul{{ groupes[gp]['libelleAbrev'] }}" style="margin-bottom:0px;padding:2px;padding-top:4px;">
+      <div class="col s9"><span class="card-title oul{{ groupes[gp]['libelleAbrev'] }}-text" style="font-weight:500;">{{ groupes[gp]['libelle'] }}</span></div>
+      <div class="col s3 acoul{{ groupes[gp]['libelleAbrev'] }}-text"><span style="font-weight:500; font-size:24px; float:right;">{{ votegp[gp]['stats']['votant'] }} %</span>
       <span style="font-weight:500; font-size:12px; float:right; padding-right:4px;">votants</span></div>
       </div>
+
       {% set vars = {'cl':'pctBig'} %}
       {% set icon = {'pour':'thumbs-up', 'contre':'thumbs-down', 'abstention':'ban','nonVotant':''} %}
       {% for pos in votegp[gp]['stats'] %}{% if pos!='votant' and votegp[gp]['stats'][pos]>0 %}
@@ -70,7 +72,7 @@
       {% endif %}{% endfor %}
 
       <div>{% for pos in ['pour','contre','abstention','nonVotant'] %}{% for v in votegp[gp][pos] %}
-        <a  class="vcircle {{ pos }}" title="{{ acteurs[v]['nomcomplet'] }}" href="acteurs/{{ v }}.html" {% if pos=='nonVotant' %} style="border-color:{{ groupes[gp]['svgcolor'] }}"{% endif %}></a>{% endfor %}{% endfor %}
+        <a  class="vcircle {{ pos }}" title="{{ acteurs[v]['nomcomplet'] }}" href="acteurs/{{ v }}.html" {% if pos=='nonVotant' %} style="border-color: #555555;" astyle="border-color:{{ groupes[gp]['svgcolor'] }}"{% endif %}></a>{% endfor %}{% endfor %}
      </div>
     </div>
 
@@ -79,8 +81,17 @@
 {% block content %}
 <div class="col s12">
   <h5>{{ titre }}</h5>
+  {% set vars = {'cl':'pctBig'} %}
+  {% set icon = {'pour':'thumbs-up', 'contre':'thumbs-down', 'abstention':'ban','nonVotant':''} %}
+  {% for pos in total %}{% if pos!='votant' and total[pos]>0 %}
+    <span class="{{ vars['cl'] }} {{ pos }}-text"><i class="fa fa-{{ icon[pos] }}"></i> {{ total[pos] }} %</span>{% if vars.update({'cl':'pctSmall'}) %}{% endif %}
+  {% endif %}{% endfor %}
+  <span style="font-weight:500; font-size:36px; float:right;">{{ total['votant'] }} %</span>
+  <span style="font-weight:500; font-size:18px; float:right; padding-right:4px;">votants</span>
+
   <div class="row">
     <div class="col s6 m6">
+
     {% for gp in ['PO730964','PO730970','PO730952'] %} {{ votegroupe(gp)}} {% endfor %}
     </div>
     <div class="col s6 m6">

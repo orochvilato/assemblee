@@ -215,6 +215,8 @@ votec = {'pour':[],'contre':[],'abstention':[],'nonVotant':[]}
 voteu = {'pour':[],'contre':[],'abstention':[],'nonVotant':[]}
 voteugp = {}
 votecgp = {}
+totalc = {'pour':0,'contre':0,'abstention':0,'nonVotant':0}
+totalu = {'pour':0,'contre':0,'abstention':0,'nonVotant':0}
 
 for acteur in acteurs.keys():
     act = acteurs[acteur]
@@ -295,6 +297,7 @@ for acteur in acteurs.keys():
 
         votecgp[gp][voteconf[norm_nom]].append(act['uid'])
         votec[voteconf[norm_nom]].append("%d" % int(placeH))
+        totalc[voteconf[norm_nom]] += 1
 
     else:
         print "pb :" + norm_nom
@@ -306,12 +309,25 @@ for acteur in acteurs.keys():
     if norm_nom in voteurg:
         voteugp[gp][voteurg[norm_nom]].append(act['uid'])
         voteu[voteurg[norm_nom]].append("%d" % int(placeH))
+        totalu[voteurg[norm_nom]] += 1
     else:
         voteugp[gp]['nonVotant'].append(act['uid'])
+        totalu['nonVotant'] += 1
 
 
 
-
+totalu_sum = sum(totalu.values())
+totalc_sum = sum(totalc.values())
+totalu = OrderedDict(sorted({'pour': int(float(100*totalu['pour'])/(totalu_sum-totalu['nonVotant'])),
+          'contre':int(float(100*totalu['contre'])/(totalu_sum-totalu['nonVotant'])),
+          'abstention': int(float(100*totalu['abstention'])/(totalu_sum-totalu['nonVotant'])),
+          'votant':100-int(float(100*totalu['nonVotant'])/totalu_sum)
+          }.items(), key=lambda t:t[1], reverse=True))
+totalc = OrderedDict(sorted({'pour': int(float(100*totalc['pour'])/(totalc_sum-totalc['nonVotant'])),
+          'contre':int(float(100*totalc['contre'])/(totalc_sum-totalc['nonVotant'])),
+          'abstention': int(float(100*totalc['abstention'])/(totalc_sum-totalc['nonVotant'])),
+          'votant':100-int(float(100*totalc['nonVotant'])/totalc_sum)
+          }.items(), key=lambda t:t[1], reverse=True))
 # Vote confiance
 for gp in votecgp.keys():
     pour = len(votecgp[gp]['pour'])
@@ -557,5 +573,5 @@ for act in acteurs:
 
 open('dist/acteurs.html','w').write(env.get_template('acteurstmpl.html').render(today=today, stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
 open('dist/hatvp.html','w').write(env.get_template('hatvptmpl.html').render(today=today, stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-open('dist/voteconfiance.html','w').write(env.get_template('voteconfiancetmpl.html').render(titre=u"Scrutin n°1 : Confiance au gouvernement",today=today, votegp = votecgp, css = css,stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
-open('dist/voteurgence.html','w').write(env.get_template('voteconfiancetmpl.html').render(titre=u"Scrutin n°2 : Etat d'Urgence",today=today, votegp = voteugp, css = css,stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/voteconfiance.html','w').write(env.get_template('voteconfiancetmpl.html').render(total=totalc,titre=u"Scrutin n°1 : Confiance au gouvernement",today=today, votegp = votecgp, css = css,stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
+open('dist/voteurgence.html','w').write(env.get_template('voteconfiancetmpl.html').render(total=totalu,titre=u"Scrutin n°2 : Etat d'Urgence",today=today, votegp = voteugp, css = css,stats=stats, acteurs = acteurs, groupes = groupes).encode('utf-8'))
