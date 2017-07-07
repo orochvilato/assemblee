@@ -60,7 +60,7 @@
 
     <div class="card-content">
       <div class="row coul{{ groupes[gp]['libelleAbrev'] }}" style="margin-bottom:0px;padding:2px;padding-top:4px;">
-      <div class="col s9"><span class="card-title oul{{ groupes[gp]['libelleAbrev'] }}-text" style="font-weight:500;">{{ groupes[gp]['libelle'] }}</span></div>
+      <div class="col s9"><span class="card-title oul{{ groupes[gp]['libelleAbrev'] }}-text" style="font-weight:500;"><a href="groupes/{{ gp }}.html" style="color:black;">{{ groupes[gp]['libelle'] }}</a></span></div>
       <div class="col s3 acoul{{ groupes[gp]['libelleAbrev'] }}-text"><span style="font-weight:500; font-size:24px; float:right;">{{ votegp[gp]['stats']['votant'] }} %</span>
       <span style="font-weight:500; font-size:12px; float:right; padding-right:4px;">votants</span></div>
       </div>

@@ -263,6 +263,7 @@ for acteur in acteurs.keys():
         qua = man['infosQualite.codeQualite']
         fonctions[organeRef] = dict(qualite=qua,debut=format_date(man['dateDebut']),organe=organeRef)
         qua_norm = normalize(qua)
+        
         organes[man['organes.organeRef']]['qualites'][qua_norm] = organes[man['organes.organeRef']]['qualites'].get(qua_norm,[]) + [act['uid']]
         organes[man['organes.organeRef']]['membres'][act['uid']] = (act['uid'],qua,rangs.get(qua,3 if qua.lower()!='membre' else 8))
 
@@ -349,7 +350,7 @@ for gp in voteugp.keys():
     contre = len(voteugp[gp]['contre'])
     abstention = len(voteugp[gp]['abstention'])
     nonVotant = len(voteugp[gp]['nonVotant'])
-    print groupes[gp]['libelle'],pour,contre,abstention,nonVotant
+
     total = pour+contre+abstention
     voteugp[gp]['stats'] = {'pour': int(float(100*pour)/total),
                             'contre':int(float(100*contre)/total),

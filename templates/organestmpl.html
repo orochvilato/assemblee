@@ -15,7 +15,7 @@
             {% set groupe = organes[acteurs[pres]['groupe']] %}
             <a href="groupes/{{ acteurs[pres]['groupe'] }}.html" class="{{ groupe['csscolor'] }}-text" style="font-weight:500;">{{ groupe['libelleAbrev'] }}</a>
             )</td>
-            <td>{% for vp in organes[org]['qualites']['vice-president'] %}{% set groupe = organes[acteurs[vp]['groupe']] %}
+            <td>{% for vp in organes[org]['qualites']['vicepresident'] %}{% set groupe = organes[acteurs[vp]['groupe']] %}
             <a href="acteurs/{{ vp}}.html" style="color:black;">{{ acteurs[vp]['nomcomplet'] }}</a> (<a href="groupes/{{ acteurs[vp]['groupe'] }}.html" class="{{ groupe['csscolor'] }}-text" style="font-weight:500;">{{ groupe['libelleAbrev'] }}</a>)<br/>{% endfor %}</td>
             <td>{{ organes[org]['nbmembres'] }}</td>
           </tr>{% endfor %}
