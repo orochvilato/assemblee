@@ -1,8 +1,10 @@
 import scrapy
 import requests
 import json
-from lib.tools import normalize
+from tools import normalize,cmdline_args
 from scrapy.crawler import CrawlerProcess
+
+debug = cmdline_args.debug
 
 deputywatch = {}
 
@@ -38,15 +40,18 @@ class DeputyWatchSpider(scrapy.Spider):
 
 
 
+if not debug:
+    process = CrawlerProcess({
+        'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
+    })
 
 
-process = CrawlerProcess({
-    'USER_AGENT': 'Mozilla/4.0 (compatible; MSIE 7.0; Windows NT 5.1)',
-})
+    process.crawl(DeputyWatchSpider)
+    process.start() # the script will block here until the crawling is finished
 
+    with open('json/deputywatch.json','w') as f:
+        f.write(json.dumps(deputywatch))
+else:
+    deputywatch = json.loads(open('json/deputywatch.json','r').read())
 
-process.crawl(DeputyWatchSpider)
-process.start() # the script will block here until the crawling is finished
-
-with open('json/deputywatch.json','w') as f:
-    f.write(json.dumps(deputywatch))
+deputywatch = dict((k,v) for k,v in deputywatch.iteritems() if v.get('flag',False) == True)

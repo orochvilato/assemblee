@@ -18,94 +18,9 @@ from lib.hatvp import declarations
 
 from collections import OrderedDict
 
-statsCSP = OrderedDict((
-(u"Agriculteurs exploitants", 1.1),
-(u"Artisans, commerçants et chefs d'entreprise",3.6),
-(u"Cadres et professions intellectuelles supérieures",9.4),
-(u"Professions Intermédiaires",13.8),
-(u"Employés",15.9),
-(u"Ouvriers",12.3),
-(u"Retraités",24.9),
-(u"Autres (y compris inconnu et sans profession déclarée)",19)
-))
-
-gplabels = []
-svgcolors = {}
+from lib.actorg import statsCSP, gplabels, svgcolors
 
 
-
-def setPalette(svgfile):
-    css = ""
-    svg = xmltodict.parse(open(svgfile,'r').read())
-    for c in svg['svg']['rect']:
-        id = c['@id']
-        h = re.search(r';fill:([^;]+);',c['@style']).groups()[0][1:]
-        svgcolors[id] = '#'+h
-        hcolor = tuple(int(h[i:i+2], 16) for i in (0, 2 ,4))
-        css += '.coul'+id+' {\n  background-color: rgba(%d,%d,%d,1);\n}\n\n' % hcolor
-        css += '.coul'+id+'-text {\n  color: rgba(%d,%d,%d,1);\n}\n\n' % hcolor
-        css += '.coul'+id+'bg {\n  background-color: rgba(%d,%d,%d,0.33);\n}\n\n' % hcolor
-        css += '.coul'+id+'bg-text {\n  color: rgba(%d,%d,%d,0.33);\n}\n\n' % hcolor
-    open("dist/css/colors.css",'w').write(css)
-
-
-setPalette('palette.svg')
-
-def loadXMLZip(url):
-
-    zip = StringIO(requests.get(url).content)
-
-    with ZipFile(zip,'r') as z:
-        name = z.namelist()[0]
-        with z.open(name,'r') as f:
-            xml = f.read()
-
-    return xmltodict.parse(xml)
-def getVal(v):
-    return None if isinstance(v,dict) else v
-
-import collections
-def flatten(elt):
-    if isinstance(elt,dict):
-        update = []
-        for k,v in elt.iteritems():
-            if isinstance(v, collections.MutableMapping):
-                update.append((k,v))
-            elif isinstance(v,list):
-                flatten(v)
-        for (k,v) in update:
-            flatten(v)
-            if '@xsi:nil' in v.keys():
-                elt[k] = None
-                continue
-            if len(v.keys()) == 1 and k == v.keys()[0]+'s':
-                elt[k] = v.values()[0]
-                continue
-            for _k,_v in v.iteritems():
-                elt[ k + '.' + _k ] = _v
-            del elt[k]
-        if '@xsi:type' in elt.keys():
-            elt['type'] = elt['@xsi:type']
-            del elt['@xsi:type']
-        if 'uid.#text' in elt.keys():
-            elt['uid'] = elt['uid.#text']
-            del elt['uid.#text']
-    elif isinstance(elt,list):
-        for e in elt:
-            flatten(e)
-
-
-def loadDeputes():
-    url = "http://data.assemblee-nationale.fr/static/openData/repository/AMO/tous_acteurs_mandats_organes_xi_legislature/AMO30_tous_acteurs_tous_mandats_tous_organes_historique.xml.zip"
-    url = "http://data.assemblee-nationale.fr/static/openData/repository/AMO/deputes_actifs_mandats_actifs_organes/AMO10_deputes_actifs_mandats_actifs_organes_XIV.xml.zip"
-    deputes = loadXMLZip(url)
-    #deputes = xmltodict.parse(open('AMO10_deputes_actifs_mandats_actifs_organes_XIV.xml','r').read())
-
-    flatten(deputes['export']['organes']['organe'])
-    flatten(deputes['export']['acteurs']['acteur'])
-    organes = dict( (o['uid'],o) for o in deputes['export']['organes']['organe'])
-    acteurs = dict( (a['uid'],a) for a in deputes['export']['acteurs']['acteur'])
-    return organes,acteurs
 
 def loadScrutins():
     url = "http://data.assemblee-nationale.fr/static/openData/repository/LOI/scrutins/Scrutins_XIV.xml.zip"
@@ -132,9 +47,9 @@ else:
     scrutins = json.loads(open('json/scrutins.json','r').read())
 
 
+from lib.deputywatch import deputywatch
 
 
-deputywatch = dict((k,v) for k,v in json.loads(open('json/deputywatch.json','r').read()).iteritems() if v.get('flag',False) == True)
 
 nbvotes = {}
 groupes = {}
@@ -263,7 +178,7 @@ for acteur in acteurs.keys():
         qua = man['infosQualite.codeQualite']
         fonctions[organeRef] = dict(qualite=qua,debut=format_date(man['dateDebut']),organe=organeRef)
         qua_norm = normalize(qua)
-        
+
         organes[man['organes.organeRef']]['qualites'][qua_norm] = organes[man['organes.organeRef']]['qualites'].get(qua_norm,[]) + [act['uid']]
         organes[man['organes.organeRef']]['membres'][act['uid']] = (act['uid'],qua,rangs.get(qua,3 if qua.lower()!='membre' else 8))
 
