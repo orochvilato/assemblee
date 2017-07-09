@@ -41,19 +41,20 @@ var selectAxe = function(axen) {
       var stats_list =[];
 
       var positionsVotants = ['pour','contre','abstention']
-      var icons = { pour:'thumbs-up', contre:'thumbs-down', abstention:'meh', 'nonVotant':'ban', 'absent':'plane'};
+      var icons = { pour:'thumbs-up', contre:'thumbs-down', abstention:'meh-o', 'nonVotant':'ban', 'absent':'plane'};
+      var libelles = { pour:'votes pour', contre:'votes contre', abstention:'abstention', 'nonVotant':'non votants (justifiés)', 'absent':'absents'};
       var item_stats =  { n: results.length, pct: Math.round(100*(results.length/scrutin.positions.length))};
       var nvotants = results.length - stats['absent'] - stats['nonVotant']
       positionsVotants.forEach(function(p) {
         if (stats[p]>0) {
-          stats_list.push({ position:p, n:stats[p], pct:Math.round(100*stats[p]/nvotants), icon:icons[p] });
+          stats_list.push({ libelle:libelles[p], position:p, n:stats[p], pct:Math.round(100*stats[p]/nvotants), icon:icons[p] });
         }
       });
       stats_list.sort(function(a, b) { return b.n - a.n; });
 
-      stats_list.push({ position:'absent', big:true,n:stats['absent'], absent:true, pct:Math.round(100*stats['absent']/results.length), icon:icons['absent'] });
+      stats_list.push({ libelle:libelles['absent'], position:'absent', big:true,n:stats['absent'], absent:true, pct:Math.round(100*stats['absent']/results.length), icon:icons['absent'] });
       if (stats['nonVotant']>0) {
-          stats_list.push({ position:'nonVotant', n:stats['nonVotant'], absent:true, pct:Math.round(100*stats['nonVotant']/results.length), icon:icons['nonVotant'] });
+          stats_list.push({ libelle:libelles['nonVotant'], position:'nonVotant', n:stats['nonVotant'], absent:true, pct:Math.round(100*stats['nonVotant']/results.length), icon:icons['nonVotant'] });
       }
 
 
