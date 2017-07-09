@@ -139,7 +139,7 @@ for acteur in acteurs.keys():
     act['nomcomplet'] = act['etatCivil.ident.civ'] + ' ' + act['etatCivil.ident.prenom'] + ' ' + act['etatCivil.ident.nom']
     act['id'] = normalize(act['nomcomplet'])
     act['age'] = int((datetime.now() - datetime.strptime(act['etatCivil.infoNaissance.dateNais'],'%Y-%m-%d')).days / 365.25)
-    act['classeage'] = '%d-%d' % ((act['age']/10)*10,(1+(act['age']/10))*10)
+    act['classeage'] = '%d-%d ans' % ((act['age']/10)*10,(1+(act['age']/10))*10)
     if not act['profession.socProcINSEE.famSocPro'] in statsCSP.keys():
         act['profession.socProcINSEE.famSocPro'] = u"Autres (y compris inconnu et sans profession déclarée)"
 

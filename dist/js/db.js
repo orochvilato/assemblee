@@ -7,13 +7,14 @@ $(document).ready( function() {
   // Add a collection to the database
   var votants = db.addCollection('votants');
   var axes;
+  var scrutin;
   $.ajax({
     //url: 'https://cdn.rawgit.com/maxkfranz/3d4d3c8eb808bd95bae7/raw', // wine-and-cheese.json
     url: 'json/scrutin2.json',
     type: 'GET',
     dataType: 'json'
   }).done(function(data) {
-    var scrutin = data;
+    scrutin = data;
     $('#numeroscrutin').html(scrutin.numero);
     $('#libellescrutin').html(scrutin.libelle);
     scrutin['positions'].forEach(function (p) {
@@ -42,7 +43,7 @@ $(document).ready( function() {
   function selectAxe(axen) {
     var def = axes.defs[axes.noms[axen]];
     $('#vue').empty();
-    for (i=0; i<def.items.length; i++) {
+    for (var i=0; i<def.items.length; i++) {
       //$('#vue').append('<h4>'+def.items[i][1]+'</h4>');
       var sel = {};
       var cmp = {}
@@ -50,14 +51,16 @@ $(document).ready( function() {
       cmp[def.compare] = def.items[i][0];
       sel[def.field] = cmp
       var results = votants.find(sel);
-      console.log(sel,results);
+
       var stats = { pour:0, contre:0, abstention:0, 'nonVotant':0, absent:0};
-      for (j=0; j<results.length;j++) {
+      for (var j=0; j<results.length;j++) {
         stats[results[j].position] += 1;
       }
       var stats_list =[];
+
       var positions = ['pour','contre','abstention']
       var icons = { pour:'thumbs-up', contre:'thumbs-down', abstention:'meh', 'nonVotant':'ban', 'absent':'plane'};
+      var item_stats =  { n: results.length, pct: Math.round(100*(results.length/scrutin.positions.length))};
 
       positions.forEach(function(p) {
         if (stats[p]>0) {
@@ -89,7 +92,7 @@ $(document).ready( function() {
 
       var template = document.getElementById('template').innerHTML;
       Mustache.parse(template);
-      var rendered = Mustache.render(template, {titre: def.items[i][1], cercles: cercles, stats:stats_list});
+      var rendered = Mustache.render(template, {titre: def.items[i][1], cercles: cercles, stats:stats_list, item_stats:item_stats});
       //Overwrite the contents of #target with the rendered HTML
       $('#vue').append(rendered);
     }

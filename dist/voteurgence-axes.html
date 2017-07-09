@@ -134,7 +134,7 @@
   <div class="col s12">
     <div class="card" style="background:#F0F0F0">
     <div class="card-content">
-      <span class="card-title" style="font-weight:500;">{{titre}}</span>
+      <span class="card-title" style="font-weight:500;">{{titre}} <span style="font-size:60%">{{#item_stats}}({{n}} député(s) - {{pct}}%){{/item_stats}}</span></span>
       <span class="card-title">{{#stats}}<span class="pct{{#big}}Big{{/big}} {{position}}-text{{#last}} right{{/last}}"><i class="fa fa-{{icon}}"></i> {{pct}}% <span style="font-size:60%">({{n}})</span></span>{{/stats}}</span>
       <div>
         {{#cercles}}
