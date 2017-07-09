@@ -76,6 +76,7 @@ def parseVotePDF(path):
                                           'region':act['region'],
                                           'departement':act['departement'],
                                           'csp':act['csp'],
+                                          'sexe':act['sexe'],
                                           'position':votes[pos]})
 
     for uid in list(set(data['acteurs_uid'].keys())-set(exprimes)):
@@ -89,6 +90,7 @@ def parseVotePDF(path):
                                      'region':act['region'],
                                      'departement':act['departement'],
                                      'csp':act['csp'],
+                                     'sexe':act['sexe'],
                                      'position':'absent'})
 
     return scrutin

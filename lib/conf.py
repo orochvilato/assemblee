@@ -15,6 +15,8 @@ axes = [(u'Assemblée',{'source':'assemblee','label':'libelle','key':'libelleAbr
                 'item_field':'classeage','item_compare':'$eq'}),
         ('CSP',{'source':'acteurs','label':'csp','key':'csp',
         'item_field':'csp','item_compare':'$eq'}),
+        ('Sexe',{'source':'acteurs','label':'sexe','key':'sexe',
+        'item_field':'sexe','item_compare':'$eq'}),
 
        ]
 

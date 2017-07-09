@@ -134,6 +134,7 @@ correctionPlaces = {
 
 for acteur in acteurs.keys():
     act = acteurs[acteur]
+    act['sexe'] = 'Homme' if act['etatCivil.ident.civ']=='M.' else 'Femme'
     act['contacts'] = []
     act['commissions'] = []
     act['nomcomplet'] = act['etatCivil.ident.civ'] + ' ' + act['etatCivil.ident.prenom'] + ' ' + act['etatCivil.ident.nom']
