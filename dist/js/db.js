@@ -102,7 +102,7 @@ var selectAxe = function(axen) {
 
         var template = document.getElementById('template').innerHTML;
         Mustache.parse(template);
-        var rendered = Mustache.render(template, {filtered:filtres_axes[axen][i], axe:axen,i:i,hidechart:def.hidechart, key: def.items[i][0], titre: def.items[i][1], cercles: cercles, stats:stats_list, item_stats:item_stats});
+        var rendered = Mustache.render(template, {filtered:filtres_axes[axen][i], assemblee:(axen==0),axe:axen,i:i,hidechart:def.hidechart, key: def.items[i][0], titre: def.items[i][1], cercles: cercles, stats:stats_list, item_stats:item_stats});
 
         $('#vue').append(rendered);
 
