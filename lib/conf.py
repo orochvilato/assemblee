@@ -9,7 +9,7 @@ axes = [(u'Assemblée',{'source':'assemblee','label':'libelle','key':'libelleAbr
         ('Region',{'source':'acteurs','label':'region','key':'region',
                         'item_field':'region','item_compare':'$eq'}),
         (u'Département',{'source':'acteurs','label':'departement','key':'departement',
-                        'item_field':'departement','item_compare':'$eq'}),
+                        'item_field':'departement','item_compare':'$eq','hidechart':True}),
 
         ('Ages',{'source':'acteurs','label':'classeage','key':'classeage',
                 'item_field':'classeage','item_compare':'$eq'}),

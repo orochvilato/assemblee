@@ -95,6 +95,6 @@ def parseVotePDF(path):
 
     return scrutin
 
-#r = parseVotePDF('pdfs/scrutin2017_07_04.pdf')
-r = parseVotePDF('pdfs/scrutin02.pdf')
+r = parseVotePDF('pdfs/scrutin2017_07_04.pdf')
+#r = parseVotePDF('pdfs/scrutin02.pdf')
 open('dist/json/scrutin%s.json' % r['numero'], 'w').write(json.dumps(r))
