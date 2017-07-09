@@ -8,7 +8,7 @@ var scrutin;
 var loadScrutin= function(s) {
   $.ajax({
     //url: 'https://cdn.rawgit.com/maxkfranz/3d4d3c8eb808bd95bae7/raw', // wine-and-cheese.json
-    url: 'json/scrutin'+s+'.json',
+    url: 'json/scrutin'+s+'.json?t='+Date.now(),
     type: 'GET',
     dataType: 'json'
   }).done(function(data) {

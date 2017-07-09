@@ -74,6 +74,7 @@ def parseVotePDF(path):
                                           'groupe': act['groupe'],
                                           'classeage':act['classeage'],
                                           'region':act['region'],
+                                          'typeregion':act['typeregion'],
                                           'departement':act['departement'],
                                           'csp':act['csp'],
                                           'sexe':act['sexe'],
@@ -88,13 +89,14 @@ def parseVotePDF(path):
                                      'groupe': act['groupe'],
                                      'classeage':act['classeage'],
                                      'region':act['region'],
+                                     'typeregion':act['typeregion'],
                                      'departement':act['departement'],
                                      'csp':act['csp'],
                                      'sexe':act['sexe'],
                                      'position':'absent'})
 
+    open('dist/json/scrutin%s.json' % scrutin['numero'], 'w').write(json.dumps(scrutin))
     return scrutin
 
 r = parseVotePDF('pdfs/scrutin2017_07_04.pdf')
-#r = parseVotePDF('pdfs/scrutin02.pdf')
-open('dist/json/scrutin%s.json' % r['numero'], 'w').write(json.dumps(r))
+r = parseVotePDF('pdfs/scrutin02.pdf')

@@ -6,8 +6,10 @@ axes = [(u'Assemblée',{'source':'assemblee','label':'libelle','key':'libelleAbr
                         'item_field':'groupe','item_compare':'$eq'}),
         ('Commissions',{'source':'commissions','label':'libelle','key':'uid',
                         'item_field':'commissions','item_compare':'$contains'}),
-        ('Region',{'source':'acteurs','label':'region','key':'region',
+        ('Région',{'source':'acteurs','label':'region','key':'region',
                         'item_field':'region','item_compare':'$eq'}),
+        ('Type Région',{'source':'acteurs','label':'typeregion','key':'typeregion',
+                'item_field':'typeregion','item_compare':'$eq'}),
         (u'Département',{'source':'acteurs','label':'departement','key':'departement',
                         'item_field':'departement','item_compare':'$eq','hidechart':True}),
 

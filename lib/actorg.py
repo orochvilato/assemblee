@@ -159,6 +159,7 @@ for acteur in acteurs.keys():
             placeH = man['mandature.placeHemicycle']
             if not 'region' in act.keys():
                 act['region'] = man['election.lieu.region']
+                act['typeregion'] = man['election.lieu.regionType']
                 act['departement'] = man['election.lieu.departement']
                 act['circo'] = man['election.lieu.numCirco']
 
