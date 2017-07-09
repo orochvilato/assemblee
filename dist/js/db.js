@@ -38,7 +38,8 @@ var selectAxe = function(axen) {
 
       cmp[def.compare] = def.items[i][0];
       sel[def.field] = cmp
-      var req = { '$and':[sel]};
+      var req = { '$and':[]};
+
       for (var a=0; a<axes.noms.length; a++) {
         var axereq = {'$or':[]};
         var adef = axes.defs[axes.noms[a]];
@@ -58,6 +59,8 @@ var selectAxe = function(axen) {
           req['$and'].push(axereq);
         }
       }
+      var base = votants.find(req).length;
+      req['$and'].push(sel)
       var results = votants.find(req);
       if (results.length>0) {
         var stats = { pour:0, contre:0, abstention:0, 'nonVotant':0, absent:0};
@@ -69,7 +72,7 @@ var selectAxe = function(axen) {
         var positionsVotants = ['pour','contre','abstention'];
         var icons = { pour:'thumbs-up', contre:'thumbs-down', abstention:'meh-o', 'nonVotant':'ban', 'absent':'plane'};
         var libelles = { pour:'votes pour', contre:'votes contre', abstention:'abstention', 'nonVotant':'non votants (justifiés)', 'absent':'absents'};
-        var item_stats =  { n: results.length, pct: Math.round(100*(results.length/scrutin.positions.length))};
+        var item_stats =  { n: results.length, pct: Math.round(100*(results.length/base))};
         var nvotants = results.length - stats['absent'] - stats['nonVotant']
         positionsVotants.forEach(function(p) {
           if (stats[p]>0) {
