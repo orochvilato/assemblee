@@ -2,8 +2,8 @@ var db = new loki('sandbox.db');
 // Add a collection to the database
 var votants = db.addCollection('votants');
 var axes;
+var scrutins = [];
 var filtres_axes=[];
-var scrutin;
 var current_axe = 0;
 var current_elements = [];
 
@@ -34,22 +34,41 @@ var sort_fcts = [  ['% absence',sort_absent],
 var current_sort = 0;
 var current_sort_asc = false;
 
-var loadScrutin= function(s) {
-  $.ajax({
-    //url: 'https://cdn.rawgit.com/maxkfranz/3d4d3c8eb808bd95bae7/raw', // wine-and-cheese.json
-    url: 'json/scrutin'+s+'.json?t='+Date.now(),
-    type: 'GET',
-    dataType: 'json'
-  }).done(function(data) {
-    votants.clear();
-    scrutin = data;
-    $('#noscrutin').html(scrutin.numero);
-    $('#libellescrutin').html(scrutin.libelle);
-    scrutin['positions'].forEach(function (p) {
-       votants.insert(p);
-    });
-    selectAxe(current_axe);
+
+var loadVotants = function (data) {
+  scrutins.push(data)
+  data['positions'].forEach(function (p) {
+     votants.insert(p);
   });
+};
+var loadScrutin= function(s) {
+  votants.clear();
+  scrutins = [];
+  var calls = [];
+  $('#scrutin option').each(function(){
+    if (((s == 'tous') && ($(this).val() != 'tous')) || (($(this).val() == s) && ( s != 'tous')))
+    {
+        calls.push($.ajax({
+          url: 'json/scrutin'+$(this).val()+'.json?t='+Date.now(),
+          type: 'GET',
+          dataType: 'json',
+          success: loadVotants
+        }));
+    }
+  });
+  console.log(calls);
+  $.when.apply(this, calls).done(function() {
+    if (calls.length==1) {
+      $('#titrescrutin').html('Scrutin n°'+scrutins[0].numero+' : '+scrutins[0].libelle);
+    } else {
+      $('#titrescrutin').html(scrutins.length+' scrutins');
+    }
+
+    selectAxe(current_axe);
+
+  })
+
+
 }
 
 var sortElements = function() {
@@ -201,7 +220,7 @@ var selectAxe = function(axen) {
         var positionsVotants = ['pour','contre','abstention'];
         var icons = { pour:'thumbs-up', contre:'thumbs-down', abstention:'meh-o', 'nonVotant':'ban', 'absent':'plane'};
         var libelles = { pour:'votes pour', contre:'votes contre', abstention:'abstention', 'nonVotant':'non votants (justifiés)', 'absent':'absents'};
-        var item_stats =  { n: results.length, pct: Math.round(100*(results.length/base))};
+        var item_stats =  { n: results.length/scrutins.length, pct: Math.round(100*(results.length/base))};
         var nvotants = results.length - stats['absent'] - stats['nonVotant']
         positionsVotants.forEach(function(p) {
           if (stats[p]>0) {
@@ -228,7 +247,7 @@ var selectAxe = function(axen) {
           cercles = cercles.concat(_cercles[s.position]);
         })
 
-        elements.push({filtered:filtres_axes[axen][i], assemblee:(axen==0),axe:axen,hidechart:def.hidechart, key: def.items[i][0], titre: def.items[i][1], cercles: cercles, stats:stats_list, item_stats:item_stats, elem_stats:stats});
+        elements.push({monoscrutin:(scrutins.length==1),filtered:filtres_axes[axen][i], assemblee:(axen==0),axe:axen,hidechart:def.hidechart, key: def.items[i][0], titre: def.items[i][1], cercles: cercles, stats:stats_list, item_stats:item_stats, elem_stats:stats});
       }
     }
     current_elements = elements;
