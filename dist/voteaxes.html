@@ -73,6 +73,32 @@
       margin-right:10px;
       cursor:help;
     }
+    .axe {
+      margin:2px;
+    }
+    .chip {
+      color: white;
+      font-size:14px;
+    }
+    span.badge {
+      font-weight: 300;
+      font-size: 0.8rem;
+      border-radius: 2px;
+    }
+    .tri {
+      cursor: pointer;
+    }
+    .tri i.desc,i.asc {
+      display:none;
+    }
+    .tri.new.desc i.desc {
+      display:inline;
+    }
+    .tri.new.asc i.asc {
+      display:inline;
+    }
+
+
 
 </style>
 
@@ -119,23 +145,34 @@
     </div>
     <div class="row">
       <div class="col s12">
-        <h5>Scrutin n°<span id="noscrutin"></span> : <span id="libellescrutin"></span></h5>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col s12">
-        <div id="axes"></div>
+        <div class="card">
+          <div class="card-content">
+            <div id="axes"></div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="row">
       <div class="col s12">
         <div id="filtres"></div>
         </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <h5>Scrutin n°<span id="noscrutin"></span> : <span id="libellescrutin"></span></h5>
       </div>
-      <div class="row">
-        <div class="col s12">
-          <div id="vue"></div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <div class="center" id="titreaxe" style="font-size:180%;font-weight:500;margin-bottom:20px;">Titre</div>
       </div>
+      <div class="col s12">
+          <span>Trier par : </span><span id="tris"></span>
+
+      </div>
+    <div class="col s12">
+        <div id="vue"></div>
+    </div>
     </div>
   </div>
 </body>

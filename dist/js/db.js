@@ -7,6 +7,33 @@ var scrutin;
 var current_axe = 0;
 var current_elements = [];
 
+function sort_absent(a,b) {
+  return (a.elem_stats.absent/a.item_stats.n) - (b.elem_stats.absent/b.item_stats.n);
+ };
+ function sort_alpha(a,b) {
+    return a.titre>b.titre;
+ };
+ function sort_pour(a,b) {
+    return (a.elem_stats.pour/a.item_stats.n) - (b.elem_stats.pour/b.item_stats.n);
+ };
+ function sort_contre(a,b) {
+    return (a.elem_stats.contre/a.item_stats.n) - (b.elem_stats.contre/b.item_stats.n);
+ };
+ function sort_abstention(a,b) {
+    return (a.elem_stats.abstention/a.item_stats.n) - (b.elem_stats.abstention/b.item_stats.n);
+ };
+
+
+
+
+var sort_fcts = [  ['% absence',sort_absent],
+              ['% vote pour',sort_pour],
+              ['% vote contre',sort_contre],
+              ['% vote abstention',sort_abstention],
+              ['% ordre alphabétique',sort_alpha] ]
+var current_sort = 0;
+var current_sort_asc = false;
+
 var loadScrutin= function(s) {
   $.ajax({
     //url: 'https://cdn.rawgit.com/maxkfranz/3d4d3c8eb808bd95bae7/raw', // wine-and-cheese.json
@@ -24,11 +51,13 @@ var loadScrutin= function(s) {
     selectAxe(current_axe);
   });
 }
+
 var sortElements = function() {
 
-    current_elements.sort(function(a, b) {
-      return (a.elem_stats.absent/a.item_stats.n) - (b.elem_stats.absent/b.item_stats.n);
-     });
+    current_elements.sort(sort_fcts[current_sort][1]);
+    if (!current_sort_asc) {
+      current_elements.reverse();
+    }
 
 
     $('#vue').empty().hide();
@@ -107,7 +136,7 @@ var sortElements = function() {
     $('.filtreaxe').click(function() {
       var data = $(this).data();
       if (!filtres_axes[data.axe][data.item]) {
-        var chip = '<div data-axe='+data.axe+' data-item='+data.item+' class="chip">'+axes.noms[data.axe]+':'+axes.defs[axes.noms[data.axe]].items[data.item][1]+'<i class="close closefilter material-icons">close</i></div>';
+        var chip = '<div data-axe='+data.axe+' data-item='+data.item+' class="chip teal">'+axes.noms[data.axe]+':'+axes.defs[axes.noms[data.axe]].items[data.item][1]+'<i class="close closefilter material-icons">close</i></div>';
         $('#filtres').append(chip);
         $('.closefilter').click(function() {
           var data=$(this).parent().data();
@@ -129,7 +158,7 @@ var sortElements = function() {
 var selectAxe = function(axen) {
     var def = axes.defs[axes.noms[axen]];
     current_axe = axen;
-
+    $('#titreaxe').html(def.titre);
     var elements = [];
 
     for (var i=0; i<def.items.length; i++) {
@@ -209,7 +238,27 @@ var selectAxe = function(axen) {
 
 
 $(document).ready( function() {
+  for (var i=0;i<sort_fcts.length;i++) {
+    var s = sort_fcts[i];
+    var badge = ( current_sort == i ? 'new':'')
+    var sens = ( current_sort_asc ? ' asc ' : ' desc ')
 
+    $('#tris').append('<span data-i="'+i+'" class="'+badge+sens+'badge tri" data-badge-caption="'+s[0]+'"><i class="fa fa-sort-asc asc"></i><i class="fa fa-sort-desc desc"></i></span>');
+  }
+  $('.tri').click(function () {
+    if ($(this).hasClass('new')) {
+      $(this).removeClass('asc desc');
+      current_sort_asc = !current_sort_asc
+
+    } else {
+      $('.tri').removeClass('new').removeClass('asc desc');
+      $(this).addClass('new');
+      current_sort = $(this).data().i;
+    }
+    var sens = ( current_sort_asc ? ' asc ' : ' desc ');
+    $(this).addClass(sens);
+    sortElements();
+  });
   $.ajax({
     //url: 'https://cdn.rawgit.com/maxkfranz/3d4d3c8eb808bd95bae7/raw', // wine-and-cheese.json
     url: 'json/axes.json',
