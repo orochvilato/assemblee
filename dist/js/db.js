@@ -5,6 +5,7 @@ var axes;
 var filtres_axes=[];
 var scrutin;
 var current_axe = 0;
+var current_elements = [];
 
 var loadScrutin= function(s) {
   $.ajax({
@@ -23,19 +24,118 @@ var loadScrutin= function(s) {
     selectAxe(current_axe);
   });
 }
+var sortElements = function() {
+
+    current_elements.sort(function(a, b) {
+      return (a.elem_stats.absent/a.item_stats.n) - (b.elem_stats.absent/b.item_stats.n);
+     });
+
+
+    $('#vue').empty().hide();
+    var template = document.getElementById('template').innerHTML;
+    Mustache.parse(template);
+
+    for (i=0;i<current_elements.length;i++) {
+      var element = current_elements[i];
+      element.i = i;
+      var def = axes.defs[axes.noms[element.axe]];
+      var rendered = Mustache.render(template, element);
+
+      $('#vue').append(rendered);
+
+      if (!def.hidechart) {
+        var ctx = document.getElementById("donut"+i);
+        var randomScalingFactor = function() {
+         return Math.round(Math.random() * 100);
+        };
+
+        var myChart = new Chart(ctx, {
+         type: 'doughnut',
+         data: {
+             datasets: [{
+                 data: [
+                     element['elem_stats']['pour'],
+                     element['elem_stats']['contre'],
+                     element['elem_stats']['abstention'],
+                     element['elem_stats']['nonVotant'],
+                     element['elem_stats']['absent']
+                 ],
+                 backgroundColor: [
+                     "green",
+                     "red",
+                     "grey",
+                     "lightgrey",
+                     "lightgrey",
+                 ],
+                 label: 'Dataset 1'
+             }],
+             labels:['Pour','Contre','Abstention','Non votant','Absent']
+
+         },
+         options: {
+             responsive: true,
+             legend: {
+                 display: false
+             },
+             title: {
+                 display: true,
+                 text: 'Répartition par position de vote'
+             },
+             animation: {
+                 animateScale: false,
+                 animateRotate: false,
+             },
+             tooltips: {
+                  callbacks: {
+                    label: function(tooltipItem, data) {
+                      var allData = data.datasets[tooltipItem.datasetIndex].data;
+                      var tooltipLabel = data.labels[tooltipItem.index];
+                      var tooltipData = allData[tooltipItem.index];
+                      var total = 0;
+                      for (var i in allData) {
+                        total += allData[i];
+                      }
+                      var tooltipPercentage = Math.round((tooltipData / total) * 100);
+                      return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
+                    }
+                  }
+              }
+         }
+       });
+     }
+    }
+    $('.filtreaxe').click(function() {
+      var data = $(this).data();
+      if (!filtres_axes[data.axe][data.item]) {
+        var chip = '<div data-axe='+data.axe+' data-item='+data.item+' class="chip">'+axes.noms[data.axe]+':'+axes.defs[axes.noms[data.axe]].items[data.item][1]+'<i class="close closefilter material-icons">close</i></div>';
+        $('#filtres').append(chip);
+        $('.closefilter').click(function() {
+          var data=$(this).parent().data();
+          filtres_axes[data.axe][data.item] = false;
+          $('input[data-axe="'+data.axe+'"][data-item="'+data.item+'"]').prop('checked',false);
+          if (current_axe != data.axe) {
+            selectAxe(current_axe);
+          }
+        });
+      } else {
+
+        $('.chip[data-axe="'+data.axe+'"][data-item="'+data.item+'"]').remove();
+      }
+      filtres_axes[data.axe][data.item] = !filtres_axes[data.axe][data.item];
+
+    });
+    $('#vue').show();
+}
 var selectAxe = function(axen) {
     var def = axes.defs[axes.noms[axen]];
     current_axe = axen;
-    $('#vue').empty();
+
+    var elements = [];
+
     for (var i=0; i<def.items.length; i++) {
       //$('#vue').append('<h4>'+def.items[i][1]+'</h4>');
       var sel = {};
       var cmp = {}
-
-
-
-
-
       cmp[def.compare] = def.items[i][0];
       sel[def.field] = cmp
       var req = { '$and':[]};
@@ -99,83 +199,11 @@ var selectAxe = function(axen) {
           cercles = cercles.concat(_cercles[s.position]);
         })
 
-
-        var template = document.getElementById('template').innerHTML;
-        Mustache.parse(template);
-        var rendered = Mustache.render(template, {filtered:filtres_axes[axen][i], assemblee:(axen==0),axe:axen,i:i,hidechart:def.hidechart, key: def.items[i][0], titre: def.items[i][1], cercles: cercles, stats:stats_list, item_stats:item_stats});
-
-        $('#vue').append(rendered);
-
+        elements.push({filtered:filtres_axes[axen][i], assemblee:(axen==0),axe:axen,hidechart:def.hidechart, key: def.items[i][0], titre: def.items[i][1], cercles: cercles, stats:stats_list, item_stats:item_stats, elem_stats:stats});
       }
-
-      if (!def.hidechart && results.length>0) {
-        var ctx = document.getElementById("donut"+i);
-        var randomScalingFactor = function() {
-         return Math.round(Math.random() * 100);
-        };
-
-        var myChart = new Chart(ctx, {
-         type: 'doughnut',
-         data: {
-             datasets: [{
-                 data: [
-                     stats['pour'],
-                     stats['contre'],
-                     stats['abstention'],
-                     stats['nonVotant'],
-                     stats['absent']
-                 ],
-                 backgroundColor: [
-                     "green",
-                     "red",
-                     "grey",
-                     "lightgrey",
-                     "lightgrey",
-                 ],
-                 label: 'Dataset 1'
-             }],
-             labels:['Pour','Contre','Abstention','Non votant','Absent']
-
-         },
-         options: {
-             responsive: true,
-             legend: {
-                 display: false
-             },
-             title: {
-                 display: true,
-                 text: 'Répartition par position de vote'
-             },
-             animation: {
-                 animateScale: false,
-                 animateRotate: false,
-             }
-         }
-       });
-     }
     }
-    $('.filtreaxe').click(function() {
-      var data = $(this).data();
-      if (!filtres_axes[data.axe][data.item]) {
-        var chip = '<div data-axe='+data.axe+' data-item='+data.item+' class="chip">'+axes.noms[data.axe]+':'+axes.defs[axes.noms[data.axe]].items[data.item][1]+'<i class="close closefilter material-icons">close</i></div>';
-        $('#filtres').append(chip);
-        $('.closefilter').click(function() {
-          var data=$(this).parent().data();
-          filtres_axes[data.axe][data.item] = false;
-          $('input[data-axe="'+data.axe+'"][data-item="'+data.item+'"]').prop('checked',false);
-          if (current_axe != data.axe) {
-            selectAxe(current_axe);
-          }
-        });
-      } else {
-
-        $('.chip[data-axe="'+data.axe+'"][data-item="'+data.item+'"]').remove();
-      }
-      filtres_axes[data.axe][data.item] = !filtres_axes[data.axe][data.item];
-
-    });
-
-
+    current_elements = elements;
+    sortElements();
   }
 
 
