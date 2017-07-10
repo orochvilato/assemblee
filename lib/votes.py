@@ -100,3 +100,4 @@ def parseVotePDF(path):
 
 r = parseVotePDF('pdfs/scrutin2017_07_04.pdf')
 r = parseVotePDF('pdfs/scrutin02.pdf')
+r = parseVotePDF('pdfs/scrutin03.pdf')
