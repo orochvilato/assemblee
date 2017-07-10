@@ -6,9 +6,10 @@ var scrutins = [];
 var filtres_axes=[];
 var current_axe = 0;
 var current_elements = [];
+var exprimes = true;
 
-function sort_absent(a,b) {
-  return (a.elem_stats.absent/a.item_stats.n) - (b.elem_stats.absent/b.item_stats.n);
+function sort_particip(a,b) {
+  return (a.participation - b.participation);
  };
  function sort_alpha(a,b) {
     return a.titre>b.titre;
@@ -26,14 +27,13 @@ function sort_absent(a,b) {
 
 
 
-var sort_fcts = [  ['% absence',sort_absent],
+var sort_fcts = [  ['% participation',sort_particip],
               ['% vote pour',sort_pour],
               ['% vote contre',sort_contre],
               ['% vote abstention',sort_abstention],
               ['% ordre alphabétique',sort_alpha] ]
 var current_sort = 0;
 var current_sort_asc = false;
-
 
 var loadVotants = function (data) {
   scrutins.push(data)
@@ -77,13 +77,13 @@ var sortElements = function() {
     if (!current_sort_asc) {
       current_elements.reverse();
     }
-
+    current_charts = [];
 
     $('#vue').empty().hide();
     var template = document.getElementById('template').innerHTML;
     Mustache.parse(template);
 
-    for (i=0;i<current_elements.length;i++) {
+    for (var i=0;i<current_elements.length;i++) {
       var element = current_elements[i];
       element.i = i;
       var def = axes.defs[axes.noms[element.axe]];
@@ -96,24 +96,21 @@ var sortElements = function() {
         var randomScalingFactor = function() {
          return Math.round(Math.random() * 100);
         };
-
+        var data = []
+        for (var j=0;j<element['stats'].length;j++) {
+          data.push(element['stats'][j].n);
+        }
         var myChart = new Chart(ctx, {
          type: 'doughnut',
          data: {
              datasets: [{
-                 data: [
-                     element['elem_stats']['pour'],
-                     element['elem_stats']['contre'],
-                     element['elem_stats']['abstention'],
-                     element['elem_stats']['nonVotant'],
-                     element['elem_stats']['absent']
-                 ],
+                 data: data,
                  backgroundColor: [
                      "green",
                      "red",
+                     "dodgerblue",
                      "grey",
-                     "lightgrey",
-                     "lightgrey",
+                     "grey",
                  ],
                  label: 'Dataset 1'
              }],
@@ -152,6 +149,7 @@ var sortElements = function() {
        });
      }
     }
+
     $('.filtreaxe').click(function() {
       var data = $(this).data();
       if (!filtres_axes[data.axe][data.item]) {
@@ -215,39 +213,46 @@ var selectAxe = function(axen) {
         for (var j=0; j<results.length;j++) {
           stats[results[j].position] += 1;
         }
-        var stats_list =[];
-
+        var stats_exprimes =[];
+        var stats_general=[];
+        var positions =  ['pour','contre','abstention','nonVotant','absent'];
         var positionsVotants = ['pour','contre','abstention'];
         var icons = { pour:'thumbs-up', contre:'thumbs-down', abstention:'meh-o', 'nonVotant':'ban', 'absent':'plane'};
         var libelles = { pour:'votes pour', contre:'votes contre', abstention:'abstention', 'nonVotant':'non votants (justifiés)', 'absent':'absents'};
         var item_stats =  { n: results.length/scrutins.length, pct: Math.round(100*(results.length/base))};
         var nvotants = results.length - stats['absent'] - stats['nonVotant']
+        var maxexprime = Math.max(stats['pour'],stats['contre'],stats['abstention']);
+        var maxgeneral = Math.max(stats['pour'],stats['contre'],stats['abstention'],stats['nonVotant'],stats['absent']);
         positionsVotants.forEach(function(p) {
-          if (stats[p]>0) {
-            stats_list.push({ libelle:libelles[p], position:p, n:stats[p], pct:Math.round(100*stats[p]/nvotants), icon:icons[p] });
-          }
+          stats_exprimes.push({ nul: (stats[p]==0), libelle:libelles[p], big: (stats[p]==maxexprime), position:p, n:stats[p], pct:Math.round(100*stats[p]/nvotants), icon:icons[p] });
         });
-        stats_list.sort(function(a, b) { return b.n - a.n; });
-
-        stats_list.push({ libelle:libelles['absent'], position:'absent', big:true,n:stats['absent'], absent:true, pct:Math.round(100*stats['absent']/results.length), icon:icons['absent'] });
-        if (stats['nonVotant']>0) {
-            stats_list.push({ libelle:libelles['nonVotant'], position:'nonVotant', n:stats['nonVotant'], absent:true, pct:Math.round(100*stats['nonVotant']/results.length), icon:icons['nonVotant'] });
-        }
+        positions.forEach(function(p) {
+          stats_general.push({ nul: (stats[p]==0), libelle:libelles[p], big: (stats[p]==maxgeneral), position:p, n:stats[p], pct:Math.round(100*stats[p]/results.length), icon:icons[p] });
+        });
 
 
-        if (stats_list.length>0) {
-          stats_list[0].big = true;
-        }
         var _cercles =  { pour:[], contre:[], abstention:[], 'nonVotant':[], absent:[] };
         results.forEach(function(r) {
           _cercles[r.position].push(r);
         });
         var cercles = [];
-        stats_list.forEach(function(s) {
-          cercles = cercles.concat(_cercles[s.position]);
+        positions.forEach(function(p) {
+          cercles = cercles.concat(_cercles[p]);
         })
 
-        elements.push({monoscrutin:(scrutins.length==1),filtered:filtres_axes[axen][i], assemblee:(axen==0),axe:axen,hidechart:def.hidechart, key: def.items[i][0], titre: def.items[i][1], cercles: cercles, stats:stats_list, item_stats:item_stats, elem_stats:stats});
+        elements.push({
+                       monoscrutin:(scrutins.length==1),
+                       filtered:filtres_axes[axen][i],
+                       assemblee:(axen==0),
+                       axe:axen,hidechart:def.hidechart,
+                       key: def.items[i][0],
+                       titre: def.items[i][1],
+                       cercles: cercles,
+                       exprimes: exprimes,
+                       participation : Math.round(100*nvotants/(results.length-stats['nonVotant'])),
+                       stats:(exprimes ? stats_exprimes : stats_general),
+                       item_stats:item_stats,
+                       elem_stats:stats});
       }
     }
     current_elements = elements;
@@ -297,6 +302,11 @@ $(document).ready( function() {
       var axen = $(this).attr('n');
       selectAxe(axen);
     });
-
+    $('#suffrages').click(function () {
+      exprimes = !exprimes;
+      libelle = (exprimes ? 'Suffrages exprimés':'Tous les députés')
+      $(this).attr('data-badge-caption',libelle);
+      selectAxe(current_axe);
+    });
   });
 });

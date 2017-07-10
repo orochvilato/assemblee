@@ -37,7 +37,7 @@
       background: red;
     }
     .abstention {
-      background: #666666;
+      background: dodgerblue;
     }
     .nonVotant {
       border-color:green;
@@ -56,11 +56,15 @@
       color: red;
     }
     .abstention-text {
-      color: #666666;
+      color: dodgerblue;
     }
     .nonVotant-text {
-
+      color: grey;
     }
+   .absent-text {
+     color: grey;
+    }
+
     .pctBig {
       font-size: 30px;
       font-weight: 500;
@@ -85,7 +89,7 @@
       font-size: 0.8rem;
       border-radius: 2px;
     }
-    .tri {
+    .tri,#suffrages {
       cursor: pointer;
     }
     .tri i.desc,i.asc {
@@ -130,6 +134,7 @@
     <div class="row">
       <div class="col s12">
         <span>Date de mise à jour : 08/07/2017 04:44</span>
+
       </div>
     </div>
     <div class="row">
@@ -155,7 +160,7 @@
     </div>
     <div class="row">
       <div class="col s12">
-        <div id="filtres"></div>
+        <span id="filtres"></span>
         </div>
     </div>
     <div class="row">
@@ -168,7 +173,8 @@
         <div class="center" id="titreaxe" style="font-size:180%;font-weight:500;margin-bottom:20px;">Titre</div>
       </div>
       <div class="col s12">
-          <span>Trier par : </span><span id="tris"></span>
+          <span id="suffrages" class="left new badge " data-badge-caption="Suffrage exprimés"></span>
+          <span style="margin-left:20px;">Trier par : </span><span id="tris"></span>
 
       </div>
     <div class="col s12">
@@ -202,8 +208,10 @@
         <span class="card-title" style="font-weight:500;">{{titre}} <span style="font-size:60%">{{#item_stats}}({{n}} députée(s) - {{pct}}%){{/item_stats}}</span>
         {{^assemblee}}<p><input type="checkbox" id="filtre{{i}}" data-axe={{axe}} data-item={{i}} class="filtreaxe" {{#filtered}}checked{{/filtered}} /><label for="filtre{{i}}">tout filtrer selon cet élément</label></p>{{/assemblee}}
         </span>
-        <span style="font-weight:300;">Votants</span><span class="right" style="font-weight:300;">Non votants</span>
-        <span class="card-title">{{#stats}}<span title="{{libelle}}" class="pct{{#big}}Big{{/big}} {{position}}-text{{#absent}} right{{/absent}}"><i class="fa fa-{{icon}}"></i> {{pct}}% <span style="font-size:60%">({{n}})</span></span>{{/stats}}</span>
+        <span style="font-weight:300;">{{#exprimes}}Suffrages exprimés{{/exprimes}}{{^exprimes}}Tous les députés{{/exprimes}}</span><span class='right' style="font-weight:300;">Participation</span>
+        <span class="card-title">{{#stats}}{{^nul}}<span title="{{libelle}}" class="pct{{#big}}Big{{/big}} {{position}}-text"><i class="fa fa-{{icon}}"></i> {{pct}}%{{#monoscrutin}} <span style="font-size:60%">({{n}})</span>{{/monoscrutin}}</span>{{/nul}}{{/stats}}
+        <span title="Participation" class="pctBig right"></i> {{participation }}%</span>
+        </span>
         <div>
           {{#monoscrutin}}{{#cercles}}
           <a class="vcircle {{position}}" title="{{nom}}" href="acteurs/{{uid}}.html" ></a>
