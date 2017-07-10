@@ -238,7 +238,7 @@ var selectAxe = function(axen) {
         positions.forEach(function(p) {
           cercles = cercles.concat(_cercles[p]);
         })
-
+        participation = Math.round(100*nvotants/(results.length-stats['nonVotant']));
         elements.push({
                        monoscrutin:(scrutins.length==1),
                        filtered:filtres_axes[axen][i],
@@ -249,7 +249,7 @@ var selectAxe = function(axen) {
                        titre: def.items[i][1],
                        cercles: cercles,
                        exprimes: exprimes,
-                       participation : Math.round(100*nvotants/(results.length-stats['nonVotant'])),
+                       participation : (isNaN(participation)?'-':participation),
                        stats:(exprimes ? stats_exprimes : stats_general),
                        item_stats:item_stats,
                        elem_stats:stats});
