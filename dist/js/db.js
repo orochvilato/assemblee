@@ -85,14 +85,13 @@ var sortElements = function() {
 
     for (var i=0;i<current_elements.length;i++) {
       var element = current_elements[i];
-      element.i = i;
       var def = axes.defs[axes.noms[element.axe]];
       var rendered = Mustache.render(template, element);
 
       $('#vue').append(rendered);
 
       if (!def.hidechart) {
-        var ctx = document.getElementById("donut"+i);
+        var ctx = document.getElementById("donut"+element.i);
         var randomScalingFactor = function() {
          return Math.round(Math.random() * 100);
         };
@@ -243,6 +242,7 @@ var selectAxe = function(axen) {
         elements.push({
                        monoscrutin:(scrutins.length==1),
                        filtered:filtres_axes[axen][i],
+                       i:i,
                        assemblee:(axen==0),
                        axe:axen,hidechart:def.hidechart,
                        key: def.items[i][0],
