@@ -37,7 +37,7 @@ def parseVotePDF(path):
     r = txtfp.getvalue().decode('utf8')
 
     import re
-    scrutins = re.split(r'Analyse du scrutin[ n]+. *(\d)',r)[1:]
+    scrutins = re.split(r'Analyse du scrutin[ n]+. *(\d+)',r)[1:]
     scrutins = [scrutins[x:x+2] for x in xrange(0, len(scrutins), 2)]
     for noscrutin,rscrutin in scrutins:
         print path,noscrutin
