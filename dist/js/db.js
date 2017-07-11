@@ -1,6 +1,8 @@
 var db = new loki('sandbox.db');
 // Add a collection to the database
 var votants = db.addCollection('votants');
+var compare_axe = undefined;
+var compare_item = undefined;
 var axes;
 var scrutins = [];
 var filtres_axes=[];
@@ -38,7 +40,10 @@ var current_sort_asc = false;
 var loadVotants = function (data) {
   scrutins.push(data)
   data['positions'].forEach(function (p) {
-     votants.insert(p);
+     var vp = p;
+     vp.numscrutin = data.numero;
+     vp.nomscrutin = data.libelle;
+     votants.insert(vp);
   });
 };
 var loadScrutin= function(s) {
@@ -49,7 +54,7 @@ var loadScrutin= function(s) {
     if (((s == 'tous') && ($(this).val() != 'tous')) || (($(this).val() == s) && ( s != 'tous')))
     {
         calls.push($.ajax({
-          url: 'json/scrutin'+$(this).val()+'.json', //?t='+Date.now(),
+          url: 'json/scrutin'+$(this).val()+'.json?t='+Date.now(),
           type: 'GET',
           dataType: 'json',
           success: loadVotants
@@ -149,6 +154,15 @@ var sortElements = function() {
      }
     }
 
+    $('.compare').click(function () {
+      var data = $(this).data();
+      if (compare_axe) {
+        $('.compare[data-axe="'+compare_axe+'"][data-item="'+compare_item+'"]').prop('checked',false);
+      }
+      compare_axe = data.axe;
+      compare_item = data.item;
+
+    });
     $('.filtreaxe').click(function() {
       var data = $(this).data();
       if (!filtres_axes[data.axe][data.item]) {
@@ -176,7 +190,7 @@ var selectAxe = function(axen) {
     current_axe = axen;
     $('#titreaxe').html(def.titre);
     var elements = [];
-
+    axen = parseInt(axen);
     for (var i=0; i<def.items.length; i++) {
       //$('#vue').append('<h4>'+def.items[i][1]+'</h4>');
       var sel = {};
@@ -207,10 +221,15 @@ var selectAxe = function(axen) {
       var base = votants.find(req).length;
       req['$and'].push(sel)
       var results = votants.find(req);
+
       if (results.length>0) {
         var stats = { pour:0, contre:0, abstention:0, 'nonVotant':0, absent:0};
+        var totalFI = 0;
+        var totalEM = 0;
         for (var j=0; j<results.length;j++) {
           stats[results[j].position] += 1;
+          totalFI += results[j].fi;
+          totalEM += results[j].em;
         }
         var stats_exprimes =[];
         var stats_general=[];
@@ -222,12 +241,20 @@ var selectAxe = function(axen) {
         var nvotants = results.length - stats['absent'] - stats['nonVotant']
         var maxexprime = Math.max(stats['pour'],stats['contre'],stats['abstention']);
         var maxgeneral = Math.max(stats['pour'],stats['contre'],stats['abstention'],stats['nonVotant'],stats['absent']);
+
         positionsVotants.forEach(function(p) {
           stats_exprimes.push({ nul: (stats[p]==0), libelle:libelles[p], big: (stats[p]==maxexprime), position:p, n:stats[p], pct:Math.round(100*stats[p]/nvotants), icon:icons[p] });
         });
         positions.forEach(function(p) {
           stats_general.push({ nul: (stats[p]==0), libelle:libelles[p], big: (stats[p]==maxgeneral), position:p, n:stats[p], pct:Math.round(100*stats[p]/results.length), icon:icons[p] });
         });
+
+        // test EMc / FIc
+
+        var compatFI = Math.round(100*totalFI/(2*results.length))
+        var compatEM = Math.round(100*totalEM/(2*results.length))
+        //stats_exprimes.push({ libelle:"ComptatibilitéFI", big: false, pct:compatFI, icon:"" });
+        //stats_exprimes.push({ libelle:"ComptatibilitéEM", big: false, pct:compatEM, icon:"" });
 
 
         var _cercles =  { pour:[], contre:[], abstention:[], 'nonVotant':[], absent:[] };
@@ -238,10 +265,12 @@ var selectAxe = function(axen) {
         positions.forEach(function(p) {
           cercles = cercles.concat(_cercles[p]);
         })
+
         participation = Math.round(100*nvotants/(results.length-stats['nonVotant']));
         elements.push({
                        monoscrutin:(scrutins.length==1),
                        filtered:filtres_axes[axen][i],
+                       compare:(compare_axe==axen && compare_item==i),
                        i:i,
                        assemblee:(axen==0),
                        axe:axen,hidechart:def.hidechart,

@@ -37,7 +37,7 @@
       background: red;
     }
     .abstention {
-      background: #666666;
+      background: dodgerblue;
     }
     .nonVotant {
       border-color:green;
@@ -56,21 +56,53 @@
       color: red;
     }
     .abstention-text {
-      color: #666666;
+      color: dodgerblue;
     }
     .nonVotant-text {
-
+      color: grey;
     }
+   .absent-text {
+     color: grey;
+    }
+
     .pctBig {
       font-size: 30px;
       font-weight: 500;
       margin-right:10px;
+      cursor:help;
     }
     .pct {
       font-size: 24px;
       font-weight: 500;
       margin-right:10px;
+      cursor:help;
     }
+    .axe {
+      margin:2px;
+    }
+    .chip {
+      color: white;
+      font-size:14px;
+    }
+    span.badge {
+      font-weight: 300;
+      font-size: 0.8rem;
+      border-radius: 2px;
+    }
+    .tri,#suffrages {
+      cursor: pointer;
+    }
+    .tri i.desc,i.asc {
+      display:none;
+    }
+    .tri.new.desc i.desc {
+      display:inline;
+    }
+    .tri.new.asc i.asc {
+      display:inline;
+    }
+
+
 
 </style>
 
@@ -101,15 +133,16 @@
   <div class="container">
     <div class="row">
       <div class="col s12">
-        <span>Date de mise à jour : 08/07/2017 04:44</span>
+        <span>Date de mise à jour : {{ today }}</span>
+
       </div>
     </div>
     <div class="row">
       <div class="col s12">
         <div class="input-field col s12">
           <select id="scrutin">
-            <option value="1">Scrutin n°1</option>
-            <option value="2">Scrutin n°2</option>
+            <option value="tous">Tous les scrutins</option>
+            {% for s in scrutins %}<option value="{{ s['numero'] }}">Scrutin n°{{ s['numero'] }}</option>{% endfor %}
           </select>
           <label>Choix du Scrutin</label>
         </div>
@@ -117,11 +150,35 @@
     </div>
     <div class="row">
       <div class="col s12">
-        <h5>Scrutin n°<span id="noscrutin"></span> : <span id="libellescrutin"></span></h5>
-        <div id="axes"></div>
-        <div id="vue"></div>
+        <div class="card">
+          <div class="card-content">
+            <div id="axes"></div>
+          </div>
+        </div>
       </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <span id="filtres"></span>
+        </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <h5 id="titrescrutin"></h5>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col s12">
+        <div class="center" id="titreaxe" style="font-size:180%;font-weight:500;margin-bottom:20px;">Titre</div>
+      </div>
+      <div class="col s12">
+          <span id="suffrages" class="left new badge " data-badge-caption="Suffrage exprimés"></span>
+          <span style="margin-left:20px;">Trier par : </span><span id="tris"></span>
 
+      </div>
+    <div class="col s12">
+        <div id="vue"></div>
+    </div>
     </div>
   </div>
 </body>
@@ -136,6 +193,7 @@
   <script src="js/lokijs.min.js"></script>
   <script src="js/db.js"></script>
   <script id="template" type="x-tmpl-mustache">
+  {% raw %}
   <div class="col s12">
     <div class="card" style="background:#F0F0F0">
     <div class="card-content">
@@ -147,19 +205,27 @@
       <div class="col s12 m12 l9">
       {{/hidechart}}
       {{#hidechart}}<div class="col s12">{{/hidechart}}
-        <span class="card-title" style="font-weight:500;">{{titre}} <span style="font-size:60%">{{#item_stats}}({{n}} député(s) - {{pct}}%){{/item_stats}}</span></span>
-        <span style="font-weight:300;">Votants</span><span class="right" style="font-weight:300;">Non votants</span>
-        <span class="card-title">{{#stats}}<span class="pct{{#big}}Big{{/big}} {{position}}-text{{#absent}} right{{/absent}}"><i class="fa fa-{{icon}}"></i> {{pct}}% <span style="font-size:60%">({{n}})</span></span>{{/stats}}</span>
+        <span class="card-title" style="font-weight:500;">{{titre}} <span style="font-size:60%">{{#item_stats}}({{n}} députée(s) - {{pct}}%){{/item_stats}}</span>
+        {{^assemblee}}
+        <p><input type="checkbox" id="filtre{{i}}" data-axe={{axe}} data-item={{i}} class="filtreaxe" {{#filtered}}checked{{/filtered}} /><label for="filtre{{i}}">tout filtrer selon cet élément</label></p>
+        <p><input type="checkbox" id="compare{{i}}" data-axe={{axe}} data-item={{i}} class="compare" {{#compare}}checked{{/compare}} /><label for="compare{{i}}">comparer avec cet élément</label></p>
+        {{/assemblee}}
+        </span>
+        <span style="font-weight:300;">{{#exprimes}}Suffrages exprimés{{/exprimes}}{{^exprimes}}Tous les députés{{/exprimes}}</span><span class='right' style="font-weight:300;">Participation</span>
+        <span class="card-title">{{#stats}}{{^nul}}<span title="{{libelle}}" class="pct{{#big}}Big{{/big}} {{position}}-text"><i class="fa fa-{{icon}}"></i> {{pct}}%{{#monoscrutin}} <span style="font-size:60%">({{n}})</span>{{/monoscrutin}}</span>{{/nul}}{{/stats}}
+        <span title="Participation" class="pctBig right"></i> {{participation }}%</span>
+        </span>
         <div>
-          {{#cercles}}
+          {{#monoscrutin}}{{#cercles}}
           <a class="vcircle {{position}}" title="{{nom}}" href="acteurs/{{uid}}.html" ></a>
-          {{/cercles}}
+          {{/cercles}}{{/monoscrutin}}
         </div>
       </div>
       </div>
     </div
   </div>
   </div>
+  {% endraw %}
 </script>
 
   <script>
@@ -170,11 +236,13 @@
 
   <script>
   $(document).ready( function() {
+
     $('select').material_select();
     $('#scrutin').change(function() {
       loadScrutin($(this).val());
     })
-    loadScrutin(1);
+    loadScrutin('tous');
+
   });
 
   </script>

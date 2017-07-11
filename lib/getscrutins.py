@@ -6,6 +6,9 @@ from io import BytesIO
 from tools import strip_accents
 import cStringIO, codecs
 import json
+import re
+import requests
+
 from tools import cmdline_args,normalize,flatten
 debug = cmdline_args.debug
 
@@ -37,6 +40,7 @@ def parseVotePDF(path):
     scrutins = re.split(r'Analyse du scrutin[ n]+. *(\d)',r)[1:]
     scrutins = [scrutins[x:x+2] for x in xrange(0, len(scrutins), 2)]
     for noscrutin,rscrutin in scrutins:
+        print path,noscrutin
         pages = re.split(r'Page \d+ sur \d+[ \n\r\x0c]+',rscrutin)
         synthese,pages = pages[0],strip_accents(''.join(pages[1:]))
         pages = re.split(r'Mises au point', pages)+['']
@@ -85,7 +89,7 @@ def parseVotePDF(path):
 
         for uid in list(set(data['acteurs_uid'].keys())-set(exprimes)):
             act = data['acteurs_uid'][uid]
-            scrutin['positions'].append({'uid':'uid',
+            scrutin['positions'].append({'uid':uid,
                                          'nom':act['nomcomplet'],
                                          'commissions': act['commissions'],
                                          'organes': act['organes'],
@@ -101,7 +105,15 @@ def parseVotePDF(path):
         open('dist/json/scrutin%s.json' % scrutin['numero'], 'w').write(json.dumps(scrutin))
 
 
-#r = parseVotePDF('pdfs/scrutin2017_07_04.pdf')
-#r = parseVotePDF('pdfs/scrutin02.pdf')
-#r = parseVotePDF('pdfs/scrutin03.pdf')
-r = parseVotePDF('pdfs/Scrutins.pdf')
+# recupération page principale assemblée
+an = requests.get('http://www.assemblee-nationale.fr/').content
+import lxml.html
+root = lxml.html.fromstring(an)
+pdfs = root.xpath('//a[contains(@href,"pdf") and contains(text(),"Voir")]/@href')
+print pdfs
+for pdf in pdfs:
+    print pdf
+    content = requests.get(pdf).content
+    fpath = 'pdfs/'+pdf.split('/')[-1]
+    open(fpath,'w').write(content)
+    r = parseVotePDF(fpath)

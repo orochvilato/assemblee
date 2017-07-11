@@ -18,6 +18,7 @@ axes = [(u'Assemblée',{'titre':u"Votes de l'Assemblée",'source':'assemblee','l
         'item_field':'csp','item_compare':'$eq'}),
         ('Sexe',{'titre':u"Votes par sexe",'source':'acteurs','label':'sexe','key':'sexe',
         'item_field':'sexe','item_compare':'$eq'}),
+        
 
        ]
 

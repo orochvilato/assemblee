@@ -212,10 +212,3 @@ data['organes'] = organes.values()
 data['commissions'] = commissions.values()
 data['organes_abrev'] = dict((org['libelleAbrev'],org) for org in organes.values())
 data['assemblee'] = [ data['organes_abrev']['AN'] ]
-axejson = {'noms':[],'defs':{}}
-for axe,defs in axes:
-    axe_items = [ (s[defs['key']],s[defs['label']]) for s in data[defs['source']] ]
-    axejson['noms'].append(axe)
-    axejson['defs'][axe] = {'titre':defs['titre'],'hidechart':defs.get('hidechart',False),'field':defs['item_field'], 'compare':defs['item_compare'], 'items':sorted(list(set(axe_items)),key=lambda item:item[1])}
-
-open('dist/json/axes.json','w').write(json.dumps(axejson))
