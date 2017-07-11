@@ -49,7 +49,7 @@ var loadScrutin= function(s) {
     if (((s == 'tous') && ($(this).val() != 'tous')) || (($(this).val() == s) && ( s != 'tous')))
     {
         calls.push($.ajax({
-          url: 'json/scrutin'+$(this).val()+'.json?t='+Date.now(),
+          url: 'json/scrutin'+$(this).val()+'.json', //?t='+Date.now(),
           type: 'GET',
           dataType: 'json',
           success: loadVotants
